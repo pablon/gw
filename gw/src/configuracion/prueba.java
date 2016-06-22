@@ -38,6 +38,7 @@ public class prueba {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 443);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
 	}
 
 }
