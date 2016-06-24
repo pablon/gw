@@ -5,5 +5,6 @@
 	<classpathentry kind="lib" path="/usr/share/java/slf4j-api.jar"/>
 	<classpathentry kind="lib" path="/usr/share/java/slf4j-jdk14.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/openiec61850-openiec61850"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/postgresq9.4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
