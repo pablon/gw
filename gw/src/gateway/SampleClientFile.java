@@ -76,17 +76,17 @@ public class SampleClientFile  implements ClientEventListener {
        
         ServerModel serverModel;
         try {
-            serverModel = association.retrieveModel();
+            //serverModel = association.retrieveModel();
         	
             // serverModel = association.getModelFromSclFile("../sampleServer/sampleModel.icd");
             // } catch (SclParseException e1) {
         	
-            //serverModel = association.getModelFromSclFile("/home/pn/Documentos/UC_SSAA.icd");
+            serverModel = association.getModelFromSclFile("/home/pn/Documentos/uc_lt2.cid");
             //serverModel = association.getModelFromSclFile("/home/pn/Documentos/respaldo/openiec61850/run-scripts/sample/sample-model.icd");
             
             logger.info("Se disparo un GetDirectory y un GetDefintion con exito");
 
-        } catch (ServiceError e) {
+/*        } catch (ServiceError e) {
             logger.error("Service Error requesting model.", e);
             association.close();
             return;
@@ -94,11 +94,11 @@ public class SampleClientFile  implements ClientEventListener {
             logger.error("Fatal IOException requesting model.", e);
             return;
         }            
-            
-/*        } catch (SclParseException e1) {
+*/            
+        } catch (SclParseException e1) {
             logger.error("Fatal IOException requesting model.", e1);
             return;
-        }*/
+        }
         System.out.println("Inicio de exploracion del servidor");
         association.getAllDataValues();
         

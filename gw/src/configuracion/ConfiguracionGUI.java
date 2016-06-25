@@ -24,10 +24,12 @@ import java.awt.Dimension;
 import java.awt.Component;
 import javax.swing.JTextField;
 import java.awt.Insets;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javax.swing.SwingConstants;
 
 public class ConfiguracionGUI implements TreeSelectionListener {
 
@@ -40,7 +42,9 @@ public class ConfiguracionGUI implements TreeSelectionListener {
 	private JTree treeConf = new JTree();
 	private JScrollPane scrollPaneDetails = new JScrollPane();
 	private JScrollPane scrollPaneConf = new JScrollPane();
-	private JTextField textField;
+	private JTextField inputDescripcion;
+	private JLabel lblDescripcion = new JLabel();
+	private int iClick = 0;
 	
 	/**
 	 * Launch the application.
@@ -70,7 +74,7 @@ public class ConfiguracionGUI implements TreeSelectionListener {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 642, 459);
+		frame.setBounds(100, 100, 781, 459);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout = new GridBagLayout();
@@ -95,19 +99,17 @@ public class ConfiguracionGUI implements TreeSelectionListener {
 		/*
 		 * Inicio de vista de configuracion
 		 */
-        //JPanel panelConf = new JPanel(false);
         panelConf = new JPanel(false);
         panelConf.setLayout(new GridLayout(1, 1));
 		tabbedPane.addTab("Configuracion", null, panelConf, "Configuraciones generales de los drivers");
 		
-		//JScrollPane scrollPaneConf = new JScrollPane();
 		scrollPaneConf = new JScrollPane();
 		scrollPaneConf.setMinimumSize(new Dimension(100, 0));
 		panelConf.add(scrollPaneConf);
 		
         DefaultMutableTreeNode top = new DefaultMutableTreeNode("Gateway");
         createNodes(top);		
-		
+		iClick = 0;
         /* a la izquierda, grafica el arbol de opciones de la pestaña Configuracion*/
 		treeConf = new JTree(top);
 		treeConf.getSelectionModel().setSelectionMode (TreeSelectionModel.SINGLE_TREE_SELECTION);		
@@ -115,10 +117,8 @@ public class ConfiguracionGUI implements TreeSelectionListener {
 		scrollPaneConf.setViewportView(treeConf);
 		
 		/* a la derecha, grafica la vista de detalles */
-		//JScrollPane scrollPaneDetails = new JScrollPane();
 		panelConf.add(scrollPaneDetails);
 		panelDetails.setAlignmentX(Component.LEFT_ALIGNMENT);
-		//JPanel panelDetails = new JPanel();
 		scrollPaneDetails.setViewportView(panelDetails);
 		GridBagLayout gbl_panelDetails = new GridBagLayout();
 		gbl_panelDetails.columnWidths = new int[]{57, 82, 114, 0};
@@ -127,22 +127,24 @@ public class ConfiguracionGUI implements TreeSelectionListener {
 		gbl_panelDetails.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panelDetails.setLayout(gbl_panelDetails);
 		
-				JLabel lblDescripcion = new JLabel("Descripcion del campo");
-				GridBagConstraints gbc_lblDescripcion = new GridBagConstraints();
-				gbc_lblDescripcion.anchor = GridBagConstraints.WEST;
-				gbc_lblDescripcion.insets = new Insets(0, 0, 5, 5);
-				gbc_lblDescripcion.gridx = 0;
-				gbc_lblDescripcion.gridy = 0;
-				panelDetails.add(lblDescripcion, gbc_lblDescripcion);
-				
-				textField = new JTextField();
-				GridBagConstraints gbc_textField = new GridBagConstraints();
-				gbc_textField.insets = new Insets(0, 0, 0, 5);
-				gbc_textField.anchor = GridBagConstraints.NORTHWEST;
-				gbc_textField.gridx = 1;
-				gbc_textField.gridy = 0;
-				panelDetails.add(textField, gbc_textField);
-				textField.setColumns(10);
+		lblDescripcion = new JLabel("Descripcion del campo");
+		GridBagConstraints gbc_lblDescripcion = new GridBagConstraints();
+		gbc_lblDescripcion.anchor = GridBagConstraints.WEST;
+		gbc_lblDescripcion.insets = new Insets(0, 0, 5, 5);
+		gbc_lblDescripcion.gridx = 0;
+		gbc_lblDescripcion.gridy = 0;
+		panelDetails.add(lblDescripcion, gbc_lblDescripcion);
+		
+		inputDescripcion = new JTextField();
+		inputDescripcion.setHorizontalAlignment(SwingConstants.LEFT);
+		GridBagConstraints gbc_inputDescripcion = new GridBagConstraints();
+		gbc_inputDescripcion.gridwidth = 2;
+		gbc_inputDescripcion.insets = new Insets(0, 0, 0, 5);
+		gbc_inputDescripcion.anchor = GridBagConstraints.NORTHWEST;
+		gbc_inputDescripcion.gridx = 1;
+		gbc_inputDescripcion.gridy = 0;
+		panelDetails.add(inputDescripcion, gbc_inputDescripcion);
+		inputDescripcion.setColumns(10);
  
 		/*
 		 * Inicio de vista de MAPEO
@@ -188,11 +190,12 @@ public class ConfiguracionGUI implements TreeSelectionListener {
 	 * @version 1.0
 	 */
     private void createNodes(DefaultMutableTreeNode top) {
-        DefaultMutableTreeNode category = null;
-        DefaultMutableTreeNode book = null;
+        DefaultMutableTreeNode subestacion;
+        DefaultMutableTreeNode drivers;
+        String driverNombre;
 
-        category = new DefaultMutableTreeNode("Subestación");
-        top.add(category);
+        subestacion = new DefaultMutableTreeNode("Subestación");
+        top.add(subestacion);
      
         try {
 			Connection con = Conexion.crearConexion();
@@ -201,8 +204,11 @@ public class ConfiguracionGUI implements TreeSelectionListener {
 			
 			while (rs.next())
 			{
-		        book = new DefaultMutableTreeNode(rs.getString(2));
-		        category.add(book);			   
+		        //drivers = new DefaultMutableTreeNode(String.valueOf(rs.getString(2)));
+				driverNombre = new String(String.valueOf(rs.getString(2)));
+		        drivers = new DefaultMutableTreeNode(driverNombre, true);
+		        
+		        subestacion.add(drivers);			   
 			} rs.close();
 			st.close();
 			
@@ -215,12 +221,31 @@ public class ConfiguracionGUI implements TreeSelectionListener {
 		}
         
     }
+    
+    
+    private class DriverInfo {
+        public String bookName;
+        public URL bookURL;
+
+        public DriverInfo(String book, String filename) {
+            bookName = book;
+            bookURL = getClass().getResource(filename);
+            if (bookURL == null) {
+                System.err.println("Couldn't find file: "
+                                   + filename);
+            }
+        }
+
+        public String toString() {
+            return bookName;
+        }
+    }    
 
 	@Override
 	public void valueChanged(TreeSelectionEvent e) {
 		// TODO Auto-generated method stub
-		panelDetails.removeAll();
-		panelDetails.repaint();
+		//panelDetails.removeAll();
+		//panelDetails.repaint();
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) treeConf.getLastSelectedPathComponent();
 		if (node == null){
 			System.out.println("nada fue seleccionoda");
@@ -228,10 +253,15 @@ public class ConfiguracionGUI implements TreeSelectionListener {
 		}
 		
 		Object nodeInfo = node.getUserObject();
-		if (node.isLeaf())
+		//Object nodeInfo = e.getNewLeadSelectionPath().getLastPathComponent();
+		inputDescripcion.setText(String.valueOf(nodeInfo.toString()));
+		
+		//inputDescripcion.setText(String.valueOf(iClick++));
+		
+/*		if (node.isLeaf())
 			System.out.println("Seleccionado node.isLeaf: " + node + ". NodeInfo: " + nodeInfo);
 		else
-			System.out.println("Seleccionado node.is NOT Leaf: " + node + ". NodeInfo: " + nodeInfo);
+			System.out.println("Seleccionado node.is NOT Leaf: " + node + ". NodeInfo: " + nodeInfo);*/
 	}
 	
 }
