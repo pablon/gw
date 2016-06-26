@@ -4,7 +4,9 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -16,6 +18,7 @@ import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import com.conexion.Conexion;
@@ -24,14 +27,20 @@ import java.awt.Dimension;
 import java.awt.Component;
 import javax.swing.JTextField;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import javax.swing.SwingConstants;
+import java.awt.Font;
+import javax.swing.JButton;
 
-public class ConfiguracionGUI implements TreeSelectionListener {
+public class ConfiguracionGUI implements TreeSelectionListener, ActionListener {
 
 	private JFrame frame;
 	private JTabbedPane tabbedPane = new JTabbedPane();
@@ -44,7 +53,8 @@ public class ConfiguracionGUI implements TreeSelectionListener {
 	private JScrollPane scrollPaneConf = new JScrollPane();
 	private JTextField inputDescripcion;
 	private JLabel lblDescripcion = new JLabel();
-	private int iClick = 0;
+
+	private DefaultMutableTreeNode selectedNode;	
 	
 	/**
 	 * Launch the application.
@@ -104,16 +114,18 @@ public class ConfiguracionGUI implements TreeSelectionListener {
 		tabbedPane.addTab("Configuracion", null, panelConf, "Configuraciones generales de los drivers");
 		
 		scrollPaneConf = new JScrollPane();
-		scrollPaneConf.setMinimumSize(new Dimension(100, 0));
+		//scrollPaneConf.setMinimumSize(new Dimension(100, 0));
 		panelConf.add(scrollPaneConf);
 		
         DefaultMutableTreeNode top = new DefaultMutableTreeNode("Gateway");
         createNodes(top);		
-		iClick = 0;
+
         /* a la izquierda, grafica el arbol de opciones de la pestaña Configuracion*/
 		treeConf = new JTree(top);
 		treeConf.getSelectionModel().setSelectionMode (TreeSelectionModel.SINGLE_TREE_SELECTION);		
-		treeConf.addTreeSelectionListener(this);
+		treeConf.addTreeSelectionListener(this);			//implementar valueChange
+	    treeConf.setComponentPopupMenu(getPopUpMenu()); //agrega el popup
+	    //treeConf.addMouseListener(getMouseListener());
 		scrollPaneConf.setViewportView(treeConf);
 		
 		/* a la derecha, grafica la vista de detalles */
@@ -121,30 +133,45 @@ public class ConfiguracionGUI implements TreeSelectionListener {
 		panelDetails.setAlignmentX(Component.LEFT_ALIGNMENT);
 		scrollPaneDetails.setViewportView(panelDetails);
 		GridBagLayout gbl_panelDetails = new GridBagLayout();
-		gbl_panelDetails.columnWidths = new int[]{57, 82, 114, 0};
-		gbl_panelDetails.rowHeights = new int[]{19, 0, 0, 0};
-		gbl_panelDetails.columnWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_panelDetails.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panelDetails.columnWidths = new int[]{207, 172, 0};
+		gbl_panelDetails.rowHeights = new int[]{19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		gbl_panelDetails.columnWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+		gbl_panelDetails.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panelDetails.setLayout(gbl_panelDetails);
+		
+		JLabel lblPropiedades = new JLabel("Propiedades");
+		lblPropiedades.setFont(new Font("Dialog", Font.BOLD, 14));
+		GridBagConstraints gbc_lblPropiedades = new GridBagConstraints();
+		gbc_lblPropiedades.gridwidth = 2;
+		gbc_lblPropiedades.insets = new Insets(0, 0, 5, 0);
+		gbc_lblPropiedades.gridx = 0;
+		gbc_lblPropiedades.gridy = 0;
+		gbc_lblPropiedades.weightx = 1;
+		panelDetails.add(lblPropiedades, gbc_lblPropiedades);
 		
 		lblDescripcion = new JLabel("Descripcion del campo");
 		GridBagConstraints gbc_lblDescripcion = new GridBagConstraints();
 		gbc_lblDescripcion.anchor = GridBagConstraints.WEST;
 		gbc_lblDescripcion.insets = new Insets(0, 0, 5, 5);
 		gbc_lblDescripcion.gridx = 0;
-		gbc_lblDescripcion.gridy = 0;
+		gbc_lblDescripcion.gridy = 2;
 		panelDetails.add(lblDescripcion, gbc_lblDescripcion);
 		
 		inputDescripcion = new JTextField();
-		inputDescripcion.setHorizontalAlignment(SwingConstants.LEFT);
 		GridBagConstraints gbc_inputDescripcion = new GridBagConstraints();
-		gbc_inputDescripcion.gridwidth = 2;
-		gbc_inputDescripcion.insets = new Insets(0, 0, 0, 5);
+		gbc_inputDescripcion.fill = GridBagConstraints.HORIZONTAL;
+		gbc_inputDescripcion.insets = new Insets(0, 0, 5, 0);
 		gbc_inputDescripcion.anchor = GridBagConstraints.NORTHWEST;
 		gbc_inputDescripcion.gridx = 1;
-		gbc_inputDescripcion.gridy = 0;
+		gbc_inputDescripcion.gridy = 2;
 		panelDetails.add(inputDescripcion, gbc_inputDescripcion);
 		inputDescripcion.setColumns(10);
+		
+		JButton btnGuardarPropiedades = new JButton("Guardar");
+		GridBagConstraints gbc_btnGuardarPropiedades = new GridBagConstraints();
+		gbc_btnGuardarPropiedades.gridx = 1;
+		gbc_btnGuardarPropiedades.gridy = GridBagConstraints.SOUTHWEST;;
+		panelDetails.add(btnGuardarPropiedades, gbc_btnGuardarPropiedades);
  
 		/*
 		 * Inicio de vista de MAPEO
@@ -222,7 +249,11 @@ public class ConfiguracionGUI implements TreeSelectionListener {
         
     }
     
-    
+    /**
+     * Ejemplo de creacion de clase interna
+     * @author root
+     *
+     */
     private class DriverInfo {
         public String bookName;
         public URL bookURL;
@@ -241,9 +272,13 @@ public class ConfiguracionGUI implements TreeSelectionListener {
         }
     }    
 
+    /**
+     * Metodo que es llamado cada vez que se le da click al arbol de configuracion
+     */
 	@Override
 	public void valueChanged(TreeSelectionEvent e) {
 		// TODO Auto-generated method stub
+		//e.getPath().toString()
 		//panelDetails.removeAll();
 		//panelDetails.repaint();
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) treeConf.getLastSelectedPathComponent();
@@ -255,13 +290,22 @@ public class ConfiguracionGUI implements TreeSelectionListener {
 		Object nodeInfo = node.getUserObject();
 		//Object nodeInfo = e.getNewLeadSelectionPath().getLastPathComponent();
 		inputDescripcion.setText(String.valueOf(nodeInfo.toString()));
-		
-		//inputDescripcion.setText(String.valueOf(iClick++));
-		
-/*		if (node.isLeaf())
-			System.out.println("Seleccionado node.isLeaf: " + node + ". NodeInfo: " + nodeInfo);
-		else
-			System.out.println("Seleccionado node.is NOT Leaf: " + node + ". NodeInfo: " + nodeInfo);*/
 	}
+	
+	private JPopupMenu getPopUpMenu() {
+	    JPopupMenu menu = new JPopupMenu();
+	    JMenuItem item = new JMenuItem("Agregar IED");
+	    item.addActionListener(this);
+	    menu.add(item);
+	    return menu;
+	}	
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+        JMenuItem source = (JMenuItem)(e.getSource());
+        String s = "Action event detected. Event source: " + source.getText();
+        System.out.println(s);
+	}	
 	
 }
