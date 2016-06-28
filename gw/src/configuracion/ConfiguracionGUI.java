@@ -19,6 +19,10 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+import org.openmuc.openiec61850.ClientSap;
+import org.openmuc.openiec61850.ServerModel;
+import org.openmuc.openiec61850.ServiceError;
+
 import com.conexion.Conexion;
 
 import java.awt.Component;
@@ -33,6 +37,11 @@ import java.awt.Font;
 import javax.swing.JButton;
 
 import configuracion.DriverInfo;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.awt.event.ActionEvent;
 
 public class ConfiguracionGUI implements TreeSelectionListener {
 
@@ -41,14 +50,26 @@ public class ConfiguracionGUI implements TreeSelectionListener {
 	private GridBagLayout gridBagLayout = new GridBagLayout();
 	private GridBagConstraints gbc_tabbedPane = new GridBagConstraints();
 	private JPanel panelConf = new JPanel();
-	private JPanel panelDetails = new JPanel();
+	private JPanel panelIec61850 = new JPanel();
 	private JTree treeConf = new JTree();
 	private JScrollPane scrollPaneDetails = new JScrollPane();
 	private JScrollPane scrollPaneConf = new JScrollPane();
-	private JTextField inputDescripcion;
+	private JTextField inputIp;
 	private JLabel lblDescripcion = new JLabel();
+	private JLabel lblIp;
     private DriverInfo[] driverInfo;
     private int driver = 0;
+    private JTextField inputPort;
+    
+    private int tselLocal1 = 0;
+    private int tselLocal2 = 0;
+    private int tselRemote1 = 0;
+    private int tselRemote2 = 1;
+    private JTextField tselLocalField1 = new JTextField();
+    private JTextField tselLocalField2 = new JTextField();
+    private JTextField tselRemoteField1 = new JTextField();
+    private JTextField tselRemoteField2 = new JTextField();    
+    
 	
 	/**
 	 * Launch the application.
@@ -122,49 +143,128 @@ public class ConfiguracionGUI implements TreeSelectionListener {
 		
 		/* a la derecha, grafica la vista de detalles */
 		panelConf.add(scrollPaneDetails);
-		panelDetails.setAlignmentX(Component.LEFT_ALIGNMENT);
-		panelDetails.setVisible(false);
-		scrollPaneDetails.setViewportView(panelDetails);
-		GridBagLayout gbl_panelDetails = new GridBagLayout();
-		gbl_panelDetails.columnWidths = new int[]{207, 172, 0};
-		gbl_panelDetails.rowHeights = new int[]{19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-		gbl_panelDetails.columnWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
-		gbl_panelDetails.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		panelDetails.setLayout(gbl_panelDetails);
+		panelIec61850.setAlignmentX(Component.LEFT_ALIGNMENT);
+		panelIec61850.setVisible(false);
+		scrollPaneDetails.setViewportView(panelIec61850);
+		GridBagLayout gbl_panelIec61850 = new GridBagLayout();
+		gbl_panelIec61850.columnWidths = new int[]{207, 61, 55, 0};
+		gbl_panelIec61850.rowHeights = new int[]{19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		gbl_panelIec61850.columnWeights = new double[]{0.0, 1.0, 1.0, Double.MIN_VALUE};
+		gbl_panelIec61850.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		panelIec61850.setLayout(gbl_panelIec61850);
 		
 		JLabel lblPropiedades = new JLabel("Propiedades");
 		lblPropiedades.setFont(new Font("Dialog", Font.BOLD, 14));
 		GridBagConstraints gbc_lblPropiedades = new GridBagConstraints();
-		gbc_lblPropiedades.gridwidth = 2;
-		gbc_lblPropiedades.insets = new Insets(0, 0, 5, 0);
+		gbc_lblPropiedades.gridwidth = 3;
+		gbc_lblPropiedades.insets = new Insets(0, 0, 5, 5);
 		gbc_lblPropiedades.gridx = 0;
 		gbc_lblPropiedades.gridy = 0;
 		gbc_lblPropiedades.weightx = 1;
-		panelDetails.add(lblPropiedades, gbc_lblPropiedades);
+		panelIec61850.add(lblPropiedades, gbc_lblPropiedades);
 		
-		lblDescripcion = new JLabel("Descripcion del campo");
-		GridBagConstraints gbc_lblDescripcion = new GridBagConstraints();
-		gbc_lblDescripcion.anchor = GridBagConstraints.WEST;
-		gbc_lblDescripcion.insets = new Insets(0, 0, 5, 5);
-		gbc_lblDescripcion.gridx = 0;
-		gbc_lblDescripcion.gridy = 2;
-		panelDetails.add(lblDescripcion, gbc_lblDescripcion);
+		lblIp = new JLabel("Dirección IP");
+		GridBagConstraints gbc_lblIp = new GridBagConstraints();
+		gbc_lblIp.anchor = GridBagConstraints.WEST;
+		gbc_lblIp.insets = new Insets(0, 0, 5, 5);
+		gbc_lblIp.gridx = 0;
+		gbc_lblIp.gridy = 2;
+		panelIec61850.add(lblIp, gbc_lblIp);
 		
-		inputDescripcion = new JTextField();
-		GridBagConstraints gbc_inputDescripcion = new GridBagConstraints();
-		gbc_inputDescripcion.fill = GridBagConstraints.HORIZONTAL;
-		gbc_inputDescripcion.insets = new Insets(0, 0, 5, 0);
-		gbc_inputDescripcion.anchor = GridBagConstraints.NORTHWEST;
-		gbc_inputDescripcion.gridx = 1;
-		gbc_inputDescripcion.gridy = 2;
-		panelDetails.add(inputDescripcion, gbc_inputDescripcion);
-		inputDescripcion.setColumns(10);
+		inputIp = new JTextField("127.0.0.1");
+		GridBagConstraints gbc_inputIp = new GridBagConstraints();
+		gbc_inputIp.gridwidth = 2;
+		gbc_inputIp.fill = GridBagConstraints.HORIZONTAL;
+		gbc_inputIp.insets = new Insets(0, 0, 5, 5);
+		gbc_inputIp.anchor = GridBagConstraints.NORTHWEST;
+		gbc_inputIp.gridx = 1;
+		gbc_inputIp.gridy = 2;
+		panelIec61850.add(inputIp, gbc_inputIp);
+		inputIp.setColumns(10);
 		
-		JButton btnGuardarPropiedades = new JButton("Guardar");
-		GridBagConstraints gbc_btnGuardarPropiedades = new GridBagConstraints();
-		gbc_btnGuardarPropiedades.gridx = 1;
-		gbc_btnGuardarPropiedades.gridy = GridBagConstraints.SOUTHWEST;;
-		panelDetails.add(btnGuardarPropiedades, gbc_btnGuardarPropiedades);
+		JLabel lblPort = new JLabel("Puerto");
+		GridBagConstraints gbc_lblPort = new GridBagConstraints();
+		gbc_lblPort.anchor = GridBagConstraints.WEST;
+		gbc_lblPort.insets = new Insets(0, 0, 5, 5);
+		gbc_lblPort.gridx = 0;
+		gbc_lblPort.gridy = 3;
+		panelIec61850.add(lblPort, gbc_lblPort);
+		
+		inputPort = new JTextField("102");
+		GridBagConstraints gbc_inputPort = new GridBagConstraints();
+		gbc_inputPort.gridwidth = 2;
+		gbc_inputPort.insets = new Insets(0, 0, 5, 5);
+		gbc_inputPort.fill = GridBagConstraints.HORIZONTAL;
+		gbc_inputPort.gridx = 1;
+		gbc_inputPort.gridy = 3;
+		panelIec61850.add(inputPort, gbc_inputPort);
+		inputPort.setColumns(10);
+		
+		//--------------------------------------------------------------------
+		JLabel lblTsel = new JLabel("TSelLocal");
+		GridBagConstraints gbc_lblTsel = new GridBagConstraints();
+		gbc_lblTsel.anchor = GridBagConstraints.WEST;
+		gbc_lblTsel.insets = new Insets(0, 0, 5, 5);
+		gbc_lblTsel.gridx = 0;
+		gbc_lblTsel.gridy = 4;
+		panelIec61850.add(lblTsel, gbc_lblTsel);		
+		
+		
+	    tselLocalField1 = new JTextField(Integer.toString(tselLocal1));
+		GridBagConstraints gbc_inputTsel = new GridBagConstraints();
+		gbc_inputTsel.fill = GridBagConstraints.HORIZONTAL;
+		gbc_inputTsel.insets = new Insets(0, 0, 5, 5);
+		gbc_inputTsel.gridx = 1;
+		gbc_inputTsel.gridy = 4;
+		panelIec61850.add(tselLocalField1, gbc_inputTsel);
+		
+	    tselLocalField2 = new JTextField(Integer.toString(tselLocal2));
+		GridBagConstraints gbc_inputTsel2 = new GridBagConstraints();
+		gbc_inputTsel2.fill = GridBagConstraints.HORIZONTAL;
+		gbc_inputTsel2.insets = new Insets(0, 0, 5, 0);
+		gbc_inputTsel2.gridx = 2;
+		gbc_inputTsel2.gridy = 4;
+		panelIec61850.add(tselLocalField2, gbc_inputTsel2);
+	    
+		//--------------------------------------------------------------------
+		JLabel lblTselRem = new JLabel("TSelRemoto");
+		gbc_lblTsel = new GridBagConstraints();
+		gbc_lblTsel.anchor = GridBagConstraints.WEST;
+		gbc_lblTsel.insets = new Insets(0, 0, 5, 5);
+		gbc_lblTsel.gridx = 0;
+		gbc_lblTsel.gridy = 5;
+		panelIec61850.add(lblTselRem, gbc_lblTsel);		
+		
+		
+		tselRemoteField1 = new JTextField(Integer.toString(tselRemote1));
+		gbc_inputTsel = new GridBagConstraints();
+		gbc_inputTsel.fill = GridBagConstraints.HORIZONTAL;
+		gbc_inputTsel.insets = new Insets(0, 0, 5, 5);
+		gbc_inputTsel.gridx = 1;
+		gbc_inputTsel.gridy = 5;
+		panelIec61850.add(tselRemoteField1, gbc_inputTsel);
+		
+		tselRemoteField2 = new JTextField(Integer.toString(tselRemote2));
+		gbc_inputTsel2 = new GridBagConstraints();
+		gbc_inputTsel2.fill = GridBagConstraints.HORIZONTAL;
+		gbc_inputTsel2.insets = new Insets(0, 0, 5, 0);
+		gbc_inputTsel2.gridx = 2;
+		gbc_inputTsel2.gridy = 5;
+		panelIec61850.add(tselRemoteField2, gbc_inputTsel2);	    
+   		
+	    //--------------------------------------------------------------------
+		JButton btnAgregarIED = new JButton("Inspeccionar IED");
+		btnAgregarIED.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				iedInspections();
+			}
+		});
+		GridBagConstraints gbc_btnAgregarIED = new GridBagConstraints();
+		gbc_btnAgregarIED.gridwidth = 2;
+		gbc_btnAgregarIED.insets = new Insets(0, 0, 5, 5);
+		gbc_btnAgregarIED.gridx = 1;
+		gbc_btnAgregarIED.gridy = 6;		
+		panelIec61850.add(btnAgregarIED, gbc_btnAgregarIED);
  
 		/*
 		 * Inicio de vista de MAPEO
@@ -272,18 +372,68 @@ public class ConfiguracionGUI implements TreeSelectionListener {
 		
 		Object nodeInfo = node.getUserObject();
 		//Object nodeInfo = e.getNewLeadSelectionPath().getLastPathComponent();
-		inputDescripcion.setText(String.valueOf(nodeInfo.toString()));
+		//inputIp.setText(String.valueOf(nodeInfo.toString()));
 		
 		//borrador de metodo que mostrara ventana para el caso que se le de click al nodo iec61850 de configuracion
-		panelDetails.setVisible(false);
+		panelIec61850.setVisible(false);
 		for (DriverInfo driverInfo2 : driverInfo) {
 			if (driverInfo2.getIec61850())
 				if(Objects.equals(driverInfo2.toString(), nodeInfo)){
-					panelDetails.setVisible(true);
+					panelIec61850.setVisible(true);
 					break;
 				}
 		}
 		
 	}
+
+    private void iedInspections() {
+    	System.out.println("Funcion Inspeccionar. IP: "+inputIp.getText()+", Puerto: "+inputPort.getText());
+    	
+        ClientSap clientSap = new ClientSap();
+
+        InetAddress address = null;
+        try {
+            address = InetAddress.getByName(inputIp.getText());
+        } catch (UnknownHostException e1) {
+        	System.out.println("error de ip");
+            e1.printStackTrace();
+            return;
+        }
+
+        int remotePort = 10002;
+        try {
+            remotePort = Integer.parseInt(inputPort.getText());
+            if (remotePort < 1 || remotePort > 0xFFFF) {
+                throw new NumberFormatException("port must be in range [1, 65535]");
+            }
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return;
+        }  
+        
+/*        clientSap.setTSelLocal(settingsFrame.getTselLocal());
+        clientSap.setTSelRemote(settingsFrame.getTselRemote());
+
+        try {
+            association = clientSap.associate(address, remotePort, null, null);
+        } catch (IOException e) {
+            logger.error("Error connecting to server: " + e.getMessage());
+            return;
+        }
+
+        ServerModel serverModel;
+        try {
+            serverModel = association.retrieveModel();
+            association.getAllDataValues();
+        } catch (ServiceError e) {
+            logger.error("Service Error requesting model.", e);
+            association.close();
+            return;
+        } catch (IOException e) {
+            logger.error("Fatal IOException requesting model.", e);
+            return;
+        }
+*/        
+    }	
 	
 }
