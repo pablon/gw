@@ -4,9 +4,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -23,24 +21,20 @@ import javax.swing.tree.TreeSelectionModel;
 
 import com.conexion.Conexion;
 
-import java.awt.Dimension;
 import java.awt.Component;
 import javax.swing.JTextField;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.net.URL;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Objects;
 import java.awt.Font;
 import javax.swing.JButton;
 
-public class ConfiguracionGUI implements TreeSelectionListener, ActionListener {
+import configuracion.DriverInfo;
+
+public class ConfiguracionGUI implements TreeSelectionListener {
 
 	private JFrame frame;
 	private JTabbedPane tabbedPane = new JTabbedPane();
@@ -53,8 +47,8 @@ public class ConfiguracionGUI implements TreeSelectionListener, ActionListener {
 	private JScrollPane scrollPaneConf = new JScrollPane();
 	private JTextField inputDescripcion;
 	private JLabel lblDescripcion = new JLabel();
-
-	private DefaultMutableTreeNode selectedNode;	
+    private DriverInfo[] driverInfo;
+    private int driver = 0;
 	
 	/**
 	 * Launch the application.
@@ -124,13 +118,12 @@ public class ConfiguracionGUI implements TreeSelectionListener, ActionListener {
 		treeConf = new JTree(top);
 		treeConf.getSelectionModel().setSelectionMode (TreeSelectionModel.SINGLE_TREE_SELECTION);		
 		treeConf.addTreeSelectionListener(this);			//implementar valueChange
-	    treeConf.setComponentPopupMenu(getPopUpMenu()); //agrega el popup
-	    //treeConf.addMouseListener(getMouseListener());
 		scrollPaneConf.setViewportView(treeConf);
 		
 		/* a la derecha, grafica la vista de detalles */
 		panelConf.add(scrollPaneDetails);
 		panelDetails.setAlignmentX(Component.LEFT_ALIGNMENT);
+		panelDetails.setVisible(false);
 		scrollPaneDetails.setViewportView(panelDetails);
 		GridBagLayout gbl_panelDetails = new GridBagLayout();
 		gbl_panelDetails.columnWidths = new int[]{207, 172, 0};
@@ -212,7 +205,7 @@ public class ConfiguracionGUI implements TreeSelectionListener, ActionListener {
 	
 	/**
 	 * Crea la lista de opciones de drivers a configurar.
-	 * en una siguiente version se deberá levantar los datos de una BD
+	 * es utilizado para la construccion del arbol de drivers
 	 * @param top nodo raiz
 	 * @version 1.0
 	 */
@@ -220,20 +213,33 @@ public class ConfiguracionGUI implements TreeSelectionListener, ActionListener {
         DefaultMutableTreeNode subestacion;
         DefaultMutableTreeNode drivers;
         String driverNombre;
-
+        Boolean iec61850;
+        Boolean iec101;
+        Boolean ied;
+        Integer countDriver = 0;
+        
         subestacion = new DefaultMutableTreeNode("Subestación");
         top.add(subestacion);
      
         try {
 			Connection con = Conexion.crearConexion();
-			Statement st = con.createStatement();
+			Statement st = con.createStatement(	ResultSet.TYPE_SCROLL_INSENSITIVE, 
+					   							ResultSet.CONCUR_READ_ONLY);
 			ResultSet rs = st.executeQuery("SELECT * FROM drivers");
-			
+			rs.last();
+			countDriver = rs.getRow();
+			driverInfo = new DriverInfo [countDriver];
+			rs.beforeFirst();		
+
 			while (rs.next())
 			{
-		        //drivers = new DefaultMutableTreeNode(String.valueOf(rs.getString(2)));
 				driverNombre = new String(String.valueOf(rs.getString(2)));
-		        drivers = new DefaultMutableTreeNode(driverNombre, true);
+				iec61850 = Objects.equals(String.valueOf(rs.getString(4)), new String("t"));
+				iec101 = Objects.equals(String.valueOf(rs.getString(5)), new String("t"));
+				ied = Objects.equals(String.valueOf(rs.getString(6)), new String("t"));
+				driverInfo[driver] = new DriverInfo(driver, driverNombre, iec61850, iec101, ied);
+				driver++;
+		        drivers = new DefaultMutableTreeNode(driverNombre);
 		        
 		        subestacion.add(drivers);			   
 			} rs.close();
@@ -248,36 +254,13 @@ public class ConfiguracionGUI implements TreeSelectionListener, ActionListener {
 		}
         
     }
-    
-    /**
-     * Ejemplo de creacion de clase interna
-     * @author root
-     *
-     */
-    private class DriverInfo {
-        public String bookName;
-        public URL bookURL;
 
-        public DriverInfo(String book, String filename) {
-            bookName = book;
-            bookURL = getClass().getResource(filename);
-            if (bookURL == null) {
-                System.err.println("Couldn't find file: "
-                                   + filename);
-            }
-        }
-
-        public String toString() {
-            return bookName;
-        }
-    }    
 
     /**
      * Metodo que es llamado cada vez que se le da click al arbol de configuracion
      */
 	@Override
 	public void valueChanged(TreeSelectionEvent e) {
-		// TODO Auto-generated method stub
 		//e.getPath().toString()
 		//panelDetails.removeAll();
 		//panelDetails.repaint();
@@ -290,22 +273,17 @@ public class ConfiguracionGUI implements TreeSelectionListener, ActionListener {
 		Object nodeInfo = node.getUserObject();
 		//Object nodeInfo = e.getNewLeadSelectionPath().getLastPathComponent();
 		inputDescripcion.setText(String.valueOf(nodeInfo.toString()));
+		
+		//borrador de metodo que mostrara ventana para el caso que se le de click al nodo iec61850 de configuracion
+		panelDetails.setVisible(false);
+		for (DriverInfo driverInfo2 : driverInfo) {
+			if (driverInfo2.getIec61850())
+				if(Objects.equals(driverInfo2.toString(), nodeInfo)){
+					panelDetails.setVisible(true);
+					break;
+				}
+		}
+		
 	}
-	
-	private JPopupMenu getPopUpMenu() {
-	    JPopupMenu menu = new JPopupMenu();
-	    JMenuItem item = new JMenuItem("Agregar IED");
-	    item.addActionListener(this);
-	    menu.add(item);
-	    return menu;
-	}	
-	
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-        JMenuItem source = (JMenuItem)(e.getSource());
-        String s = "Action event detected. Event source: " + source.getText();
-        System.out.println(s);
-	}	
 	
 }
