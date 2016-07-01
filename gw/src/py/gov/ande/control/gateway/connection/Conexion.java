@@ -1,4 +1,4 @@
-package com.conexion;
+package py.gov.ande.control.gateway.connection;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

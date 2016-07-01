@@ -1,4 +1,4 @@
-package configuracion;
+package py.gov.ande.control.gateway.configuration;
 
 import java.awt.EventQueue;
 
@@ -23,7 +23,8 @@ import org.openmuc.openiec61850.ClientSap;
 import org.openmuc.openiec61850.ServerModel;
 import org.openmuc.openiec61850.ServiceError;
 
-import com.conexion.Conexion;
+import py.gov.ande.control.gateway.configuration.DriverInfo;
+import py.gov.ande.control.gateway.connection.Conexion;
 
 import java.awt.Component;
 import javax.swing.JTextField;
@@ -36,14 +37,13 @@ import java.util.Objects;
 import java.awt.Font;
 import javax.swing.JButton;
 
-import configuracion.DriverInfo;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.awt.event.ActionEvent;
 
-public class ConfiguracionGUI implements TreeSelectionListener {
+public class ConfigurationGUI implements TreeSelectionListener {
 
 	private JFrame frame;
 	private JTabbedPane tabbedPane = new JTabbedPane();
@@ -69,7 +69,7 @@ public class ConfiguracionGUI implements TreeSelectionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ConfiguracionGUI window = new ConfiguracionGUI();
+					ConfigurationGUI window = new ConfigurationGUI();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -81,7 +81,7 @@ public class ConfiguracionGUI implements TreeSelectionListener {
 	/**
 	 * Create the application.
 	 */
-	public ConfiguracionGUI() {
+	public ConfigurationGUI() {
 		initialize();
 	}
 

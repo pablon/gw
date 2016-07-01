@@ -1,4 +1,4 @@
-package configuracion;
+package py.gov.ande.control.gateway.configuration;
 
 import java.awt.Component;
 import java.awt.Font;
@@ -19,6 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.openmuc.openiec61850.BasicDataAttribute;
+import org.openmuc.openiec61850.BdaVisibleString;
 import org.openmuc.openiec61850.Brcb;
 import org.openmuc.openiec61850.ClientAssociation;
 import org.openmuc.openiec61850.ClientSap;
@@ -245,7 +246,7 @@ public class PanelIec61850 extends JPanel {
         System.out.println("Inicio de exploracion del servidor");
         //association.getAllDataValues();
         
-        Files file = new Files("getBasicDataAttributes","txt");
+/*        Files file = new Files("getBasicDataAttributes","txt");
         for (BasicDataAttribute bda : serverModel.getBasicDataAttributes()) {
             
         	//System.out.println("BDA: " + bda);
@@ -260,15 +261,28 @@ public class PanelIec61850 extends JPanel {
         //Files fileName = new Files("getName","txt", serverModel.getName().toString());
         //fileName.closeFile();
         
-        Files fileDataset = new Files("getDataset","txt");
+        //getServicesSupportedCalling()
+        System.out.println("serverModel.copy().getReference()"+serverModel.copy().getReference());		//Null
+        //System.out.println("serverModel.copy().getName()"+serverModel.copy().getName());				explota
+        System.out.println("serverModel.copy().getParent()"+serverModel.copy().getParent());			//Null
+                
+        Files fileDevice = new Files("fileDevice", "txt");
+        for (ModelNode modelNode : serverModel) {
+				fileDevice.writeLine(modelNode.toString());
+		}
+        fileDevice.closeFile();
+        
+        Files fileDataset = new Files("getDatasets","txt");							//UC_SSAACTRL/LLN0.ESTADOS
         for (DataSet modelNode : serverModel.getDataSets()) {
-			fileDataset.writeLine(modelNode.toString());
+			fileDataset.writeLine(modelNode.toString());							//lista de dataSets
 		}
         fileDataset.closeFile();
         
-        Files fileBrcbs = new Files("getBrcbs", "txt"); 
+        Files fileBrcbs = new Files("getBrcbs", "txt"); 							//lista de reportes+dataset
         for (Brcb modelNode : serverModel.getBrcbs()) {
-			fileBrcbs.writeLine(modelNode.toString());
+			//fileBrcbs.writeLine(modelNode.toString());							//UC_SSAACTRL/LLN0.brcbESTADOS2 [BR]
+			fileBrcbs.writeLine("reporte: "+modelNode.getReference().toString());	//UC_SSAACTRL/LLN0.brcbESTADOS2
+			fileBrcbs.writeLine("dataset: "+modelNode.getDatSet().getStringValue());//UC_SSAACTRL/LLN0$ESTADOS2
 		}
         fileBrcbs.closeFile();
         
@@ -281,16 +295,64 @@ public class PanelIec61850 extends JPanel {
         Files fileBrcbEstados2Child = new Files("fileBrcbEstados2Child", "txt");
         Brcb brcb = serverModel.getBrcb("UC_SSAACTRL/LLN0.brcbESTADOS2");
         for (ModelNode modelNode : brcb.getChildren()) {
-			fileBrcbEstados2Child.writeLine(modelNode.toString());
+			fileBrcbEstados2Child.writeLine(modelNode.toString());					//propiedades de un reporte
 		}
         fileBrcbEstados2Child.closeFile();
         
-        Files fileDatasetEstados2Child = new Files("fileDatasetEstados2Child", "txt");
+        Files fileDatasetEstados2Child = new Files("fileDatasetEstados2Child", "txt");	//lista de TAGs de un dataset
         DataSet dataset = serverModel.getDataSet("UC_SSAACTRL/LLN0.ESTADOS2");
         for (ModelNode modelNode : dataset) {
-        	fileDatasetEstados2Child.writeLine(modelNode.toString());
+        	//fileDatasetEstados2Child.writeLine(modelNode.toString());				//UC_SSAACTRL/GGIO2.Ind02 [ST]
+        	fileDatasetEstados2Child.writeLine(modelNode.getReference().toString());//UC_SSAACTRL/GGIO2.Ind02
 		}
         fileDatasetEstados2Child.closeFile();
+        
+        Files fileBrcbEstados2Dataset = new Files("fileBrcbEstados2Dataset", "txt");	//lista el dataset del reporte
+        Brcb brcb2 = serverModel.getBrcb("UC_SSAACTRL/LLN0.brcbESTADOS2");
+        BdaVisibleString modelNode = brcb2.getDatSet();
+        	//fileBrcbEstados2Dataset.writeLine(modelNode.getReference().toString());	//responde: UC_SSAACTRL/LLN0.brcbESTADOS2.DatSet
+        	//fileBrcbEstados2Dataset.writeLine(modelNode.getName());					//responde: DatSet
+        	fileBrcbEstados2Dataset.writeLine(modelNode.getStringValue());			//UC_SSAACTRL/LLN0$ESTADOS2  este es el indicado
+        fileBrcbEstados2Dataset.closeFile();
+        
+*/        
+        Files fileBrcbsDataset = new Files("fileBrcbsDatasetTag", "txt"); 							//lista de reportes+dataset+tag
+        fileBrcbsDataset.writeLine("LISTA DE BRCB, CON LA LISTA DE TAG ASOCIADO");
+        for (Brcb modelNodebrcbs : serverModel.getBrcbs()) {
+        	fileBrcbsDataset.writeLine("reporte: "+modelNodebrcbs.getReference().toString());	//UC_SSAACTRL/LLN0.brcbESTADOS2
+        	fileBrcbsDataset.writeLine("    dataset: "+modelNodebrcbs.getDatSet().getStringValue());//UC_SSAACTRL/LLN0$ESTADOS2
+
+        	String datasetOld = modelNodebrcbs.getDatSet().getStringValue();
+        	String datasetNew = datasetOld.replace('$', '.');
+        	
+        	fileBrcbsDataset.writeLine("    dataset: "+datasetNew);
+        	
+            DataSet dataset2 = serverModel.getDataSet(datasetNew);
+            for (ModelNode modelNode2 : dataset2) {
+            	fileBrcbsDataset.writeLine("        tag: " + modelNode2.getReference().toString());//UC_SSAACTRL/GGIO2.Ind02
+    		}
+		}
+        fileBrcbsDataset.closeFile();
+        
+        
+        Files fileUrcbsDataset = new Files("fileUrcbsDatasetTag", "txt"); 							//lista de reportes+dataset+tag
+        fileUrcbsDataset.writeLine("LISTA DE URCB, CON LA LISTA DE TAG ASOCIADO");
+        for (Urcb modelNodeUrcbs : serverModel.getUrcbs()) {
+        	fileUrcbsDataset.writeLine("reporte: "+modelNodeUrcbs.getReference().toString());	//UC_SSAACTRL/LLN0.brcbESTADOS2
+        	fileUrcbsDataset.writeLine("    dataset: "+modelNodeUrcbs.getDatSet().getStringValue());//UC_SSAACTRL/LLN0$ESTADOS2
+
+        	String datasetOld = modelNodeUrcbs.getDatSet().getStringValue();
+        	String datasetNew = datasetOld.replace('$', '.');
+        	
+        	fileUrcbsDataset.writeLine("    dataset: "+datasetNew);
+        	
+            DataSet dataset2 = serverModel.getDataSet(datasetNew);
+            for (ModelNode modelNode2 : dataset2) {
+            	fileUrcbsDataset.writeLine("        tag: " + modelNode2.getReference().toString());//UC_SSAACTRL/GGIO2.Ind02
+    		}
+		}
+        fileUrcbsDataset.closeFile();
+        
         
     }	
     

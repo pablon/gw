@@ -1,4 +1,4 @@
-package configuracion;
+package py.gov.ande.control.gateway.configuration;
 
 /**
  * Informacion de Drivers e IED que se utilizaran para listar el arbol de configuracion

@@ -1,4 +1,4 @@
-package configuracion;
+package py.gov.ande.control.gateway.configuration;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -10,6 +10,7 @@ import java.util.Calendar;
 public class Files {
 
 	private BufferedWriter writer = null;
+	private String file = "files/";
 	
 	public Files(){
         try {
@@ -18,9 +19,9 @@ public class Files {
             File logFile = new File(timeLog);
 
             // This will output the full path where the file will be written to...
-            System.out.println(logFile.getCanonicalPath());
+            System.out.println(file+logFile.getCanonicalPath());
 
-            writer = new BufferedWriter(new FileWriter(logFile));
+            writer = new BufferedWriter(new FileWriter(file+logFile));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -31,9 +32,9 @@ public class Files {
             String timeLog = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
             File logFile = new File(name+"-"+timeLog+"."+ext);
 
-            System.out.println(logFile.getCanonicalPath());
+            System.out.println(file+logFile.getCanonicalPath());
 
-            writer = new BufferedWriter(new FileWriter(logFile));
+            writer = new BufferedWriter(new FileWriter(file+logFile));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -44,9 +45,9 @@ public class Files {
             String timeLog = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
             File logFile = new File(name+"-"+timeLog+"."+ext);
 
-            System.out.println(logFile.getCanonicalPath());
+            System.out.println(file+logFile.getCanonicalPath());
 
-            writer = new BufferedWriter(new FileWriter(logFile));
+            writer = new BufferedWriter(new FileWriter(file+logFile));
             writer.write(text+ "\n");
         } catch (Exception e) {
             e.printStackTrace();
