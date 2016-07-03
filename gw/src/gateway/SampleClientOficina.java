@@ -233,14 +233,6 @@ public class SampleClientOficina  implements ClientEventListener {
             	bStVal = (BdaBoolean) child.getBasicDataAttributes().get(0);
             	System.out.println ( "bStVal: " + bStVal.getValue());
     
-/*                    List<BasicDataAttribute> subBasicDataAttributes = new LinkedList<BasicDataAttribute>();
-                    for (ModelNode child1 : child.values()) {
-                        subBasicDataAttributes.addAll(child1.getBasicDataAttributes());
-                    }
-                    return subBasicDataAttributes;*/
-            	
-            	
-            	
             	//BOOLEAN
             	System.out.println ( "child.getBasicDataAttributes().get(0).getBasicType(): " + child.getBasicDataAttributes().get(0).getBasicType() );
             	System.out.println ( "child.getBasicDataAttributes().get(0).getName(): " + child.getBasicDataAttributes().get(0).getName());//stVal
@@ -249,6 +241,10 @@ public class SampleClientOficina  implements ClientEventListener {
             	System.out.println ( "child.getBasicDataAttributes().get(0).getFc(): " + child.getBasicDataAttributes().get(0).getFc() );	//ST
             	System.out.println ( "child.getBasicDataAttributes().get(0).getParent(): " + child.getBasicDataAttributes().get(0).getParent() );//UC_SSAACTRL/GGIO2.Ind02 [ST]
             	System.out.println ( "child.getBasicDataAttributes().get(0).getReference(): " + child.getBasicDataAttributes().get(0).getReference() );//UC_SSAACTRL/GGIO2.Ind02.stVal
+            	
+            	for (ModelNode modelNode : child.getBasicDataAttributes()) {
+					System.out.println("forEach child.getBasicDataAttributes: "+modelNode);	// stval, quality y tiempo
+				}
             }
             shiftNum++;
         }

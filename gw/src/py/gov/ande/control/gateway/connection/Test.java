@@ -8,7 +8,7 @@ public class Test {
 
 	public static void main(String[] args) {
 		try {
-			Connection con = Conexion.crearConexion();
+			Connection con = Connections.crearConexion();
 			Statement st = con.createStatement();
 			ResultSet rs = st.executeQuery("SELECT * FROM drivers");
 			

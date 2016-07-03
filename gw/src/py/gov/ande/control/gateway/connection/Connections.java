@@ -1,10 +1,11 @@
 package py.gov.ande.control.gateway.connection;
 
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class Conexion {
+public class Connections {
 
 	static final String URL = "jdbc:postgresql://localhost:5432/gateway";
 	static final String USER = "pnsql";

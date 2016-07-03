@@ -24,7 +24,7 @@ import org.openmuc.openiec61850.ServerModel;
 import org.openmuc.openiec61850.ServiceError;
 
 import py.gov.ande.control.gateway.configuration.DriverInfo;
-import py.gov.ande.control.gateway.connection.Conexion;
+import py.gov.ande.control.gateway.connection.Connections;
 
 import java.awt.Component;
 import javax.swing.JTextField;
@@ -189,7 +189,7 @@ public class ConfigurationGUI implements TreeSelectionListener {
         top.add(subestacion);
      
         try {
-			Connection con = Conexion.crearConexion();
+			Connection con = Connections.crearConexion();
 			Statement st = con.createStatement(	ResultSet.TYPE_SCROLL_INSENSITIVE, 
 					   							ResultSet.CONCUR_READ_ONLY);
 			ResultSet rs = st.executeQuery("SELECT * FROM drivers");

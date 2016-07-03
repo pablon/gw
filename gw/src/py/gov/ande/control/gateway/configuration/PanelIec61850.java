@@ -15,6 +15,7 @@ import java.net.UnknownHostException;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -22,20 +23,20 @@ import org.openmuc.openiec61850.BasicDataAttribute;
 import org.openmuc.openiec61850.BdaVisibleString;
 import org.openmuc.openiec61850.Brcb;
 import org.openmuc.openiec61850.ClientAssociation;
+import org.openmuc.openiec61850.ClientEventListener;
 import org.openmuc.openiec61850.ClientSap;
 import org.openmuc.openiec61850.DataSet;
 import org.openmuc.openiec61850.ModelNode;
+import org.openmuc.openiec61850.Report;
 import org.openmuc.openiec61850.ServerModel;
 import org.openmuc.openiec61850.ServiceError;
 import org.openmuc.openiec61850.Urcb;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import gateway.SampleClientOficina;
-
 //import org.openmuc.openiec61850.ClientSap;
 
-public class PanelIec61850 extends JPanel {
+public class PanelIec61850 extends JPanel implements ClientEventListener {
 
     /**
 	 * 
@@ -205,11 +206,13 @@ public class PanelIec61850 extends JPanel {
             address = InetAddress.getByName(inputIp.getText());
         } catch (UnknownHostException e1) {
         	System.out.println("error de ip");
+        	JOptionPane.showMessageDialog(null,"Error: Verifique que la dirección ip sea valida",
+        		      "Advertencia",JOptionPane.WARNING_MESSAGE);
             e1.printStackTrace();
             return;
         }
 
-        int remotePort = 10002;
+        int remotePort = 102;
         try {
             remotePort = Integer.parseInt(inputPort.getText());
             if (remotePort < 1 || remotePort > 0xFFFF) {
@@ -223,8 +226,10 @@ public class PanelIec61850 extends JPanel {
         clientSap.setTSelLocal(getTselLocal());
         clientSap.setTSelRemote(getTselRemote());
 
+        PanelIec61850 eventHandler = new PanelIec61850();
+        
         try {
-            association = clientSap.associate(address, remotePort, null, null);
+            association = clientSap.associate(address, remotePort, null, eventHandler);
         } catch (IOException e) {
             logger.error("Error connecting to server: " + e.getMessage());
             return;
@@ -244,7 +249,17 @@ public class PanelIec61850 extends JPanel {
         }
         
         System.out.println("Inicio de exploracion del servidor");
-        //association.getAllDataValues();
+        try {
+			association.getAllDataValues();
+		} catch (ServiceError e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+        //createIED(address, remotePort);
+
+        
+        //System.out.println("texto: " + serverModel.getBrcb("UC_SSAACTRL/LLN0.brcbESTADOS2").getParent().getParent());	// UC_SSAACTRL
         
 /*        Files file = new Files("getBasicDataAttributes","txt");
         for (BasicDataAttribute bda : serverModel.getBasicDataAttributes()) {
@@ -254,13 +269,13 @@ public class PanelIec61850 extends JPanel {
         }   
         file.closeFile();
         System.out.println("FIN DE EXPLORACION y del archivo");
-        
+*/        
         //Files fileReference = new Files("getReference","txt", serverModel.getReference().toString());
         //fileReference.closeFile();
         
-        //Files fileName = new Files("getName","txt", serverModel.getName().toString());
+        //Files fileName = new Files("getName","txt", serverModel.getName());
         //fileName.closeFile();
-        
+/*        
         //getServicesSupportedCalling()
         System.out.println("serverModel.copy().getReference()"+serverModel.copy().getReference());		//Null
         //System.out.println("serverModel.copy().getName()"+serverModel.copy().getName());				explota
@@ -316,7 +331,7 @@ public class PanelIec61850 extends JPanel {
         fileBrcbEstados2Dataset.closeFile();
         
 */        
-        Files fileBrcbsDataset = new Files("fileBrcbsDatasetTag", "txt"); 							//lista de reportes+dataset+tag
+/*        Files fileBrcbsDataset = new Files("fileBrcbsDatasetTag", "txt"); 							//lista de reportes+dataset+tag
         fileBrcbsDataset.writeLine("LISTA DE BRCB, CON LA LISTA DE TAG ASOCIADO");
         for (Brcb modelNodebrcbs : serverModel.getBrcbs()) {
         	fileBrcbsDataset.writeLine("reporte: "+modelNodebrcbs.getReference().toString());	//UC_SSAACTRL/LLN0.brcbESTADOS2
@@ -352,7 +367,7 @@ public class PanelIec61850 extends JPanel {
     		}
 		}
         fileUrcbsDataset.closeFile();
-        
+*/        
         
     }	
     
@@ -380,6 +395,31 @@ public class PanelIec61850 extends JPanel {
         }
         return value;
     }
+
+	@Override
+	public void newReport(Report report) {
+		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void associationClosed(IOException e) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	/**
+	 *  Metodo que crea un iea
+	 *  name
+	 *  buffer_time
+     *	ip_address
+     *	port_address
+     *	connection_test (ms)
+	 */
+/*	private void createIED(InetAddress address, int remotePort){
+		Ied ied = new Ied();
+		//ied.crearIed(address, remotePort);
+	}
+*/		
     
 }

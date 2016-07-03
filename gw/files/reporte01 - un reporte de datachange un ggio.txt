@@ -1,0 +1,63 @@
+SLF4J: Class path contains multiple SLF4J bindings.
+SLF4J: Found binding in [jar:file:/usr/share/java/slf4j-jdk14.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: Found binding in [jar:file:/home/pn/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-simple/1.6.1/58e59bfb3e247097b8122243b3bfe0049c8cfae8/slf4j-simple-1.6.1.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: Found binding in [jar:file:/home/pn/.gradle/caches/modules-2/files-2.1/ch.qos.logback/logback-classic/1.1.6/665e3de72f19ec66ac67d82612d7b8e6b3de3cd0/logback-classic-1.1.6.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+SLF4J: Actual binding is of type [org.slf4j.impl.JDK14LoggerFactory]
+dentro de la clase gateway.SampleClient
+jul 02, 2016 2:03:37 PM gateway.SampleClientOficina main
+INFORMACIÓN: Attempting to connect to server 10.2.28.231 on port 102
+jul 02, 2016 2:03:37 PM gateway.SampleClientOficina main
+INFORMACIÓN: Conectado con exito
+jul 02, 2016 2:03:40 PM gateway.SampleClientOficina main
+INFORMACIÓN: Se disparo un GetDirectory y un GetDefintion con exito
+Inicio de exploracion del servidor
+jul 02, 2016 2:03:49 PM gateway.SampleClientOficina main
+INFORMACIÓN: brcb name: brcbESTADOS
+jul 02, 2016 2:03:49 PM gateway.SampleClientOficina main
+INFORMACIÓN: RptId: UC_SSAACTRL/LLN0.brcbESTADOS.RptID: UC_SSAACTRL/LLN0$BR$brcbESTADOS
+jul 02, 2016 2:03:49 PM gateway.SampleClientOficina main
+INFORMACIÓN: RptEna: false
+jul 02, 2016 2:03:49 PM gateway.SampleClientOficina main
+INFORMACIÓN: Rpt.getTrgOps isIntegrity: false
+jul 02, 2016 2:03:49 PM gateway.SampleClientOficina main
+INFORMACIÓN: getIntgPd: UC_SSAACTRL/LLN0.brcbESTADOS.IntgPd: 2000
+jul 02, 2016 2:03:49 PM gateway.SampleClientOficina main
+INFORMACIÓN: brcb.getTrgOps().isGeneralInterrogation: true
+jul 02, 2016 2:03:49 PM gateway.SampleClientOficina main
+INFORMACIÓN: RptEna: true
+jul 02, 2016 2:03:49 PM gateway.SampleClientOficina main
+INFORMACIÓN: Rpt.getTrgOps isIntegrity: true
+jul 02, 2016 2:03:49 PM gateway.SampleClientOficina main
+INFORMACIÓN: getIntgPd: UC_SSAACTRL/LLN0.brcbESTADOS.IntgPd: 2000
+inicio de interrogacion general
+got REPORT with dataset ref: UC_SSAACTRL/LLN0.ESTADOS
+isDataChange: 
+getRptId: UC_SSAACTRL/LLN0$BR$brcbESTADOS
+getTimeOfEntry: none: 1025719551189
+getSqNum: 4
+getConfRev: 11
+getInclusionBitString: [B@6e43cf88
+getDataSetRef(): UC_SSAACTRL/LLN0$ESTADOS
+getReferenceStr(): UC_SSAACTRL/LLN0.ESTADOS
+getEntryId(): none: [0, 0, 22, 114, 0, 0, 0, 0]
+prueba de dataSet:
+child.getName(): Ind03
+child.getReference():UC_SSAACTRL/GGIO2.Ind03
+child.getBasicDataAttributes(): [UC_SSAACTRL/GGIO2.Ind03.stVal: false, UC_SSAACTRL/GGIO2.Ind03.q: 0x0, 0x0, UC_SSAACTRL/GGIO2.Ind03.t: Sat Jul 02 14:05:50 PYT 2016]
+child.getBasicDataAttributes().get(0): UC_SSAACTRL/GGIO2.Ind03.stVal: false
+bStVal: false
+child.getBasicDataAttributes().get(0).getBasicType(): BOOLEAN
+child.getBasicDataAttributes().get(0).getName(): stVal
+child.getBasicDataAttributes().get(0).getSAddr(): null
+child.getBasicDataAttributes().get(0).getClass(): class org.openmuc.openiec61850.BdaBoolean
+child.getBasicDataAttributes().get(0).getFc(): ST
+child.getBasicDataAttributes().get(0).getParent(): UC_SSAACTRL/GGIO2.Ind03 [ST]
+child.getBasicDataAttributes().get(0).getReference(): UC_SSAACTRL/GGIO2.Ind03.stVal
+forEach child.getBasicDataAttributes: UC_SSAACTRL/GGIO2.Ind03.stVal: false
+forEach child.getBasicDataAttributes: UC_SSAACTRL/GGIO2.Ind03.q: 0x0, 0x0
+forEach child.getBasicDataAttributes: UC_SSAACTRL/GGIO2.Ind03.t: Sat Jul 02 14:05:50 PYT 2016
+fin del MAIN
+jul 02, 2016 2:04:09 PM gateway.SampleClientOficina associationClosed
+INFORMACIÓN: Association was closed
+
