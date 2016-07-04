@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 03/07/2016 08:06:54 PM by Hibernate Tools 5.1.0.Alpha1 -->
+<hibernate-mapping>
+    <class name="py.gov.ande.control.gateway.model.InformationType" table="information_type" schema="public" optimistic-lock="version">
+        <comment>tipo de informacion del tag como ser SP o DP</comment>
+        <id name="id" type="int">
+            <column name="id" />
+            <generator class="assigned" />
+        </id>
+        <property name="description" type="string">
+            <column name="description" not-null="true" unique="true" />
+        </property>
+    </class>
+</hibernate-mapping>

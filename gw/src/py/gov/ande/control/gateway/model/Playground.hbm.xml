@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 03/07/2016 08:06:54 PM by Hibernate Tools 5.1.0.Alpha1 -->
+<hibernate-mapping>
+    <class name="py.gov.ande.control.gateway.model.Playground" table="playground" schema="public" optimistic-lock="version">
+        <id name="equipId" type="int">
+            <column name="equip_id" />
+            <generator class="assigned" />
+        </id>
+        <property name="type" type="string">
+            <column name="type" length="50" not-null="true" />
+        </property>
+        <property name="color" type="string">
+            <column name="color" length="25" not-null="true" />
+        </property>
+        <property name="location" type="string">
+            <column name="location" length="25" />
+        </property>
+        <property name="installDate" type="date">
+            <column name="install_date" length="13" />
+        </property>
+    </class>
+</hibernate-mapping>

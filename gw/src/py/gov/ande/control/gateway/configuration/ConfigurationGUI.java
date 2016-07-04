@@ -16,32 +16,24 @@ import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
-import org.openmuc.openiec61850.ClientSap;
-import org.openmuc.openiec61850.ServerModel;
-import org.openmuc.openiec61850.ServiceError;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 
 import py.gov.ande.control.gateway.configuration.DriverInfo;
-import py.gov.ande.control.gateway.connection.Connections;
+import py.gov.ande.control.gateway.model.Drivers;
+import py.gov.ande.control.gateway.model.DriversManager;
+import py.gov.ande.control.gateway.util.Connections;
+import py.gov.ande.control.gateway.util.GenericManager;
 
-import java.awt.Component;
-import javax.swing.JTextField;
-import java.awt.Insets;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 import java.util.Objects;
-import java.awt.Font;
-import javax.swing.JButton;
 
-import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.awt.event.ActionEvent;
 
 public class ConfigurationGUI implements TreeSelectionListener {
 
@@ -61,6 +53,7 @@ public class ConfigurationGUI implements TreeSelectionListener {
 
     
     private final PanelIec61850 panelIec61850 = new PanelIec61850();
+    private static SessionFactory factory; 
 	
 	/**
 	 * Launch the application.
@@ -187,8 +180,16 @@ public class ConfigurationGUI implements TreeSelectionListener {
         
         subestacion = new DefaultMutableTreeNode("Subestación");
         top.add(subestacion);
-     
-        try {
+        
+        //DriversManager dm = new DriversManager();
+        List<Drivers> driverList = GenericManager.getAllObjects(Drivers.class, Order.asc("id"));
+
+        for (Drivers drivers2 : driverList) {
+	        drivers = new DefaultMutableTreeNode(drivers2.getDescription());
+	        subestacion.add(drivers);
+		}
+        
+/*        try {
 			Connection con = Connections.crearConexion();
 			Statement st = con.createStatement(	ResultSet.TYPE_SCROLL_INSENSITIVE, 
 					   							ResultSet.CONCUR_READ_ONLY);
@@ -206,9 +207,9 @@ public class ConfigurationGUI implements TreeSelectionListener {
 				ied = Objects.equals(String.valueOf(rs.getString(6)), new String("t"));
 				driverInfo[driver] = new DriverInfo(driver, driverNombre, iec61850, iec101, ied);
 				driver++;
-		        drivers = new DefaultMutableTreeNode(driverNombre);
+		        //drivers = new DefaultMutableTreeNode(driverNombre);
 		        
-		        subestacion.add(drivers);			   
+		        //subestacion.add(drivers);			   
 			} rs.close();
 			st.close();
 			
@@ -218,7 +219,7 @@ public class ConfigurationGUI implements TreeSelectionListener {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
         
     }
 
@@ -243,13 +244,24 @@ public class ConfigurationGUI implements TreeSelectionListener {
 		
 		//borrador de metodo que mostrara ventana para el caso que se le de click al nodo iec61850 de configuracion
 		panelIec61850.setVisible(false);
-		for (DriverInfo driverInfo2 : driverInfo) {
+		
+		List<Drivers> driverListx = GenericManager.getAllObjects(Drivers.class, Order.asc("id"));
+		for (Drivers drivers2x : driverListx) {
+			if(drivers2x.getIec61850() == true){
+				if(Objects.equals(drivers2x.getDescription(), nodeInfo)){
+					panelIec61850.setVisible(true);
+					break;
+				}
+			}
+		}
+		
+/*		for (DriverInfo driverInfo2 : driverInfo) {
 			if (driverInfo2.getIec61850())
 				if(Objects.equals(driverInfo2.toString(), nodeInfo)){
 					panelIec61850.setVisible(true);
 					break;
 				}
-		}
+		}*/
 		
 	}
 
