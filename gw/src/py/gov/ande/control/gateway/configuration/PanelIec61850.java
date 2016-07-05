@@ -19,6 +19,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 import org.openmuc.openiec61850.BasicDataAttribute;
 import org.openmuc.openiec61850.BdaVisibleString;
 import org.openmuc.openiec61850.Brcb;
@@ -34,13 +37,15 @@ import org.openmuc.openiec61850.Urcb;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import py.gov.ande.control.gateway.model.Drivers;
+import py.gov.ande.control.gateway.model.Ied;
+import py.gov.ande.control.gateway.model.IedHome;
+import py.gov.ande.control.gateway.util.GenericManager;
+
 //import org.openmuc.openiec61850.ClientSap;
 
 public class PanelIec61850 extends JPanel implements ClientEventListener {
 
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = -386731185449901198L;
 	private int tselLocal1 = 0;
     private int tselLocal2 = 0;
@@ -50,15 +55,14 @@ public class PanelIec61850 extends JPanel implements ClientEventListener {
     private JTextField tselLocalField2 = new JTextField();
     private JTextField tselRemoteField1 = new JTextField();
     private JTextField tselRemoteField2 = new JTextField();  	
-
 	private JLabel lblIp;
 	private JTextField inputIp;
     private JTextField inputPort;
     JButton btnAgregarIED = new JButton();
     
     private ClientAssociation association;
-    //PanelIec61850 eventHandler = new PanelIec61850();
     private static final Logger logger = LoggerFactory.getLogger(PanelIec61850.class);
+    private static SessionFactory sessionFactory;
     
 	/**
 	 * Create the panel.
@@ -182,7 +186,6 @@ public class PanelIec61850 extends JPanel implements ClientEventListener {
 				try {
 					iedInspections();
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
@@ -254,121 +257,30 @@ public class PanelIec61850 extends JPanel implements ClientEventListener {
 		} catch (ServiceError e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return;
 		}
 
-        //createIED(address, remotePort);
-
-        
-        //System.out.println("texto: " + serverModel.getBrcb("UC_SSAACTRL/LLN0.brcbESTADOS2").getParent().getParent());	// UC_SSAACTRL
-        
-/*        Files file = new Files("getBasicDataAttributes","txt");
-        for (BasicDataAttribute bda : serverModel.getBasicDataAttributes()) {
-            
-        	//System.out.println("BDA: " + bda);
-        	file.writeLine(bda.toString());
-        }   
-        file.closeFile();
-        System.out.println("FIN DE EXPLORACION y del archivo");
-*/        
-        //Files fileReference = new Files("getReference","txt", serverModel.getReference().toString());
-        //fileReference.closeFile();
-        
-        //Files fileName = new Files("getName","txt", serverModel.getName());
-        //fileName.closeFile();
-/*        
-        //getServicesSupportedCalling()
-        System.out.println("serverModel.copy().getReference()"+serverModel.copy().getReference());		//Null
-        //System.out.println("serverModel.copy().getName()"+serverModel.copy().getName());				explota
-        System.out.println("serverModel.copy().getParent()"+serverModel.copy().getParent());			//Null
-                
-        Files fileDevice = new Files("fileDevice", "txt");
-        for (ModelNode modelNode : serverModel) {
-				fileDevice.writeLine(modelNode.toString());
-		}
-        fileDevice.closeFile();
-        
-        Files fileDataset = new Files("getDatasets","txt");							//UC_SSAACTRL/LLN0.ESTADOS
-        for (DataSet modelNode : serverModel.getDataSets()) {
-			fileDataset.writeLine(modelNode.toString());							//lista de dataSets
-		}
-        fileDataset.closeFile();
-        
-        Files fileBrcbs = new Files("getBrcbs", "txt"); 							//lista de reportes+dataset
-        for (Brcb modelNode : serverModel.getBrcbs()) {
-			//fileBrcbs.writeLine(modelNode.toString());							//UC_SSAACTRL/LLN0.brcbESTADOS2 [BR]
-			fileBrcbs.writeLine("reporte: "+modelNode.getReference().toString());	//UC_SSAACTRL/LLN0.brcbESTADOS2
-			fileBrcbs.writeLine("dataset: "+modelNode.getDatSet().getStringValue());//UC_SSAACTRL/LLN0$ESTADOS2
-		}
-        fileBrcbs.closeFile();
-        
-        Files fileUrcbs = new Files("getUrcbs", "txt"); 
-        for (Urcb modelNode : serverModel.getUrcbs()) {
-			fileUrcbs.writeLine(modelNode.toString());
-		}
-        fileUrcbs.closeFile();
-        
-        Files fileBrcbEstados2Child = new Files("fileBrcbEstados2Child", "txt");
-        Brcb brcb = serverModel.getBrcb("UC_SSAACTRL/LLN0.brcbESTADOS2");
-        for (ModelNode modelNode : brcb.getChildren()) {
-			fileBrcbEstados2Child.writeLine(modelNode.toString());					//propiedades de un reporte
-		}
-        fileBrcbEstados2Child.closeFile();
-        
-        Files fileDatasetEstados2Child = new Files("fileDatasetEstados2Child", "txt");	//lista de TAGs de un dataset
-        DataSet dataset = serverModel.getDataSet("UC_SSAACTRL/LLN0.ESTADOS2");
-        for (ModelNode modelNode : dataset) {
-        	//fileDatasetEstados2Child.writeLine(modelNode.toString());				//UC_SSAACTRL/GGIO2.Ind02 [ST]
-        	fileDatasetEstados2Child.writeLine(modelNode.getReference().toString());//UC_SSAACTRL/GGIO2.Ind02
-		}
-        fileDatasetEstados2Child.closeFile();
-        
-        Files fileBrcbEstados2Dataset = new Files("fileBrcbEstados2Dataset", "txt");	//lista el dataset del reporte
-        Brcb brcb2 = serverModel.getBrcb("UC_SSAACTRL/LLN0.brcbESTADOS2");
-        BdaVisibleString modelNode = brcb2.getDatSet();
-        	//fileBrcbEstados2Dataset.writeLine(modelNode.getReference().toString());	//responde: UC_SSAACTRL/LLN0.brcbESTADOS2.DatSet
-        	//fileBrcbEstados2Dataset.writeLine(modelNode.getName());					//responde: DatSet
-        	fileBrcbEstados2Dataset.writeLine(modelNode.getStringValue());			//UC_SSAACTRL/LLN0$ESTADOS2  este es el indicado
-        fileBrcbEstados2Dataset.closeFile();
-        
-*/        
-/*        Files fileBrcbsDataset = new Files("fileBrcbsDatasetTag", "txt"); 							//lista de reportes+dataset+tag
-        fileBrcbsDataset.writeLine("LISTA DE BRCB, CON LA LISTA DE TAG ASOCIADO");
-        for (Brcb modelNodebrcbs : serverModel.getBrcbs()) {
-        	fileBrcbsDataset.writeLine("reporte: "+modelNodebrcbs.getReference().toString());	//UC_SSAACTRL/LLN0.brcbESTADOS2
-        	fileBrcbsDataset.writeLine("    dataset: "+modelNodebrcbs.getDatSet().getStringValue());//UC_SSAACTRL/LLN0$ESTADOS2
-
-        	String datasetOld = modelNodebrcbs.getDatSet().getStringValue();
-        	String datasetNew = datasetOld.replace('$', '.');
+        try {
+        	createIED(address, remotePort);	
+        	JOptionPane.showMessageDialog(null,"Información: Se a guadado los datos del ied en la Base de datos",
+        		      "Información",JOptionPane.INFORMATION_MESSAGE);
         	
-        	fileBrcbsDataset.writeLine("    dataset: "+datasetNew);
-        	
-            DataSet dataset2 = serverModel.getDataSet(datasetNew);
-            for (ModelNode modelNode2 : dataset2) {
-            	fileBrcbsDataset.writeLine("        tag: " + modelNode2.getReference().toString());//UC_SSAACTRL/GGIO2.Ind02
-    		}
+        	/**
+        	 * redibujar 
+        	 */
+		} catch (Exception e) {
+        	JOptionPane.showMessageDialog(null,"Error: No se a podido guardar los datos del ied en la Base de datos",
+      		      "Advertencia",JOptionPane.WARNING_MESSAGE);
 		}
-        fileBrcbsDataset.closeFile();
         
-        
-        Files fileUrcbsDataset = new Files("fileUrcbsDatasetTag", "txt"); 							//lista de reportes+dataset+tag
-        fileUrcbsDataset.writeLine("LISTA DE URCB, CON LA LISTA DE TAG ASOCIADO");
-        for (Urcb modelNodeUrcbs : serverModel.getUrcbs()) {
-        	fileUrcbsDataset.writeLine("reporte: "+modelNodeUrcbs.getReference().toString());	//UC_SSAACTRL/LLN0.brcbESTADOS2
-        	fileUrcbsDataset.writeLine("    dataset: "+modelNodeUrcbs.getDatSet().getStringValue());//UC_SSAACTRL/LLN0$ESTADOS2
-
-        	String datasetOld = modelNodeUrcbs.getDatSet().getStringValue();
-        	String datasetNew = datasetOld.replace('$', '.');
-        	
-        	fileUrcbsDataset.writeLine("    dataset: "+datasetNew);
-        	
-            DataSet dataset2 = serverModel.getDataSet(datasetNew);
-            for (ModelNode modelNode2 : dataset2) {
-            	fileUrcbsDataset.writeLine("        tag: " + modelNode2.getReference().toString());//UC_SSAACTRL/GGIO2.Ind02
-    		}
+        try {
+        	guardarDatosDelIedEnArchivos(serverModel);
+        	JOptionPane.showMessageDialog(null,"Información: Se a guadado los datos del ied en los archivos",
+      		      "Información",JOptionPane.INFORMATION_MESSAGE);
+		} catch (Exception e) {
+        	JOptionPane.showMessageDialog(null,"Error: No se a podido guardar los datos del ied en los archivos",
+        		      "Advertencia",JOptionPane.WARNING_MESSAGE);
 		}
-        fileUrcbsDataset.closeFile();
-*/        
-        
     }	
     
     public byte[] getTselLocal() {
@@ -409,17 +321,170 @@ public class PanelIec61850 extends JPanel implements ClientEventListener {
 	}
 	
 	/**
-	 *  Metodo que crea un iea
-	 *  name
-	 *  buffer_time
-     *	ip_address
-     *	port_address
-     *	connection_test (ms)
+	 * Crea un nuevo ied
+	 * como de momento no se logra obtener el nombre del ied, se coloca uno provisorio
+	 * @param address
+	 * @param remotePort
 	 */
-/*	private void createIED(InetAddress address, int remotePort){
+	private void createIED(InetAddress address, int remotePort){
+		logger.info("metodo createIED. Address: "+address.getHostAddress()+", port: "+remotePort);
+		String name = "Nombre Provisorio";
+		
+		Integer i;
+		
+		i = GenericManager.getCountObjets("From Ied"); //hasta saber porque no funciona el auto incremental
+		
 		Ied ied = new Ied();
-		//ied.crearIed(address, remotePort);
+		ied.setId(++i);
+		ied.setIpAddress(address.getHostAddress().toString());
+		ied.setPortAddress(remotePort);
+		ied.setName(name);
+
+		try {
+			GenericManager.saveObject(ied);
+			logger.info("luego del metodo generic manager Save()");
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("Error, luego del metodo generic manager Save()");
+		}
+
+		i = GenericManager.getCountObjets("From Drivers"); //hasta saber porque no funciona el auto incremental
+		
+		Drivers driver = new Drivers();
+		driver.setId(++i);
+		driver.setDescription(name);
+		driver.setIec101(false);
+		driver.setIec61850(false);
+		driver.setIed(true);
+		try {
+			GenericManager.saveObject(driver);
+			logger.info("luego del metodo generic manager Save()");
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("Error, luego del metodo generic manager Save()");
+		}
 	}
-*/		
-    
+	
+	/**
+	 * metodo provisorio que explora un ied y guardar  en archivos sus propiedades
+	 * @param serverModel
+	 * @throws IOException
+	 */
+	private void guardarDatosDelIedEnArchivos(ServerModel serverModel) throws IOException{
+        Files file = new Files("getBasicDataAttributes","txt");
+		for (BasicDataAttribute bda : serverModel.getBasicDataAttributes()) {
+			file.writeLine(bda.toString());
+		}   
+			file.closeFile();
+
+		System.out.println("FIN DE EXPLORACION y del archivo");
+		
+		/*Files fileReference = new Files("Reference","txt", serverModel.getReference().toString());
+			fileReference.closeFile();*/
+		
+		Files fileDevice = new Files("Device", "txt");
+		for (ModelNode modelNode : serverModel) {
+				fileDevice.writeLine(modelNode.toString());
+		}
+		fileDevice.closeFile();
+
+		Files fileDataset = new Files("Datasets","txt");							//UC_SSAACTRL/LLN0.ESTADOS
+		for (DataSet modelNode : serverModel.getDataSets()) {
+			fileDataset.writeLine(modelNode.toString());							//lista de dataSets
+		}
+		fileDataset.closeFile();
+
+		Files fileBrcbs = new Files("Brcbs", "txt"); 							//lista de reportes+dataset
+		for (Brcb modelNode : serverModel.getBrcbs()) {
+			//fileBrcbs.writeLine(modelNode.toString());							//UC_SSAACTRL/LLN0.brcbESTADOS2 [BR]
+			fileBrcbs.writeLine("reporte: "+modelNode.getReference().toString());	//UC_SSAACTRL/LLN0.brcbESTADOS2
+			fileBrcbs.writeLine("dataset: "+modelNode.getDatSet().getStringValue());//UC_SSAACTRL/LLN0$ESTADOS2
+		}
+		fileBrcbs.closeFile();
+
+		Files fileUrcbs = new Files("Urcbs", "txt"); 
+		for (Urcb modelNode : serverModel.getUrcbs()) {
+			fileUrcbs.writeLine(modelNode.toString());
+		}
+		fileUrcbs.closeFile();
+		
+		Files fileBrcbsDataset = new Files("BrcbsDatasetTag", "txt"); 							//lista de reportes+dataset+tag
+		fileBrcbsDataset.writeLine("LISTA DE BRCB, CON LA LISTA DE TAG ASOCIADO");
+		for (Brcb modelNodebrcbs : serverModel.getBrcbs()) {
+			fileBrcbsDataset.writeLine("reporte: "+modelNodebrcbs.getReference().toString());	//UC_SSAACTRL/LLN0.brcbESTADOS2
+			fileBrcbsDataset.writeLine("    dataset: "+modelNodebrcbs.getDatSet().getStringValue());//UC_SSAACTRL/LLN0$ESTADOS2
+		
+			String datasetOld = modelNodebrcbs.getDatSet().getStringValue();
+			String datasetNew = datasetOld.replace('$', '.');
+			
+			fileBrcbsDataset.writeLine("    dataset: "+datasetNew);
+			
+		    DataSet dataset2 = serverModel.getDataSet(datasetNew);
+		    for (ModelNode modelNode2 : dataset2) {
+		    	fileBrcbsDataset.writeLine("        tag: " + modelNode2.getReference().toString());//UC_SSAACTRL/GGIO2.Ind02
+			}
+		}
+		fileBrcbsDataset.closeFile();
+		
+		Files fileUrcbsDataset = new Files("UrcbsDatasetTag", "txt"); 							//lista de reportes+dataset+tag
+		fileUrcbsDataset.writeLine("LISTA DE URCB, CON LA LISTA DE TAG ASOCIADO");
+		for (Urcb modelNodeUrcbs : serverModel.getUrcbs()) {
+			fileUrcbsDataset.writeLine("reporte: "+modelNodeUrcbs.getReference().toString());	//UC_SSAACTRL/LLN0.brcbESTADOS2
+			fileUrcbsDataset.writeLine("    dataset: "+modelNodeUrcbs.getDatSet().getStringValue());//UC_SSAACTRL/LLN0$ESTADOS2
+		
+			String datasetOld = modelNodeUrcbs.getDatSet().getStringValue();
+			String datasetNew = datasetOld.replace('$', '.');
+			
+			fileUrcbsDataset.writeLine("    dataset: "+datasetNew);
+			
+		    DataSet dataset2 = serverModel.getDataSet(datasetNew);
+		    for (ModelNode modelNode2 : dataset2) {
+		    	fileUrcbsDataset.writeLine("        tag: " + modelNode2.getReference().toString());//UC_SSAACTRL/GGIO2.Ind02
+			}
+		}
+		fileUrcbsDataset.closeFile();
+	}
 }
+
+//System.out.println("texto: " + serverModel.getBrcb("UC_SSAACTRL/LLN0.brcbESTADOS2").getParent().getParent());	// UC_SSAACTRL
+
+
+        
+
+
+//Files fileName = new Files("getName","txt", serverModel.getName());
+//fileName.closeFile();
+/*        
+//getServicesSupportedCalling()
+System.out.println("serverModel.copy().getReference()"+serverModel.copy().getReference());		//Null
+//System.out.println("serverModel.copy().getName()"+serverModel.copy().getName());				explota
+System.out.println("serverModel.copy().getParent()"+serverModel.copy().getParent());			//Null
+        
+
+
+Files fileBrcbEstados2Child = new Files("fileBrcbEstados2Child", "txt");
+Brcb brcb = serverModel.getBrcb("UC_SSAACTRL/LLN0.brcbESTADOS2");
+for (ModelNode modelNode : brcb.getChildren()) {
+	fileBrcbEstados2Child.writeLine(modelNode.toString());					//propiedades de un reporte
+}
+fileBrcbEstados2Child.closeFile();
+
+Files fileDatasetEstados2Child = new Files("fileDatasetEstados2Child", "txt");	//lista de TAGs de un dataset
+DataSet dataset = serverModel.getDataSet("UC_SSAACTRL/LLN0.ESTADOS2");
+for (ModelNode modelNode : dataset) {
+	//fileDatasetEstados2Child.writeLine(modelNode.toString());				//UC_SSAACTRL/GGIO2.Ind02 [ST]
+	fileDatasetEstados2Child.writeLine(modelNode.getReference().toString());//UC_SSAACTRL/GGIO2.Ind02
+}
+fileDatasetEstados2Child.closeFile();
+
+Files fileBrcbEstados2Dataset = new Files("fileBrcbEstados2Dataset", "txt");	//lista el dataset del reporte
+Brcb brcb2 = serverModel.getBrcb("UC_SSAACTRL/LLN0.brcbESTADOS2");
+BdaVisibleString modelNode = brcb2.getDatSet();
+	//fileBrcbEstados2Dataset.writeLine(modelNode.getReference().toString());	//responde: UC_SSAACTRL/LLN0.brcbESTADOS2.DatSet
+	//fileBrcbEstados2Dataset.writeLine(modelNode.getName());					//responde: DatSet
+	fileBrcbEstados2Dataset.writeLine(modelNode.getStringValue());			//UC_SSAACTRL/LLN0$ESTADOS2  este es el indicado
+fileBrcbEstados2Dataset.closeFile();
+
+*/        
+
+      

@@ -42,18 +42,10 @@ public class ConfigurationGUI implements TreeSelectionListener {
 	private GridBagLayout gridBagLayout = new GridBagLayout();
 	private GridBagConstraints gbc_tabbedPane = new GridBagConstraints();
 	private JPanel panelConf = new JPanel();
-	//private JPanel panelIec61850 = new JPanel();
 	private JTree treeConf = new JTree();
 	private JScrollPane scrollPaneDetails = new JScrollPane();
 	private JScrollPane scrollPaneConf = new JScrollPane();
-	private JLabel lblDescripcion = new JLabel();
-
-    private DriverInfo[] driverInfo;
-    private int driver = 0;
-
-    
     private final PanelIec61850 panelIec61850 = new PanelIec61850();
-    private static SessionFactory factory; 
 	
 	/**
 	 * Launch the application.
@@ -112,15 +104,16 @@ public class ConfigurationGUI implements TreeSelectionListener {
 		//scrollPaneConf.setMinimumSize(new Dimension(100, 0));
 		panelConf.add(scrollPaneConf);
 		
-        DefaultMutableTreeNode top = new DefaultMutableTreeNode("Gateway");
+		drawTree();
+/*        DefaultMutableTreeNode top = new DefaultMutableTreeNode("Gateway");
         createNodes(top);		
 
-        /* a la izquierda, grafica el arbol de opciones de la pestaña Configuracion*/
+        // a la izquierda, grafica el arbol de opciones de la pestaña Configuracion
 		treeConf = new JTree(top);
 		treeConf.getSelectionModel().setSelectionMode (TreeSelectionModel.SINGLE_TREE_SELECTION);		
-		treeConf.addTreeSelectionListener(this);			//implementar valueChange
+		treeConf.addTreeSelectionListener(this);
 		scrollPaneConf.setViewportView(treeConf);
-		
+*/		
 		/* a la derecha, grafica la vista de detalles */
 
 		scrollPaneDetails.setViewportView(panelIec61850);
@@ -172,55 +165,16 @@ public class ConfigurationGUI implements TreeSelectionListener {
     private void createNodes(DefaultMutableTreeNode top) {
         DefaultMutableTreeNode subestacion;
         DefaultMutableTreeNode drivers;
-        String driverNombre;
-        Boolean iec61850;
-        Boolean iec101;
-        Boolean ied;
-        Integer countDriver = 0;
         
         subestacion = new DefaultMutableTreeNode("Subestación");
         top.add(subestacion);
         
-        //DriversManager dm = new DriversManager();
         List<Drivers> driverList = GenericManager.getAllObjects(Drivers.class, Order.asc("id"));
 
         for (Drivers drivers2 : driverList) {
 	        drivers = new DefaultMutableTreeNode(drivers2.getDescription());
 	        subestacion.add(drivers);
 		}
-        
-/*        try {
-			Connection con = Connections.crearConexion();
-			Statement st = con.createStatement(	ResultSet.TYPE_SCROLL_INSENSITIVE, 
-					   							ResultSet.CONCUR_READ_ONLY);
-			ResultSet rs = st.executeQuery("SELECT * FROM drivers");
-			rs.last();
-			countDriver = rs.getRow();
-			driverInfo = new DriverInfo [countDriver];
-			rs.beforeFirst();		
-
-			while (rs.next())
-			{
-				driverNombre = new String(String.valueOf(rs.getString(2)));
-				iec61850 = Objects.equals(String.valueOf(rs.getString(4)), new String("t"));
-				iec101 = Objects.equals(String.valueOf(rs.getString(5)), new String("t"));
-				ied = Objects.equals(String.valueOf(rs.getString(6)), new String("t"));
-				driverInfo[driver] = new DriverInfo(driver, driverNombre, iec61850, iec101, ied);
-				driver++;
-		        //drivers = new DefaultMutableTreeNode(driverNombre);
-		        
-		        //subestacion.add(drivers);			   
-			} rs.close();
-			st.close();
-			
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-        
     }
 
 
@@ -239,8 +193,6 @@ public class ConfigurationGUI implements TreeSelectionListener {
 		}
 		
 		Object nodeInfo = node.getUserObject();
-		//Object nodeInfo = e.getNewLeadSelectionPath().getLastPathComponent();
-		//inputIp.setText(String.valueOf(nodeInfo.toString()));
 		
 		//borrador de metodo que mostrara ventana para el caso que se le de click al nodo iec61850 de configuracion
 		panelIec61850.setVisible(false);
@@ -263,6 +215,15 @@ public class ConfigurationGUI implements TreeSelectionListener {
 				}
 		}*/
 		
+	}
+	
+	private void drawTree(){
+        DefaultMutableTreeNode top = new DefaultMutableTreeNode("Gateway");
+        createNodes(top);	
+		treeConf = new JTree(top);
+		treeConf.getSelectionModel().setSelectionMode (TreeSelectionModel.SINGLE_TREE_SELECTION);		
+		treeConf.addTreeSelectionListener(this);
+		scrollPaneConf.setViewportView(treeConf);
 	}
 
 
