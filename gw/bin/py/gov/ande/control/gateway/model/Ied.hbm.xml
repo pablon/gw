@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 05/07/2016 01:12:05 AM by Hibernate Tools 5.1.0.Alpha1 -->
+<hibernate-mapping>
+    <class name="py.gov.ande.control.gateway.model.Ied" table="ied" schema="public" optimistic-lock="version">
+        <id name="id" type="int">
+            <column name="id" />
+            <generator class="assigned" />
+        </id>
+        <property name="name" type="string">
+            <column name="name" />
+        </property>
+        <property name="bufferTime" type="java.lang.Integer">
+            <column name="buffer_time" />
+        </property>
+        <property name="portAddress" type="java.lang.Integer">
+            <column name="port_address" />
+        </property>
+        <property name="connectionTest" type="java.lang.Integer">
+            <column name="connection_test" />
+        </property>
+        <property name="ipAddress" type="string">
+            <column name="ip_address" length="20" />
+        </property>
+    </class>
+</hibernate-mapping>

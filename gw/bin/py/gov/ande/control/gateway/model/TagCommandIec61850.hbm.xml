@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 05/07/2016 01:12:05 AM by Hibernate Tools 5.1.0.Alpha1 -->
+<hibernate-mapping>
+    <class name="py.gov.ande.control.gateway.model.TagCommandIec61850" table="tag_command_iec61850" schema="public" optimistic-lock="version">
+        <id name="id" type="int">
+            <column name="id" />
+            <generator class="assigned" />
+        </id>
+        <property name="use" type="java.lang.Boolean">
+            <column name="use" />
+        </property>
+        <property name="name" type="string">
+            <column name="name" not-null="true" />
+        </property>
+        <property name="typeId" type="java.lang.Integer">
+            <column name="type_id" />
+        </property>
+        <property name="telegramAddress" type="string">
+            <column name="telegram_address" />
+        </property>
+        <property name="normalizationId" type="java.lang.Integer">
+            <column name="normalization_id" />
+        </property>
+        <property name="iedId" type="int">
+            <column name="ied_id" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

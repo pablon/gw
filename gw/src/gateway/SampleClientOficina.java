@@ -132,11 +132,16 @@ public class SampleClientOficina  implements ClientEventListener {
             logger.info("getIntgPd: " + brcb.getIntgPd());			//UC_SSAACTRL/LLN0.brcbESTADOS.IntgPd: 2000
             
             System.out.println("inicio de interrogacion general");
-			try {
-				Thread.sleep(tiempo);
-			} catch (InterruptedException e) {
-				logger.info("DemoApp thread interrupted: will stop");
-			}
+            int i= 1;
+            while (true){
+				try {
+					System.out.println("Sleep: "+i++);
+					Thread.sleep(tiempo);
+				} catch (InterruptedException e) {
+					logger.info("DemoApp thread interrupted: will stop");
+					break;
+				}
+            }
             association.disableReporting(brcb);
             association.disconnect();
         }

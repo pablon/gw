@@ -1,0 +1,138 @@
+intento de conexion al ied SIPROTEC que se encontraba en servicio
+
+
+SLF4J: Class path contains multiple SLF4J bindings.
+SLF4J: Found binding in [jar:file:/usr/share/java/slf4j-jdk14.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: Found binding in [jar:file:/home/pn/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-simple/1.6.1/58e59bfb3e247097b8122243b3bfe0049c8cfae8/slf4j-simple-1.6.1.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: Found binding in [jar:file:/home/pn/.gradle/caches/modules-2/files-2.1/ch.qos.logback/logback-classic/1.1.6/665e3de72f19ec66ac67d82612d7b8e6b3de3cd0/logback-classic-1.1.6.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+SLF4J: Actual binding is of type [org.slf4j.impl.JDK14LoggerFactory]
+jul 05, 2016 1:55:44 PM org.hibernate.Version logVersion
+INFORMACIÓN: HHH000412: Hibernate Core {5.2.0.Final}
+jul 05, 2016 1:55:44 PM org.hibernate.cfg.Environment <clinit>
+INFORMACIÓN: HHH000206: hibernate.properties not found
+jul 05, 2016 1:55:44 PM org.hibernate.cfg.Environment buildBytecodeProvider
+INFORMACIÓN: HHH000021: Bytecode provider name : javassist
+jul 05, 2016 1:55:44 PM org.hibernate.annotations.common.reflection.java.JavaReflectionManager <clinit>
+INFORMACIÓN: HCANN000001: Hibernate Commons Annotations {5.0.1.Final}
+jul 05, 2016 1:55:47 PM org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl configure
+ADVERTENCIA: HHH10001002: Using Hibernate built-in connection pool (not for production use!)
+jul 05, 2016 1:55:47 PM org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl buildCreator
+INFORMACIÓN: HHH10001005: using driver [org.postgresql.Driver] at URL [jdbc:postgresql://localhost:5432/gateway]
+jul 05, 2016 1:55:47 PM org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl buildCreator
+INFORMACIÓN: HHH10001001: Connection properties: {user=pnsql, password=****}
+jul 05, 2016 1:55:47 PM org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl buildCreator
+INFORMACIÓN: HHH10001003: Autocommit mode: false
+jul 05, 2016 1:55:47 PM org.hibernate.engine.jdbc.connections.internal.PooledConnections <init>
+INFORMACIÓN: HHH000115: Hibernate connection pool size: 20 (min=1)
+jul 05, 2016 1:55:47 PM org.hibernate.dialect.Dialect <init>
+INFORMACIÓN: HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+jul 05, 2016 1:55:48 PM org.hibernate.engine.jdbc.env.internal.LobCreatorBuilderImpl useContextualLobCreation
+INFORMACIÓN: HHH000424: Disabling contextual LOB creation as createClob() method threw error : java.lang.reflect.InvocationTargetException
+jul 05, 2016 1:55:48 PM org.hibernate.type.BasicTypeRegistry register
+INFORMACIÓN: HHH000270: Type registration [java.util.UUID] overrides previous : org.hibernate.type.UUIDBinaryType@3cb67dde
+jul 05, 2016 1:55:49 PM org.hibernate.internal.SessionImpl createCriteria
+ADVERTENCIA: HHH90000022: Hibernate's legacy org.hibernate.Criteria API is deprecated; use the JPA javax.persistence.criteria.CriteriaQuery instead
+Hibernate: 
+    select
+        this_.id as id1_1_0_,
+        this_.description as descript2_1_0_,
+        this_.observation as observat3_1_0_,
+        this_.iec61850 as iec4_1_0_,
+        this_.iec101 as iec5_1_0_,
+        this_.ied as ied6_1_0_ 
+    from
+        public.drivers this_ 
+    order by
+        this_.id asc
+jul 05, 2016 1:56:11 PM org.hibernate.internal.SessionImpl createCriteria
+ADVERTENCIA: HHH90000022: Hibernate's legacy org.hibernate.Criteria API is deprecated; use the JPA javax.persistence.criteria.CriteriaQuery instead
+Hibernate: 
+    select
+        this_.id as id1_1_0_,
+        this_.description as descript2_1_0_,
+        this_.observation as observat3_1_0_,
+        this_.iec61850 as iec4_1_0_,
+        this_.iec101 as iec5_1_0_,
+        this_.ied as ied6_1_0_ 
+    from
+        public.drivers this_ 
+    order by
+        this_.id asc
+jul 05, 2016 1:56:12 PM org.hibernate.internal.SessionImpl createCriteria
+ADVERTENCIA: HHH90000022: Hibernate's legacy org.hibernate.Criteria API is deprecated; use the JPA javax.persistence.criteria.CriteriaQuery instead
+Hibernate: 
+    select
+        this_.id as id1_1_0_,
+        this_.description as descript2_1_0_,
+        this_.observation as observat3_1_0_,
+        this_.iec61850 as iec4_1_0_,
+        this_.iec101 as iec5_1_0_,
+        this_.ied as ied6_1_0_ 
+    from
+        public.drivers this_ 
+    order by
+        this_.id asc
+jul 05, 2016 1:56:13 PM org.hibernate.internal.SessionImpl createCriteria
+ADVERTENCIA: HHH90000022: Hibernate's legacy org.hibernate.Criteria API is deprecated; use the JPA javax.persistence.criteria.CriteriaQuery instead
+Hibernate: 
+    select
+        this_.id as id1_1_0_,
+        this_.description as descript2_1_0_,
+        this_.observation as observat3_1_0_,
+        this_.iec61850 as iec4_1_0_,
+        this_.iec101 as iec5_1_0_,
+        this_.ied as ied6_1_0_ 
+    from
+        public.drivers this_ 
+    order by
+        this_.id asc
+Funcion Inspeccionar. IP: 10.200.4.165, Puerto: 102
+jul 05, 2016 2:02:48 PM py.gov.ande.control.gateway.configuration.PanelIec61850 iedInspections
+GRAVE: Service Error requesting model.
+org.openmuc.openiec61850.ServiceError: INSTANCE_LOCKED_BY_OTHER_CLIENT(8): MMS DataAccessError: temporarily-unavailable
+	at org.openmuc.openiec61850.ClientAssociation.mmsDataAccessErrorToServiceError(ClientAssociation.java:367)
+	at org.openmuc.openiec61850.ClientAssociation.decodeGetDataValuesResponse(ClientAssociation.java:926)
+	at org.openmuc.openiec61850.ClientAssociation.getDataValues(ClientAssociation.java:875)
+	at org.openmuc.openiec61850.ClientAssociation.getAllDataValues(ClientAssociation.java:894)
+	at py.gov.ande.control.gateway.configuration.PanelIec61850.iedInspections(PanelIec61850.java:244)
+	at py.gov.ande.control.gateway.configuration.PanelIec61850.access$0(PanelIec61850.java:202)
+	at py.gov.ande.control.gateway.configuration.PanelIec61850$1.actionPerformed(PanelIec61850.java:187)
+	at javax.swing.AbstractButton.fireActionPerformed(AbstractButton.java:2022)
+	at javax.swing.AbstractButton$Handler.actionPerformed(AbstractButton.java:2348)
+	at javax.swing.DefaultButtonModel.fireActionPerformed(DefaultButtonModel.java:402)
+	at javax.swing.DefaultButtonModel.setPressed(DefaultButtonModel.java:259)
+	at javax.swing.plaf.basic.BasicButtonListener.mouseReleased(BasicButtonListener.java:252)
+	at java.awt.Component.processMouseEvent(Component.java:6535)
+	at javax.swing.JComponent.processMouseEvent(JComponent.java:3324)
+	at java.awt.Component.processEvent(Component.java:6300)
+	at java.awt.Container.processEvent(Container.java:2236)
+	at java.awt.Component.dispatchEventImpl(Component.java:4891)
+	at java.awt.Container.dispatchEventImpl(Container.java:2294)
+	at java.awt.Component.dispatchEvent(Component.java:4713)
+	at java.awt.LightweightDispatcher.retargetMouseEvent(Container.java:4888)
+	at java.awt.LightweightDispatcher.processMouseEvent(Container.java:4525)
+	at java.awt.LightweightDispatcher.dispatchEvent(Container.java:4466)
+	at java.awt.Container.dispatchEventImpl(Container.java:2280)
+	at java.awt.Window.dispatchEventImpl(Window.java:2750)
+	at java.awt.Component.dispatchEvent(Component.java:4713)
+	at java.awt.EventQueue.dispatchEventImpl(EventQueue.java:758)
+	at java.awt.EventQueue.access$500(EventQueue.java:97)
+	at java.awt.EventQueue$3.run(EventQueue.java:709)
+	at java.awt.EventQueue$3.run(EventQueue.java:703)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:76)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:86)
+	at java.awt.EventQueue$4.run(EventQueue.java:731)
+	at java.awt.EventQueue$4.run(EventQueue.java:729)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:76)
+	at java.awt.EventQueue.dispatchEvent(EventQueue.java:728)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:201)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:116)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:105)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:93)
+	at java.awt.EventDispatchThread.run(EventDispatchThread.java:82)
+
+
