@@ -1,20 +1,24 @@
 package py.gov.ande.control.gateway.configuration;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
-import java.awt.GridBagLayout;
+import py.gov.ande.control.gateway.model.DriversManager;
 
+import java.awt.GridBagLayout;
+import java.awt.event.ActionListener;
 import java.awt.GridBagConstraints;
 
 public class TabConfigurationView extends JPanel {
 
 	protected JScrollPane scrollPaneConf;
 	protected JScrollPane scrollPaneDetails;
-	protected PanelIec61850 panelIec61850;
+	protected PanelIec61850 panelIec61850 = new PanelIec61850();
 	protected JTree treeConf;
 
 	public TabConfigurationView() {
@@ -47,7 +51,43 @@ public class TabConfigurationView extends JPanel {
 		gbc_scrollPaneDetails.gridx = 1;
 		gbc_scrollPaneDetails.gridy = 0;
 		add(scrollPaneDetails, gbc_scrollPaneDetails);
-
+		
+		//scrollPaneDetails.setViewportView(panelIec61850);
+		//panelIec61850.setVisible(true);
+		
+	}
+	
+	/**
+	 * metodo para eventos del arbol de drivers.
+	 * @param listenForTreeClick
+	 */
+	void addTreeListener(TreeSelectionListener listenForTreeClick){
+		System.out.println("AddTreeListener");
+		treeConf.addTreeSelectionListener(listenForTreeClick);
 	}
 
+	void displayErrorMessage(String errorMessage){
+		
+		JOptionPane.showMessageDialog(this, errorMessage);
+		
+	}
+
+	/**
+	 * mostrará el panel de detalles según se le haya dado click en el arbol de drivers.
+	 * @param valueChangedOfTheTree
+	 */
+	public void valueChangedOfTheTree(DriversManager driverModel) {
+		System.out.println("TabConfigurationView.valueChange");
+		if(driverModel.getValueChangedOfTheTree().getIec61850()){
+			System.out.println("getIec61850 true");
+			scrollPaneDetails.setViewportView(panelIec61850);
+			panelIec61850.setVisible(true);
+//		}else{
+//			scrollPaneDetails.removeAll();
+		}
+		
+		//scrollPaneDetails.repaint();
+		//scrollPaneDetails.updateUI();
+		
+	}
 }

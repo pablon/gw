@@ -4,11 +4,14 @@ import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
+
+import py.gov.ande.control.gateway.model.DriversManager;
 
 public class ConfigurationView extends JFrame {
 

@@ -59,7 +59,8 @@ public class ConfigurationGUI implements TreeSelectionListener {
 					//hacer visible a la vista
 					
 					ConfigurationView view = new ConfigurationView();
-					ConfigurationController controller = new ConfigurationController(view);
+					DriversManager driverModel = new DriversManager();
+					ConfigurationController controller = new ConfigurationController(view, driverModel);
 					view.setVisible(true);
 					//ConfigurationGUI window = new ConfigurationGUI();
 					//window.frame.setVisible(true);

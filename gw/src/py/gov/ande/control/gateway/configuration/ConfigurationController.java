@@ -4,16 +4,21 @@ import java.util.List;
 import javax.swing.tree.DefaultMutableTreeNode;
 import org.hibernate.criterion.Order;
 import py.gov.ande.control.gateway.model.Drivers;
+import py.gov.ande.control.gateway.model.DriversManager;
 import py.gov.ande.control.gateway.model.Ied;
 import py.gov.ande.control.gateway.util.GenericManager;
 
 public class ConfigurationController {
 	
-	protected ConfigurationView theView;
+	private ConfigurationView theView;
+	protected DriversManager driverModel;
 
-	public ConfigurationController(ConfigurationView theView){
+	public ConfigurationController(ConfigurationView theView, DriversManager driverModel){
 		this.theView = theView;
+		this.driverModel = driverModel;
 		buildTree();
+		
+		this.theView.panelConf.addTreeListener(new TabConfigurationListener(this.theView.panelConf, this.driverModel));
 		
 	}
 
