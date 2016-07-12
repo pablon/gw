@@ -205,5 +205,70 @@ public class GenericManager {
         else
             return query.list().size();
     }
+    
+    /**
+    *
+    * @param Padre
+    * @param hijo
+    * @author pablo
+    */
+   public static DatabaseOperationResult BorrarTodosLosHijos(Class padre , Object hijo){
+       DatabaseOperationResult.ErrorType errorType = null;
+       int recordsAffected = 0;
+       RuntimeException exception = null;
+       try {
+           Session session = createNewSession();
+           Transaction tx = session.beginTransaction();
+           Query query = session.createQuery("DELETE FROM " + padre.getSimpleName() + " padre WHERE padre."+hijo.getClass().getSimpleName().toString().toLowerCase()+" = :hijo");
+           query.setParameter("hijo", hijo);
+           System.out.print(query.toString());
+           recordsAffected = query.executeUpdate();
+           tx.commit();
+           session.close();
+       } catch (RuntimeException e) {
+           if (e instanceof ConstraintViolationException) {
+               errorType = DatabaseOperationResult.ErrorType.CONSTRAINT_VIOLATION;
+               System.out.print("Error1: "+ e.getMessage());
+           } else {
+               errorType = DatabaseOperationResult.ErrorType.OTHER;
+               System.out.print("Error2: " + e.getMessage());
+           }
+           exception = e;
+       }
+
+       return new DatabaseOperationResult(errorType, recordsAffected, exception);
+
+    }
+
+   /**
+    * Metodo que realiza una consulta, y retorna la lista de tuplas.
+    * ejemplo: From Drivers drivers ORDER BY drivers.subestation DESC
+    * @param <T>
+    * @param criterio
+    * @return List
+    * @author pablo
+    */
+   public static <T> List<T> getListBasedOnCriteria(String criterio){
+       DatabaseOperationResult.ErrorType errorType = null;
+       RuntimeException exception = null;
+       Query query = null;
+       try {
+           Session session = createNewSession();
+           Transaction tx = session.beginTransaction();
+           query = session.createQuery(criterio);
+           tx.commit();
+       } catch (RuntimeException e) {
+           if (e instanceof ConstraintViolationException) {
+               errorType = DatabaseOperationResult.ErrorType.CONSTRAINT_VIOLATION;
+           } else {
+               errorType = DatabaseOperationResult.ErrorType.OTHER;
+           }
+           exception = e;
+       }
+       if(query == null)
+           return null;
+       else
+           return query.list();        
+   }
 
 }

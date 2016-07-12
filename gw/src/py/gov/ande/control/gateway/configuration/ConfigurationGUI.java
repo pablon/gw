@@ -54,8 +54,15 @@ public class ConfigurationGUI implements TreeSelectionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ConfigurationGUI window = new ConfigurationGUI();
-					window.frame.setVisible(true);
+					//instanciar vista
+					//instanciar controller
+					//hacer visible a la vista
+					
+					ConfigurationView view = new ConfigurationView();
+					ConfigurationController controller = new ConfigurationController(view);
+					view.setVisible(true);
+					//ConfigurationGUI window = new ConfigurationGUI();
+					//window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -206,14 +213,6 @@ public class ConfigurationGUI implements TreeSelectionListener {
 				}
 			}
 		}
-		
-/*		for (DriverInfo driverInfo2 : driverInfo) {
-			if (driverInfo2.getIec61850())
-				if(Objects.equals(driverInfo2.toString(), nodeInfo)){
-					panelIec61850.setVisible(true);
-					break;
-				}
-		}*/
 		
 	}
 	

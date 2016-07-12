@@ -1,5 +1,5 @@
 package py.gov.ande.control.gateway.model;
-// Generated 05/07/2016 01:12:05 AM by Hibernate Tools 5.1.0.Alpha1
+// Generated 12/07/2016 12:48:11 AM by Hibernate Tools 5.1.0.Alpha1
 
 import java.util.Date;
 
