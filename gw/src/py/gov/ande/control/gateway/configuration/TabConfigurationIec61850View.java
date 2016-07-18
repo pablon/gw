@@ -41,10 +41,11 @@ import py.gov.ande.control.gateway.model.Drivers;
 import py.gov.ande.control.gateway.model.Ied;
 import py.gov.ande.control.gateway.model.IedHome;
 import py.gov.ande.control.gateway.util.GenericManager;
+import javax.swing.SwingConstants;
 
 //import org.openmuc.openiec61850.ClientSap;
 
-public class PanelIec61850 extends JPanel implements ClientEventListener {
+public class TabConfigurationIec61850View extends JPanel implements ClientEventListener {
 
 	private static final long serialVersionUID = -386731185449901198L;
 	private int tselLocal1 = 0;
@@ -61,13 +62,13 @@ public class PanelIec61850 extends JPanel implements ClientEventListener {
     JButton btnAgregarIED = new JButton();
     
     private ClientAssociation association;
-    private static final Logger logger = LoggerFactory.getLogger(PanelIec61850.class);
+    private static final Logger logger = LoggerFactory.getLogger(TabConfigurationIec61850View.class);
     private static SessionFactory sessionFactory;
     
 	/**
 	 * Create the panel.
 	 */
-	public PanelIec61850() {
+	public TabConfigurationIec61850View() {
 
 		
 		setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -81,10 +82,15 @@ public class PanelIec61850 extends JPanel implements ClientEventListener {
 		setLayout(gbl_panelIec61850);
 		
 		JLabel lblPropiedades = new JLabel("Propiedades");
+		lblPropiedades.setHorizontalAlignment(SwingConstants.CENTER);
+		lblPropiedades.setVerticalAlignment(SwingConstants.TOP);
 		lblPropiedades.setFont(new Font("Dialog", Font.BOLD, 14));
 		GridBagConstraints gbc_lblPropiedades = new GridBagConstraints();
 		gbc_lblPropiedades.gridwidth = 3;
-		gbc_lblPropiedades.insets = new Insets(0, 0, 5, 5);
+		gbc_lblPropiedades.fill = GridBagConstraints.BOTH;
+		gbc_lblPropiedades.anchor = GridBagConstraints.NORTH;
+		//gbc_lblPropiedades.gridwidth = 3;
+		gbc_lblPropiedades.insets = new Insets(5, 5, 5, 5);
 		gbc_lblPropiedades.gridx = 0;
 		gbc_lblPropiedades.gridy = 0;
 		gbc_lblPropiedades.weightx = 1;
@@ -93,7 +99,7 @@ public class PanelIec61850 extends JPanel implements ClientEventListener {
 		lblIp = new JLabel("Dirección IP");
 		GridBagConstraints gbc_lblIp = new GridBagConstraints();
 		gbc_lblIp.anchor = GridBagConstraints.WEST;
-		gbc_lblIp.insets = new Insets(0, 0, 5, 5);
+		gbc_lblIp.insets = new Insets(5, 5, 5, 5);
 		gbc_lblIp.gridx = 0;
 		gbc_lblIp.gridy = 2;
 		add(lblIp, gbc_lblIp);
@@ -102,17 +108,17 @@ public class PanelIec61850 extends JPanel implements ClientEventListener {
 		GridBagConstraints gbc_inputIp = new GridBagConstraints();
 		gbc_inputIp.gridwidth = 2;
 		gbc_inputIp.fill = GridBagConstraints.HORIZONTAL;
-		gbc_inputIp.insets = new Insets(0, 0, 5, 5);
+		gbc_inputIp.insets = new Insets(5, 5, 5, 5);
 		gbc_inputIp.anchor = GridBagConstraints.NORTHWEST;
 		gbc_inputIp.gridx = 1;
 		gbc_inputIp.gridy = 2;
 		add(inputIp, gbc_inputIp);
-		inputIp.setColumns(10);
+		//inputIp.setColumns(10);
 		
 		JLabel lblPort = new JLabel("Puerto");
 		GridBagConstraints gbc_lblPort = new GridBagConstraints();
 		gbc_lblPort.anchor = GridBagConstraints.WEST;
-		gbc_lblPort.insets = new Insets(0, 0, 5, 5);
+		gbc_lblPort.insets = new Insets(5, 5, 5, 5);
 		gbc_lblPort.gridx = 0;
 		gbc_lblPort.gridy = 3;
 		add(lblPort, gbc_lblPort);
@@ -120,18 +126,18 @@ public class PanelIec61850 extends JPanel implements ClientEventListener {
 		inputPort = new JTextField("102");
 		GridBagConstraints gbc_inputPort = new GridBagConstraints();
 		gbc_inputPort.gridwidth = 2;
-		gbc_inputPort.insets = new Insets(0, 0, 5, 5);
+		gbc_inputPort.insets = new Insets(5, 5, 5, 5);
 		gbc_inputPort.fill = GridBagConstraints.HORIZONTAL;
 		gbc_inputPort.gridx = 1;
 		gbc_inputPort.gridy = 3;
 		add(inputPort, gbc_inputPort);
-		inputPort.setColumns(10);
+		//inputPort.setColumns(10);
 		
 		//--------------------------------------------------------------------
 		JLabel lblTsel = new JLabel("TSelLocal");
 		GridBagConstraints gbc_lblTsel = new GridBagConstraints();
 		gbc_lblTsel.anchor = GridBagConstraints.WEST;
-		gbc_lblTsel.insets = new Insets(0, 0, 5, 5);
+		gbc_lblTsel.insets = new Insets(5, 5, 5, 5);
 		gbc_lblTsel.gridx = 0;
 		gbc_lblTsel.gridy = 4;
 		add(lblTsel, gbc_lblTsel);		
@@ -140,7 +146,7 @@ public class PanelIec61850 extends JPanel implements ClientEventListener {
 	    tselLocalField1 = new JTextField(Integer.toString(tselLocal1));
 		GridBagConstraints gbc_inputTsel = new GridBagConstraints();
 		gbc_inputTsel.fill = GridBagConstraints.HORIZONTAL;
-		gbc_inputTsel.insets = new Insets(0, 0, 5, 5);
+		gbc_inputTsel.insets = new Insets(5, 5, 5, 5);
 		gbc_inputTsel.gridx = 1;
 		gbc_inputTsel.gridy = 4;
 		add(tselLocalField1, gbc_inputTsel);
@@ -148,7 +154,7 @@ public class PanelIec61850 extends JPanel implements ClientEventListener {
 	    tselLocalField2 = new JTextField(Integer.toString(tselLocal2));
 		GridBagConstraints gbc_inputTsel2 = new GridBagConstraints();
 		gbc_inputTsel2.fill = GridBagConstraints.HORIZONTAL;
-		gbc_inputTsel2.insets = new Insets(0, 0, 5, 0);
+		gbc_inputTsel2.insets = new Insets(5,5, 5, 5);
 		gbc_inputTsel2.gridx = 2;
 		gbc_inputTsel2.gridy = 4;
 		add(tselLocalField2, gbc_inputTsel2);
@@ -157,7 +163,7 @@ public class PanelIec61850 extends JPanel implements ClientEventListener {
 		JLabel lblTselRem = new JLabel("TSelRemoto");
 		gbc_lblTsel = new GridBagConstraints();
 		gbc_lblTsel.anchor = GridBagConstraints.WEST;
-		gbc_lblTsel.insets = new Insets(0, 0, 5, 5);
+		gbc_lblTsel.insets = new Insets(5, 5, 5, 5);
 		gbc_lblTsel.gridx = 0;
 		gbc_lblTsel.gridy = 5;
 		add(lblTselRem, gbc_lblTsel);		
@@ -166,7 +172,7 @@ public class PanelIec61850 extends JPanel implements ClientEventListener {
 		tselRemoteField1 = new JTextField(Integer.toString(tselRemote1));
 		gbc_inputTsel = new GridBagConstraints();
 		gbc_inputTsel.fill = GridBagConstraints.HORIZONTAL;
-		gbc_inputTsel.insets = new Insets(0, 0, 5, 5);
+		gbc_inputTsel.insets = new Insets(5, 5, 5, 5);
 		gbc_inputTsel.gridx = 1;
 		gbc_inputTsel.gridy = 5;
 		add(tselRemoteField1, gbc_inputTsel);
@@ -174,14 +180,14 @@ public class PanelIec61850 extends JPanel implements ClientEventListener {
 		tselRemoteField2 = new JTextField(Integer.toString(tselRemote2));
 		gbc_inputTsel2 = new GridBagConstraints();
 		gbc_inputTsel2.fill = GridBagConstraints.HORIZONTAL;
-		gbc_inputTsel2.insets = new Insets(0, 0, 5, 0);
+		gbc_inputTsel2.insets = new Insets(5, 5, 5, 5);
 		gbc_inputTsel2.gridx = 2;
 		gbc_inputTsel2.gridy = 5;
 		add(tselRemoteField2, gbc_inputTsel2);	    
    		
 	    //--------------------------------------------------------------------
-		btnAgregarIED = new JButton("Inspeccionar IED");
-		btnAgregarIED.addActionListener(new ActionListener() {
+		btnAgregarIED = new JButton("Explorar IED");
+		/*btnAgregarIED.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					iedInspections();
@@ -189,7 +195,7 @@ public class PanelIec61850 extends JPanel implements ClientEventListener {
 					e1.printStackTrace();
 				}
 			}
-		});
+		});*/
 		GridBagConstraints gbc_btnAgregarIED = new GridBagConstraints();
 		gbc_btnAgregarIED.gridwidth = 2;
 		gbc_btnAgregarIED.insets = new Insets(0, 0, 5, 5);
@@ -229,7 +235,7 @@ public class PanelIec61850 extends JPanel implements ClientEventListener {
         clientSap.setTSelLocal(getTselLocal());
         clientSap.setTSelRemote(getTselRemote());
 
-        PanelIec61850 eventHandler = new PanelIec61850();
+        TabConfigurationIec61850View eventHandler = new TabConfigurationIec61850View();
         
         try {
             association = clientSap.associate(address, remotePort, null, eventHandler);
@@ -265,9 +271,6 @@ public class PanelIec61850 extends JPanel implements ClientEventListener {
         	JOptionPane.showMessageDialog(null,"Información: Se a guadado los datos del ied en la Base de datos",
         		      "Información",JOptionPane.INFORMATION_MESSAGE);
         	
-        	/**
-        	 * redibujar 
-        	 */
 		} catch (Exception e) {
         	JOptionPane.showMessageDialog(null,"Error: No se a podido guardar los datos del ied en la Base de datos",
       		      "Advertencia",JOptionPane.WARNING_MESSAGE);
@@ -283,13 +286,13 @@ public class PanelIec61850 extends JPanel implements ClientEventListener {
 		}
     }	
     
-    public byte[] getTselLocal() {
+    protected byte[] getTselLocal() {
         tselLocal1 = parseTextField(tselLocalField1, tselLocal1);
         tselLocal2 = parseTextField(tselLocalField2, tselLocal2);    	
         return new byte[] { (byte) tselLocal1, (byte) tselLocal2 };
     }
     
-    public byte[] getTselRemote() {
+    protected byte[] getTselRemote() {
         tselLocal1 = parseTextField(tselRemoteField1, tselRemote1);
         tselLocal2 = parseTextField(tselRemoteField2, tselRemote2);    	
         return new byte[] { (byte) tselLocal1, (byte) tselLocal2 };
@@ -308,6 +311,14 @@ public class PanelIec61850 extends JPanel implements ClientEventListener {
         return value;
     }
 
+    protected String getInputIp(){
+    	return inputIp.getText();
+    }
+    
+    protected String getInputPort(){
+    	return inputPort.getText();
+    }
+    
 	@Override
 	public void newReport(Report report) {
 		// TODO Auto-generated method stub
@@ -444,6 +455,12 @@ public class PanelIec61850 extends JPanel implements ClientEventListener {
 		}
 		fileUrcbsDataset.closeFile();
 	}
+	
+	void addBtnExploreIed(ActionListener listenForBtnClick){
+		btnAgregarIED.addActionListener(listenForBtnClick);
+		
+	}
+	
 }
 
 //System.out.println("texto: " + serverModel.getBrcb("UC_SSAACTRL/LLN0.brcbESTADOS2").getParent().getParent());	// UC_SSAACTRL

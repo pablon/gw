@@ -6,19 +6,28 @@ import org.hibernate.criterion.Order;
 import py.gov.ande.control.gateway.model.Drivers;
 import py.gov.ande.control.gateway.model.DriversManager;
 import py.gov.ande.control.gateway.model.Ied;
+import py.gov.ande.control.gateway.model.IedManager;
 import py.gov.ande.control.gateway.util.GenericManager;
 
 public class ConfigurationController {
 	
 	private ConfigurationView theView;
 	protected DriversManager driverModel;
+	private IedManager iedModel;
 
 	public ConfigurationController(ConfigurationView theView, DriversManager driverModel){
 		this.theView = theView;
 		this.driverModel = driverModel;
+		this.iedModel = new IedManager();
 		buildTree();
 		
-		this.theView.panelConf.addTreeListener(new TabConfigurationListener(this.theView.panelConf, this.driverModel));
+		this.theView.panelConf.addTreeListener(
+				new TabConfigurationListener(
+						this.theView.panelConf, this.driverModel));
+		
+		this.theView.panelConf.tabConfIec61850View.addBtnExploreIed(
+				new TabConfigurationIec61850Listener(
+						this.theView.panelConf.tabConfIec61850View, this.iedModel));
 		
 	}
 
@@ -33,7 +42,6 @@ public class ConfigurationController {
         List<Drivers> driverList = GenericManager.getListBasedOnCriteria("From Drivers drivers ORDER BY "
         		+ "drivers.subestation DESC,"
         		+ "drivers.iec61850 DESC,"
-        		+ "drivers.ied DESC,"
         		+ "drivers.iec101 DESC");
         
         /* se explora lista de drivers*/

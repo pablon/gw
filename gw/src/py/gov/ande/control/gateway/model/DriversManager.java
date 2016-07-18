@@ -77,6 +77,14 @@ public class DriversManager {
 				}else{
 					this.setIec61850(false);
 				}
+			}else if(driver.getIec101() == true){
+				if(Objects.equals(driver.getDescription(), nodeInfo)){
+					System.out.println("click en 101");
+					this.setIec101(true);
+					break;
+				}else{
+					this.setIec101(false);
+				}
 			}
 		}
 		

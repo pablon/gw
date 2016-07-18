@@ -1,5 +1,5 @@
 package py.gov.ande.control.gateway.model;
-// Generated 12/07/2016 12:48:13 AM by Hibernate Tools 5.1.0.Alpha1
+// Generated 18/07/2016 01:42:16 AM by Hibernate Tools 5.1.0.Alpha1
 
 import java.util.List;
 import javax.naming.InitialContext;

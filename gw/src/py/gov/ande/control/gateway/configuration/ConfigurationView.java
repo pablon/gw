@@ -1,36 +1,68 @@
 package py.gov.ande.control.gateway.configuration;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.util.ArrayList;
 
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import py.gov.ande.control.gateway.model.DriversManager;
 
 public class ConfigurationView extends JFrame {
+	
+	private static final Logger logger = LoggerFactory.getLogger(ConfigurationView.class);
 
-	protected JPanel contentPane;
+	private JPanel topPanel;
 	protected GridBagLayout gbl;
-	protected JTabbedPane tabbedPane;
+	private JTabbedPane tabbedPane;
 	private GridBagConstraints gbc_tabbedPane;
 	protected TabConfigurationView panelConf;
 	protected TabMapping panelMapping;
 	protected TabTopology panelTopology;
 
 	public ConfigurationView() {
+		
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException e) {
+            logger.error("Class not found: ", e);
+        } catch (InstantiationException e) {
+            logger.error("Object not instantiated: ", e);
+        } catch (IllegalAccessException e) {
+            logger.error("Illegal acces: ", e);
+        } catch (UnsupportedLookAndFeelException e) {
+            logger.error("Unsupported LookAndFeel: ", e);
+        }		
+		
+        gbl=new GridBagLayout();
+        setLayout(gbl);
+        
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 781, 459);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		gbl=new GridBagLayout();
-		contentPane.setLayout(gbl);
-		setContentPane(contentPane);
+		topPanel = new JPanel();
+		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
+	
+        GridBagConstraints topPanelConstraint = new GridBagConstraints();
+        topPanelConstraint.fill = GridBagConstraints.HORIZONTAL;
+        topPanelConstraint.gridwidth = GridBagConstraints.REMAINDER;
+        topPanelConstraint.gridx = 0;
+        topPanelConstraint.gridy = 0;
+        topPanelConstraint.insets = new Insets(5, 5, 5, 5);
+        topPanelConstraint.anchor = GridBagConstraints.NORTH;
+        gbl.setConstraints(topPanel, topPanelConstraint);
+        add(topPanel);		
 		
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		gbc_tabbedPane = new GridBagConstraints();
@@ -39,14 +71,21 @@ public class ConfigurationView extends JFrame {
 		gbc_tabbedPane.gridy = 0;
 		gbc_tabbedPane.weightx = 1;
 		gbc_tabbedPane.weighty = 1;
-		getContentPane().add(tabbedPane, gbc_tabbedPane);
+		gbc_tabbedPane.insets = new Insets(5, 5, 5, 5);
+		gbc_tabbedPane.anchor = GridBagConstraints.NORTHWEST;
+		gbl.setConstraints(topPanel, gbc_tabbedPane);
+		topPanel.add(tabbedPane);
+		//getContentPane().add(tabbedPane, gbc_tabbedPane);
 		
 		panelConf = new TabConfigurationView();
 		tabbedPane.addTab("Configuracion", null, panelConf, "Configuraciones generales de los drivers");
 		panelMapping = new TabMapping();
 		tabbedPane.addTab("Mapeo", null, panelMapping, "Mapeo de cada señal de cada driver");	
 		panelTopology = new TabTopology();
-		tabbedPane.addTab("Topologia", null, panelTopology, "Estructura topologica de cada señal de cada equipo");	
+		tabbedPane.addTab("Topologia", null, panelTopology, "Estructura topologica de cada señal de cada equipo");
+		
+		setSize(900, 500);
+		setMinimumSize(new Dimension(420, 420));
 		
 	}
 

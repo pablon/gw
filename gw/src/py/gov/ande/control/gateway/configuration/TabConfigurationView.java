@@ -4,6 +4,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
+import javax.swing.ToolTipManager;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
@@ -11,49 +12,57 @@ import javax.swing.tree.TreeSelectionModel;
 import py.gov.ande.control.gateway.model.DriversManager;
 
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.awt.GridBagConstraints;
+import javax.swing.border.BevelBorder;
 
 public class TabConfigurationView extends JPanel {
 
 	protected JScrollPane scrollPaneConf;
 	protected JScrollPane scrollPaneDetails;
-	protected PanelIec61850 panelIec61850 = new PanelIec61850();
+	protected TabConfigurationIec61850View tabConfIec61850View = new TabConfigurationIec61850View();
+	protected TabConfigurationIec101View tabConfIec101View = new TabConfigurationIec101View();
 	protected JTree treeConf;
+	private GridBagLayout gridBagLayout;
+	protected JPanel panelDetails = new JPanel(); 
 
 	public TabConfigurationView() {
 
-		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[]{181, 79, 3, 0};
-		gridBagLayout.rowHeights = new int[]{403, 0};
-		gridBagLayout.columnWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{0.0, Double.MIN_VALUE};
+		gridBagLayout = new GridBagLayout();
 		setLayout(gridBagLayout);
 				
-		scrollPaneConf = new JScrollPane();
+		DefaultMutableTreeNode top = new DefaultMutableTreeNode("Gateway");
+		treeConf = new JTree(top);
+		ToolTipManager.sharedInstance().registerComponent(treeConf);
+		treeConf.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+		
+		scrollPaneConf = new JScrollPane(treeConf);
 		GridBagConstraints gbc_scrollPaneConf = new GridBagConstraints();
 		gbc_scrollPaneConf.fill = GridBagConstraints.BOTH;
 		gbc_scrollPaneConf.anchor = GridBagConstraints.WEST;
 		gbc_scrollPaneConf.gridx = 0;
 		gbc_scrollPaneConf.gridy = 0;
+		gbc_scrollPaneConf.weightx = 0.2;
+		gbc_scrollPaneConf.weighty = 1;
+		gbc_scrollPaneConf.insets = new Insets(5, 5, 5, 5);
 		add(scrollPaneConf, gbc_scrollPaneConf);
 		
-		DefaultMutableTreeNode top = new DefaultMutableTreeNode("Gateway");
-		treeConf = new JTree(top);		
-		treeConf.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-		
-		scrollPaneConf.setViewportView(treeConf);
-
 		scrollPaneDetails = new JScrollPane();
 		GridBagConstraints gbc_scrollPaneDetails = new GridBagConstraints();
-		gbc_scrollPaneDetails.gridheight = 2;
-		gbc_scrollPaneDetails.anchor = GridBagConstraints.EAST;
+		gbc_scrollPaneDetails.fill = GridBagConstraints.BOTH;
+		gbc_scrollPaneDetails.anchor = GridBagConstraints.NORTHWEST;
 		gbc_scrollPaneDetails.gridx = 1;
 		gbc_scrollPaneDetails.gridy = 0;
+		gbc_scrollPaneDetails.weightx = 0.8;
+		gbc_scrollPaneDetails.weighty = 1;
 		add(scrollPaneDetails, gbc_scrollPaneDetails);
-		
-		//scrollPaneDetails.setViewportView(panelIec61850);
-		//panelIec61850.setVisible(true);
+
+		panelDetails.add(tabConfIec61850View);
+		panelDetails.add(tabConfIec101View);
+		scrollPaneDetails.add(panelDetails);
+		tabConfIec61850View.setVisible(false);
+		tabConfIec101View.setVisible(false);
 		
 	}
 	
@@ -80,10 +89,18 @@ public class TabConfigurationView extends JPanel {
 		System.out.println("TabConfigurationView.valueChange");
 		if(driverModel.getValueChangedOfTheTree().getIec61850()){
 			System.out.println("getIec61850 true");
-			scrollPaneDetails.setViewportView(panelIec61850);
-			panelIec61850.setVisible(true);
-//		}else{
-//			scrollPaneDetails.removeAll();
+			scrollPaneDetails.setViewportView(tabConfIec61850View);
+			tabConfIec61850View.setVisible(true);
+		}else if(driverModel.getValueChangedOfTheTree().getIec101()){
+			System.out.println("getIec101 true");
+			scrollPaneDetails.setViewportView(tabConfIec101View);
+			tabConfIec101View.setVisible(true);
+			
+		}
+		else{
+			//scrollPaneDetails.removeAll();
+			tabConfIec61850View.setVisible(false);
+			tabConfIec101View.setVisible(false);
 		}
 		
 		//scrollPaneDetails.repaint();
