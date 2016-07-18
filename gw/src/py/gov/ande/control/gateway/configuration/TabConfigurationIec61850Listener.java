@@ -46,6 +46,9 @@ public class TabConfigurationIec61850Listener implements ActionListener{
         	if(iedModel.saveIed(theView.getInputIp(), Integer.valueOf(theView.getInputPort()))){
             	JOptionPane.showMessageDialog(null,"Información: Los datos del IED fueron guardados",
           		      "Advertencia",JOptionPane.INFORMATION_MESSAGE);
+            	
+            	//agregar los demas datos del ied, como ser dataset
+            	
         	}else{
             	JOptionPane.showMessageDialog(null,"Error: No se guardaron los datos del IED",
           		      "Advertencia",JOptionPane.WARNING_MESSAGE);
