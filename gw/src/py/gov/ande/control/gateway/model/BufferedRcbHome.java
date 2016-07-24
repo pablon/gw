@@ -1,5 +1,5 @@
 package py.gov.ande.control.gateway.model;
-// Generated 18/07/2016 01:42:16 AM by Hibernate Tools 5.1.0.Alpha1
+// Generated 21/07/2016 02:30:08 PM by Hibernate Tools 5.1.0.Alpha1
 
 import java.util.List;
 import javax.naming.InitialContext;
@@ -10,13 +10,13 @@ import org.hibernate.SessionFactory;
 import static org.hibernate.criterion.Example.create;
 
 /**
- * Home object for domain model class Brcb.
- * @see py.gov.ande.control.gateway.model.Brcb
+ * Home object for domain model class BufferedRcb.
+ * @see py.gov.ande.control.gateway.model.BufferedRcb
  * @author Hibernate Tools
  */
-public class BrcbHome {
+public class BufferedRcbHome {
 
-	private static final Log log = LogFactory.getLog(BrcbHome.class);
+	private static final Log log = LogFactory.getLog(BufferedRcbHome.class);
 
 	private final SessionFactory sessionFactory = getSessionFactory();
 
@@ -29,8 +29,8 @@ public class BrcbHome {
 		}
 	}
 
-	public void persist(Brcb transientInstance) {
-		log.debug("persisting Brcb instance");
+	public void persist(BufferedRcb transientInstance) {
+		log.debug("persisting BufferedRcb instance");
 		try {
 			sessionFactory.getCurrentSession().persist(transientInstance);
 			log.debug("persist successful");
@@ -40,8 +40,8 @@ public class BrcbHome {
 		}
 	}
 
-	public void attachDirty(Brcb instance) {
-		log.debug("attaching dirty Brcb instance");
+	public void attachDirty(BufferedRcb instance) {
+		log.debug("attaching dirty BufferedRcb instance");
 		try {
 			sessionFactory.getCurrentSession().saveOrUpdate(instance);
 			log.debug("attach successful");
@@ -51,8 +51,8 @@ public class BrcbHome {
 		}
 	}
 
-	public void attachClean(Brcb instance) {
-		log.debug("attaching clean Brcb instance");
+	public void attachClean(BufferedRcb instance) {
+		log.debug("attaching clean BufferedRcb instance");
 		try {
 			sessionFactory.getCurrentSession().lock(instance, LockMode.NONE);
 			log.debug("attach successful");
@@ -62,8 +62,8 @@ public class BrcbHome {
 		}
 	}
 
-	public void delete(Brcb persistentInstance) {
-		log.debug("deleting Brcb instance");
+	public void delete(BufferedRcb persistentInstance) {
+		log.debug("deleting BufferedRcb instance");
 		try {
 			sessionFactory.getCurrentSession().delete(persistentInstance);
 			log.debug("delete successful");
@@ -73,10 +73,10 @@ public class BrcbHome {
 		}
 	}
 
-	public Brcb merge(Brcb detachedInstance) {
-		log.debug("merging Brcb instance");
+	public BufferedRcb merge(BufferedRcb detachedInstance) {
+		log.debug("merging BufferedRcb instance");
 		try {
-			Brcb result = (Brcb) sessionFactory.getCurrentSession().merge(detachedInstance);
+			BufferedRcb result = (BufferedRcb) sessionFactory.getCurrentSession().merge(detachedInstance);
 			log.debug("merge successful");
 			return result;
 		} catch (RuntimeException re) {
@@ -85,10 +85,11 @@ public class BrcbHome {
 		}
 	}
 
-	public Brcb findById(int id) {
-		log.debug("getting Brcb instance with id: " + id);
+	public BufferedRcb findById(int id) {
+		log.debug("getting BufferedRcb instance with id: " + id);
 		try {
-			Brcb instance = (Brcb) sessionFactory.getCurrentSession().get("py.gov.ande.control.gateway.model.Brcb", id);
+			BufferedRcb instance = (BufferedRcb) sessionFactory.getCurrentSession()
+					.get("py.gov.ande.control.gateway.model.BufferedRcb", id);
 			if (instance == null) {
 				log.debug("get successful, no instance found");
 			} else {
@@ -101,11 +102,11 @@ public class BrcbHome {
 		}
 	}
 
-	public List<Brcb> findByExample(Brcb instance) {
-		log.debug("finding Brcb instance by example");
+	public List<BufferedRcb> findByExample(BufferedRcb instance) {
+		log.debug("finding BufferedRcb instance by example");
 		try {
-			List<Brcb> results = (List<Brcb>) sessionFactory.getCurrentSession()
-					.createCriteria("py.gov.ande.control.gateway.model.Brcb").add(create(instance)).list();
+			List<BufferedRcb> results = (List<BufferedRcb>) sessionFactory.getCurrentSession()
+					.createCriteria("py.gov.ande.control.gateway.model.BufferedRcb").add(create(instance)).list();
 			log.debug("find by example successful, result size: " + results.size());
 			return results;
 		} catch (RuntimeException re) {

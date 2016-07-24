@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd" >
+
+<hibernate-reverse-engineering>
+  <table-filter match-schema="public" match-name="brcb"/>
+  <table-filter match-schema="public" match-name="drivers"/>
+  <table-filter match-schema="public" match-name="ied"/>
+  <table-filter match-schema="public" match-name="information_type"/>
+  <table-filter match-schema="public" match-name="normalization"/>
+  <table-filter match-schema="public" match-name="playground"/>
+  <table-filter match-schema="public" match-name="reporting_capacibility"/>
+  <table-filter match-schema="public" match-name="tag_command_iec61850"/>
+  <table-filter match-schema="public" match-name="tag_monitor_iec61850"/>
+  <table-filter match-schema="public" match-name="urcb"/>
+</hibernate-reverse-engineering>

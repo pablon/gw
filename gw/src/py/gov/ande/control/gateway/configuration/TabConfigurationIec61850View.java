@@ -185,17 +185,7 @@ public class TabConfigurationIec61850View extends JPanel implements ClientEventL
 		gbc_inputTsel2.gridy = 5;
 		add(tselRemoteField2, gbc_inputTsel2);	    
    		
-	    //--------------------------------------------------------------------
 		btnAgregarIED = new JButton("Explorar IED");
-		/*btnAgregarIED.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					iedInspections();
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-			}
-		});*/
 		GridBagConstraints gbc_btnAgregarIED = new GridBagConstraints();
 		gbc_btnAgregarIED.gridwidth = 2;
 		gbc_btnAgregarIED.insets = new Insets(0, 0, 5, 5);
@@ -205,7 +195,7 @@ public class TabConfigurationIec61850View extends JPanel implements ClientEventL
 		
 	}
 	
-    private void iedInspections() throws IOException {
+ /*   private void iedInspections() throws IOException {
     	System.out.println("Funcion Inspeccionar. IP: "+inputIp.getText()+", Puerto: "+inputPort.getText());
     	
         ClientSap clientSap = new ClientSap();
@@ -284,7 +274,7 @@ public class TabConfigurationIec61850View extends JPanel implements ClientEventL
         	JOptionPane.showMessageDialog(null,"Error: No se a podido guardar los datos del ied en los archivos",
         		      "Advertencia",JOptionPane.WARNING_MESSAGE);
 		}
-    }	
+    }*/	
     
     protected byte[] getTselLocal() {
         tselLocal1 = parseTextField(tselLocalField1, tselLocal1);
@@ -337,7 +327,7 @@ public class TabConfigurationIec61850View extends JPanel implements ClientEventL
 	 * @param address
 	 * @param remotePort
 	 */
-	private void createIED(InetAddress address, int remotePort){
+/*	private void createIED(InetAddress address, int remotePort){
 		logger.info("metodo createIED. Address: "+address.getHostAddress()+", port: "+remotePort);
 		String name = "Nombre Provisorio";
 		
@@ -374,7 +364,7 @@ public class TabConfigurationIec61850View extends JPanel implements ClientEventL
 			e.printStackTrace();
 			logger.error("Error, luego del metodo generic manager Save()");
 		}
-	}
+	}*/
 	
 	/**
 	 * metodo provisorio que explora un ied y guardar  en archivos sus propiedades

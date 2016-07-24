@@ -1,5 +1,5 @@
 package py.gov.ande.control.gateway.model;
-// Generated 18/07/2016 01:42:16 AM by Hibernate Tools 5.1.0.Alpha1
+// Generated 21/07/2016 02:30:08 PM by Hibernate Tools 5.1.0.Alpha1
 
 import java.util.List;
 import javax.naming.InitialContext;
@@ -10,13 +10,13 @@ import org.hibernate.SessionFactory;
 import static org.hibernate.criterion.Example.create;
 
 /**
- * Home object for domain model class ReportingCapacibility.
- * @see py.gov.ande.control.gateway.model.ReportingCapacibility
+ * Home object for domain model class ReportingCapability.
+ * @see py.gov.ande.control.gateway.model.ReportingCapability
  * @author Hibernate Tools
  */
-public class ReportingCapacibilityHome {
+public class ReportingCapabilityHome {
 
-	private static final Log log = LogFactory.getLog(ReportingCapacibilityHome.class);
+	private static final Log log = LogFactory.getLog(ReportingCapabilityHome.class);
 
 	private final SessionFactory sessionFactory = getSessionFactory();
 
@@ -29,8 +29,8 @@ public class ReportingCapacibilityHome {
 		}
 	}
 
-	public void persist(ReportingCapacibility transientInstance) {
-		log.debug("persisting ReportingCapacibility instance");
+	public void persist(ReportingCapability transientInstance) {
+		log.debug("persisting ReportingCapability instance");
 		try {
 			sessionFactory.getCurrentSession().persist(transientInstance);
 			log.debug("persist successful");
@@ -40,8 +40,8 @@ public class ReportingCapacibilityHome {
 		}
 	}
 
-	public void attachDirty(ReportingCapacibility instance) {
-		log.debug("attaching dirty ReportingCapacibility instance");
+	public void attachDirty(ReportingCapability instance) {
+		log.debug("attaching dirty ReportingCapability instance");
 		try {
 			sessionFactory.getCurrentSession().saveOrUpdate(instance);
 			log.debug("attach successful");
@@ -51,8 +51,8 @@ public class ReportingCapacibilityHome {
 		}
 	}
 
-	public void attachClean(ReportingCapacibility instance) {
-		log.debug("attaching clean ReportingCapacibility instance");
+	public void attachClean(ReportingCapability instance) {
+		log.debug("attaching clean ReportingCapability instance");
 		try {
 			sessionFactory.getCurrentSession().lock(instance, LockMode.NONE);
 			log.debug("attach successful");
@@ -62,8 +62,8 @@ public class ReportingCapacibilityHome {
 		}
 	}
 
-	public void delete(ReportingCapacibility persistentInstance) {
-		log.debug("deleting ReportingCapacibility instance");
+	public void delete(ReportingCapability persistentInstance) {
+		log.debug("deleting ReportingCapability instance");
 		try {
 			sessionFactory.getCurrentSession().delete(persistentInstance);
 			log.debug("delete successful");
@@ -73,10 +73,10 @@ public class ReportingCapacibilityHome {
 		}
 	}
 
-	public ReportingCapacibility merge(ReportingCapacibility detachedInstance) {
-		log.debug("merging ReportingCapacibility instance");
+	public ReportingCapability merge(ReportingCapability detachedInstance) {
+		log.debug("merging ReportingCapability instance");
 		try {
-			ReportingCapacibility result = (ReportingCapacibility) sessionFactory.getCurrentSession()
+			ReportingCapability result = (ReportingCapability) sessionFactory.getCurrentSession()
 					.merge(detachedInstance);
 			log.debug("merge successful");
 			return result;
@@ -86,11 +86,11 @@ public class ReportingCapacibilityHome {
 		}
 	}
 
-	public ReportingCapacibility findById(int id) {
-		log.debug("getting ReportingCapacibility instance with id: " + id);
+	public ReportingCapability findById(int id) {
+		log.debug("getting ReportingCapability instance with id: " + id);
 		try {
-			ReportingCapacibility instance = (ReportingCapacibility) sessionFactory.getCurrentSession()
-					.get("py.gov.ande.control.gateway.model.ReportingCapacibility", id);
+			ReportingCapability instance = (ReportingCapability) sessionFactory.getCurrentSession()
+					.get("py.gov.ande.control.gateway.model.ReportingCapability", id);
 			if (instance == null) {
 				log.debug("get successful, no instance found");
 			} else {
@@ -103,11 +103,11 @@ public class ReportingCapacibilityHome {
 		}
 	}
 
-	public List<ReportingCapacibility> findByExample(ReportingCapacibility instance) {
-		log.debug("finding ReportingCapacibility instance by example");
+	public List<ReportingCapability> findByExample(ReportingCapability instance) {
+		log.debug("finding ReportingCapability instance by example");
 		try {
-			List<ReportingCapacibility> results = (List<ReportingCapacibility>) sessionFactory.getCurrentSession()
-					.createCriteria("py.gov.ande.control.gateway.model.ReportingCapacibility").add(create(instance))
+			List<ReportingCapability> results = (List<ReportingCapability>) sessionFactory.getCurrentSession()
+					.createCriteria("py.gov.ande.control.gateway.model.ReportingCapability").add(create(instance))
 					.list();
 			log.debug("find by example successful, result size: " + results.size());
 			return results;

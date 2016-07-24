@@ -9,8 +9,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.hibernate.criterion.Order;
 
+import py.gov.ande.control.gateway.manager.DriversManager;
 import py.gov.ande.control.gateway.model.Drivers;
-import py.gov.ande.control.gateway.model.DriversManager;
 import py.gov.ande.control.gateway.util.GenericManager;
 
 public class TabConfigurationListener implements TreeSelectionListener{

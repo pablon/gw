@@ -3,6 +3,7 @@ package py.gov.ande.control.gateway.util;
 import java.util.Iterator;
 import java.util.List;
 import org.hibernate.Criteria;
+//import javax.persistence.criteria.CriteriaQuery;		//investigar para implementar este criteria
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -58,6 +59,12 @@ public class GenericManager {
         tx.commit();
         session.close();
     }
+    
+    public static void saveObject(Object object, Session session) {
+        session.persist(object);
+    }
+    
+    
 
     /**
      * Actualizar los campos de un objeto en la BBDD
@@ -71,6 +78,11 @@ public class GenericManager {
         Object mergedObject = session.merge(object);
         tx.commit();
         session.close();
+        return mergedObject;
+    }
+    
+    public static Object updateObject(Object object, Session session) {
+        Object mergedObject = session.merge(object);
         return mergedObject;
     }
 
@@ -117,19 +129,27 @@ public class GenericManager {
      */
     public static <T> List<T> getAllObjects(Class<T> clazz, Order... orders) {
         Session session = createNewSession();
+        //session.beginTransaction();
+        
         Criteria criteria = session.createCriteria(clazz);
         for (Order order : orders) {
             criteria.addOrder(order);
         }
 
         return criteria.list();
+        
+        /*List result = session.createQuery( "from Event" ).list();
+        session.getTransaction().commit();
+        session.close();
+        
+        return result;*/
     }
 
 
     /**
      * Listar todos los objetos de una clase dada, aplicando una lista de filtros
-     * especificados, ordenando de manera opcional por una o mas propiedades
-     *
+     * especificados, ordenando de manera opcional por una o mas propiedades. 
+     * Ejemplo: GenericManager.getFilteredObjects(BienesInformaticos.class,Arrays.asList(Restrictions.isNull("bienesInformaticos"),Restrictions.eq("estaActivo", 1)),Order.asc("id") );
      * @param clazz la clase del objeto a traer
      * @param criterions la lista de criterios especificados
      * @param orders los criterios de ordenes deseados, si los hubiera
@@ -149,6 +169,36 @@ public class GenericManager {
         return criteria.list();
     }
 
+    /**
+     * Obtener el primer objeto encontrado de la base de datos a partir de su clase y un criterio de búsqueda
+     * @param <T>
+     *
+     * @param clazz el literal de clase para el objeto pedido
+     * @param criterions la lista de criterios especificados
+     * @return una instancia del objeto recuperada desde la BBDD
+     */
+    public static <T> Object getFilteredObject(Class<T> clazz, List criterions) {
+        Session session = createNewSession();
+        @SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(clazz);
+
+        for (@SuppressWarnings("rawtypes")
+		Iterator it = criterions.iterator(); it.hasNext();) {
+            Criterion c = (Criterion) it.next();
+            criteria.add(c);
+        }
+        
+        @SuppressWarnings("rawtypes")
+		List results = criteria.list();
+        session.close();
+        if (results.isEmpty()) {
+            return null;
+        }
+
+        return results.get(0);
+    }
+    
+    
     /**
      * Buscar en la base de datos, utilizando un objeto POJO cualquiera conocido por Hibernate
      * para crear un criterio dinamico. Se puede aplicar un orden al resultado si asi se desea
@@ -173,7 +223,7 @@ public class GenericManager {
      *
      * @return una nueva sesion a partir del factory
      */
-    private static Session createNewSession() {
+    public static Session createNewSession() {
         SessionFactory factory = DatabaseUtil.getSessionFactory();
         Session session = factory.openSession();
         
@@ -256,7 +306,6 @@ public class GenericManager {
            Session session = createNewSession();
            Transaction tx = session.beginTransaction();
            query = session.createQuery(criterio);
-           tx.commit();
        } catch (RuntimeException e) {
            if (e instanceof ConstraintViolationException) {
                errorType = DatabaseOperationResult.ErrorType.CONSTRAINT_VIOLATION;
@@ -269,6 +318,33 @@ public class GenericManager {
            return null;
        else
            return query.list();        
+   }
+   
+   /**
+    * Método que retorna un objeto en base a un criterio de busqueda.
+    * @param criterio de busqueda. Ejemplo: "From Articulo art where art.articulo.id = " + articuloOld.getArticulo().getId()
+    * @return Object
+    */
+   public static <T> Object getObjectBasedOnCriteria(String criterio){
+       DatabaseOperationResult.ErrorType errorType = null;
+       RuntimeException exception = null;
+       Query query = null;
+       try {
+           Session session = createNewSession();
+           Transaction tx = session.beginTransaction();
+           query = session.createQuery(criterio);
+       } catch (RuntimeException e) {
+           if (e instanceof ConstraintViolationException) {
+               errorType = DatabaseOperationResult.ErrorType.CONSTRAINT_VIOLATION;
+           } else {
+               errorType = DatabaseOperationResult.ErrorType.OTHER;
+           }
+           exception = e;
+       }
+       if(query == null)
+           return null;
+       else
+           return query;        
    }
 
 }

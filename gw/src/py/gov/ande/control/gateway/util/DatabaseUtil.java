@@ -1,6 +1,9 @@
 package py.gov.ande.control.gateway.util;
 
 import org.hibernate.SessionFactory;
+import org.hibernate.boot.MetadataSources;
+import org.hibernate.boot.registry.StandardServiceRegistry;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.metadata.ClassMetadata;
 import org.hibernate.persister.entity.AbstractEntityPersister;
@@ -24,6 +27,21 @@ public class DatabaseUtil {
             throw new ExceptionInInitializerError(ex);
         }
     }
+    
+    /*final static StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
+			.configure() // configures settings from hibernate.cfg.xml
+			.build();
+    static {
+	    try {
+			sessionFactory = new MetadataSources( registry ).buildMetadata().buildSessionFactory();
+		}
+		catch (Exception e) {
+			// The registry would be destroyed by the SessionFactory, but we had trouble building the SessionFactory
+			// so destroy it manually.
+			StandardServiceRegistryBuilder.destroy( registry );
+		}
+    }*/
+    
 
     public static SessionFactory getSessionFactory() {
         return sessionFactory;
@@ -39,4 +57,5 @@ public class DatabaseUtil {
 
         return tableName;
     }
+
 }

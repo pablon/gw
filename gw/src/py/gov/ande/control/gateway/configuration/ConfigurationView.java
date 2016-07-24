@@ -19,7 +19,7 @@ import javax.swing.border.EmptyBorder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import py.gov.ande.control.gateway.model.DriversManager;
+import py.gov.ande.control.gateway.manager.DriversManager;
 
 public class ConfigurationView extends JFrame {
 	

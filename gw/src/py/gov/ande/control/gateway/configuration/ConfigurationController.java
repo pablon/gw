@@ -3,10 +3,11 @@ package py.gov.ande.control.gateway.configuration;
 import java.util.List;
 import javax.swing.tree.DefaultMutableTreeNode;
 import org.hibernate.criterion.Order;
+
+import py.gov.ande.control.gateway.manager.DriversManager;
+import py.gov.ande.control.gateway.manager.IedManager;
 import py.gov.ande.control.gateway.model.Drivers;
-import py.gov.ande.control.gateway.model.DriversManager;
 import py.gov.ande.control.gateway.model.Ied;
-import py.gov.ande.control.gateway.model.IedManager;
 import py.gov.ande.control.gateway.util.GenericManager;
 
 public class ConfigurationController {
@@ -63,6 +64,7 @@ public class ConfigurationController {
     
         /*Se explora lista de ied's */
     	List<Ied> iedList = GenericManager.getAllObjects(Ied.class, Order.asc("id"));
+    	//List<Ied> iedList = GenericManager.getAllObjects(Ied.class, "id");
     	for (Ied ieds : iedList) {
     		ied = new DefaultMutableTreeNode(ieds.getName());
     		iec61850.add(ied);

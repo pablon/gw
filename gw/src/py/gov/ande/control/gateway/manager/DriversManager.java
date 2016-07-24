@@ -1,4 +1,4 @@
-package py.gov.ande.control.gateway.model;
+package py.gov.ande.control.gateway.manager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +9,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 
+import py.gov.ande.control.gateway.model.Drivers;
 import py.gov.ande.control.gateway.util.DatabaseUtil;
 import py.gov.ande.control.gateway.util.GenericManager;
 
@@ -60,6 +61,7 @@ public class DriversManager {
 	}
 
 	public void valueChangedOfTheTree(DefaultMutableTreeNode node) {
+		System.out.println("DriversManager.valueChange");
 		if (node == null){
 			System.out.println("nada fue seleccionoda");
 			return;
@@ -68,7 +70,9 @@ public class DriversManager {
 		//theView.panelConf.scrollPaneDetails.removeAll();
 		
 		List<Drivers> driverList = GenericManager.getAllObjects(Drivers.class, Order.asc("id"));
+		//List<Drivers> driverList = GenericManager.getAllObjects(Drivers.class, "id");
 		for (Drivers driver : driverList) {
+			System.out.println("driver: "+driver.getDescription());
 			if(driver.getIec61850() == true){
 				if(Objects.equals(driver.getDescription(), nodeInfo)){
 					System.out.println("click en 61850");
@@ -79,7 +83,7 @@ public class DriversManager {
 				}
 			}else if(driver.getIec101() == true){
 				if(Objects.equals(driver.getDescription(), nodeInfo)){
-					System.out.println("click en 101");
+					//System.out.println("click en 101");
 					this.setIec101(true);
 					break;
 				}else{

@@ -9,7 +9,7 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
-import py.gov.ande.control.gateway.model.DriversManager;
+import py.gov.ande.control.gateway.manager.DriversManager;
 
 import java.awt.GridBagLayout;
 import java.awt.Insets;
