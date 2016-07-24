@@ -2,11 +2,13 @@ package py.gov.ande.control.gateway.configuration;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
 
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -53,38 +55,46 @@ public class TabConfigurationIec61850Listener implements ActionListener{
 	 * Realiza una prueba de conexión del ied, y guarda los datos del mismo.
 	 * guarda todos los tags encontrados con sus respectivos telegramAddress.
 	 * identifica cuales tags corresponden a un reporte con su dataset.
+	 * 
+	 * Acción sobre el boton de exploración del archivo CID.
 	 * @author pablo
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		logger.info("boton IEDExplorer");
 		
-        if(connectToIed()){
-        	int option = JOptionPane.showConfirmDialog(null, "Se a realizado la conexión al IED. Confirmar que se quiere guardar los TAGS encontrados", "Advertencia", JOptionPane.OK_CANCEL_OPTION);
-        	if(option == JOptionPane.OK_OPTION){
-
-	        		try {
-	        			ied = iedModel.saveIed(theView.tabConfIec61850View.getInputIp(), Integer.valueOf(theView.tabConfIec61850View.getInputPort()));
-	                	TagMonitorIec61850Manager.saveAllTagIec61850(ied, serverModel);
-	                	BrcbManager.saveAllTagWithBuffer(ied, serverModel);
-	                	UrcbManager.saveAllTagWithOutBuffer(ied, serverModel);
-
-	            		JOptionPane.showMessageDialog(null,"Información: Los datos del IED fueron guardados",
-	              		      "Advertencia",JOptionPane.INFORMATION_MESSAGE);            	
-					} catch (Exception e2) {
-	            		JOptionPane.showMessageDialog(null,"Información: Los datos del IED no fueron guardados",
-	                		      "Advertencia",JOptionPane.ERROR_MESSAGE);            	
-					}
-        	}
-        	disconnectToIed();
-        }
-        
-     // actualizar vista
-        //theView.treeConf.repaint();
-        //theView.treeConf.updateUI();
-		//DefaultMutableTreeNode top = new DefaultMutableTreeNode("Gateway");
-        //theView.treeConf = new JTree(top);
-        controller.buildTree();
+		if(e.getSource() == theView.tabConfIec61850View.btnAddIED){
+			logger.info("btnAddIed");
+	        if(connectToIed()){
+	        	int option = JOptionPane.showConfirmDialog(null, "Se a realizado la conexión al IED. Confirmar que se quiere guardar los TAGS encontrados", "Advertencia", JOptionPane.OK_CANCEL_OPTION);
+	        	if(option == JOptionPane.OK_OPTION){
+	
+		        		try {
+		        			ied = iedModel.saveIed(theView.tabConfIec61850View.getInputIp(), Integer.valueOf(theView.tabConfIec61850View.getInputPort()));
+		                	TagMonitorIec61850Manager.saveAllTagIec61850(ied, serverModel);
+		                	BrcbManager.saveAllTagWithBuffer(ied, serverModel);
+		                	UrcbManager.saveAllTagWithOutBuffer(ied, serverModel);
+	
+		            		JOptionPane.showMessageDialog(null,"Información: Los datos del IED fueron guardados",
+		              		      "Advertencia",JOptionPane.INFORMATION_MESSAGE);      
+		            		controller.buildTree();
+						} catch (Exception e2) {
+		            		JOptionPane.showMessageDialog(null,"Información: Los datos del IED no fueron guardados",
+		                		      "Advertencia",JOptionPane.ERROR_MESSAGE);            	
+						}
+	        	}
+	        	disconnectToIed();
+	        }
+	        
+		}else if(e.getSource() == theView.tabConfIec61850View.btnExploreCid){
+			logger.info("btnExploreCid");
+			JFileChooser fileChooser = new JFileChooser();
+			fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+			int result = fileChooser.showOpenDialog(theView.tabConfIec61850View);
+			if (result == JFileChooser.APPROVE_OPTION) {
+			    File selectedFile = fileChooser.getSelectedFile();
+			    System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+			}
+		}
 	}
 	
 	/**
