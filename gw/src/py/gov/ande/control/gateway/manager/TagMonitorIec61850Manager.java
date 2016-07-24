@@ -22,7 +22,7 @@ public class TagMonitorIec61850Manager {
 	 * @param ied
 	 * @param serverModel
 	 */
-	public static void saveAllTagIec61850(Ied ied, ServerModel serverModel, Session session, Transaction tx){
+	public static void saveAllTagIec61850(Ied ied, ServerModel serverModel){
 		logger.info("inicio");
 		TagMonitorIec61850 tag;
 		int count = 0;
@@ -39,7 +39,7 @@ public class TagMonitorIec61850Manager {
 					tag.setReportingCapacibiliyId(reportingCapacibiliyId);
 
 					try {
-						GenericManager.saveObject(tag, session);
+						GenericManager.saveObject(tag);
 						count++;
 					} catch (Exception e) {
 						logger.error("no se pudieron guardar los tags", e);

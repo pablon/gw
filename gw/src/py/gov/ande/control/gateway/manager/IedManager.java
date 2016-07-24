@@ -1,5 +1,7 @@
 package py.gov.ande.control.gateway.manager;
 
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +30,7 @@ public class IedManager {
 
 		try {
 			GenericManager.saveObject(ied);
-			logger.info("luego del metodo generic manager Save()");
+			//logger.info("luego del metodo generic manager Save()");
 			return ied;
 		} catch (Exception e) {
 			e.printStackTrace();

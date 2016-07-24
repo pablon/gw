@@ -23,7 +23,7 @@ public class TabConfigurationView extends JPanel {
 	protected JScrollPane scrollPaneDetails;
 	protected TabConfigurationIec61850View tabConfIec61850View = new TabConfigurationIec61850View();
 	protected TabConfigurationIec101View tabConfIec101View = new TabConfigurationIec101View();
-	protected JTree treeConf;
+	public JTree treeConf;
 	private GridBagLayout gridBagLayout;
 	protected JPanel panelDetails = new JPanel(); 
 
@@ -86,13 +86,13 @@ public class TabConfigurationView extends JPanel {
 	 * @param valueChangedOfTheTree
 	 */
 	public void valueChangedOfTheTree(DriversManager driverModel) {
-		System.out.println("TabConfigurationView.valueChange");
+		//System.out.println("TabConfigurationView.valueChange");
 		if(driverModel.getValueChangedOfTheTree().getIec61850()){
-			System.out.println("getIec61850 true");
+			//System.out.println("getIec61850 true");
 			scrollPaneDetails.setViewportView(tabConfIec61850View);
 			tabConfIec61850View.setVisible(true);
 		}else if(driverModel.getValueChangedOfTheTree().getIec101()){
-			System.out.println("getIec101 true");
+			//System.out.println("getIec101 true");
 			scrollPaneDetails.setViewportView(tabConfIec101View);
 			tabConfIec101View.setVisible(true);
 			

@@ -32,7 +32,7 @@ public class BrcbManager {
 	 * @param serverModel
 	 * @return
 	 */
-	public static void saveAllTagWithBuffer(Ied ied, ServerModel serverModel, Session session, Transaction tx) {
+	public static void saveAllTagWithBuffer(Ied ied, ServerModel serverModel) {
 		logger.info("inicio");
 		int reportingCapacibiliyBrcbId = ReportingCapabilityManager.getObjectBrcb();
 		int reportingCapacibiliyUrcbId = ReportingCapabilityManager.getObjectUrcb();
@@ -49,19 +49,19 @@ public class BrcbManager {
 			report.setDataset(datasetReferent);
 			
 			logger.info("datasetReferent: "+datasetReferent);
-			GenericManager.saveObject(report, session);
+			GenericManager.saveObject(report);
 			
 			DataSet dataset = serverModel.getDataSet(datasetReferent);
 		    for (ModelNode modelNode : dataset) {
 		    	String tag = modelNode.getReference().toString();						//UC_SSAACTRL/GGIO2.Ind02
-		    	logger.info("iedId:"+ied.getId()+", telegramAddress: "+tag);
+		    	//logger.info("iedId:"+ied.getId()+", telegramAddress: "+tag);
 		    	tagMonitor = (TagMonitorIec61850) GenericManager.getFilteredObject(TagMonitorIec61850.class, 
 		    			Arrays.asList(
 		    					Restrictions.eq("iedId", ied.getId()) ,
 		    					Restrictions.eq("telegramAddress", tag)) 
 		    			);
 		    	if(tagMonitor != null){
-		    		logger.info("tagMonitor: "+tagMonitor.getTelegramAddress()+", bufferedId: "+report.getId());
+		    		//logger.info("tagMonitor: "+tagMonitor.getTelegramAddress()+", bufferedId: "+report.getId());
 		    		tagMonitor.setBrcbId(report.getId());
 		    		tagMonitor.setBuffered(true);
 		    		
@@ -72,7 +72,7 @@ public class BrcbManager {
 		    			tagMonitor.setReportingCapacibiliyId(reportingCapacibiliyBothId);
 		    		}
 		    		
-		    		GenericManager.updateObject(tagMonitor, session);
+		    		GenericManager.updateObject(tagMonitor);
 		    	}
 		    }
 		

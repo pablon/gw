@@ -61,7 +61,8 @@ public class GenericManager {
     }
     
     public static void saveObject(Object object, Session session) {
-        session.persist(object);
+        //session.persist(object);
+        session.saveOrUpdate(object);
     }
     
     
@@ -81,9 +82,11 @@ public class GenericManager {
         return mergedObject;
     }
     
-    public static Object updateObject(Object object, Session session) {
-        Object mergedObject = session.merge(object);
-        return mergedObject;
+    //public static Object updateObject(Object object, Session session) {
+    public static void updateObject(Object object, Session session) {
+        //Object mergedObject = session.merge(object);
+    	session.saveOrUpdate(object);
+        //return mergedObject;
     }
 
     /**
@@ -138,11 +141,15 @@ public class GenericManager {
 
         return criteria.list();
         
-        /*List result = session.createQuery( "from Event" ).list();
+        /*session.beginTransaction();
+        List result = session.createQuery("from "+clazz.getClass()).getResultList();
         session.getTransaction().commit();
         session.close();
         
         return result;*/
+        
+        //List result = session.createQuery("from "+clazz.getClass()).getResultList();
+        //return result;
     }
 
 

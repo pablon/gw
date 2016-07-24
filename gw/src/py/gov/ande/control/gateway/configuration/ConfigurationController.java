@@ -28,7 +28,7 @@ public class ConfigurationController {
 		
 		this.theView.panelConf.tabConfIec61850View.addBtnExploreIed(
 				new TabConfigurationIec61850Listener(
-						this.theView.panelConf.tabConfIec61850View, this.iedModel));
+						this.theView.panelConf, this.iedModel, this));
 		
 	}
 
@@ -36,10 +36,13 @@ public class ConfigurationController {
 	 * Construye el arbol de drivers, así como la lista de IED
 	 * @author pablo
 	 */
-	private void buildTree() {
+	public void buildTree() {
         DefaultMutableTreeNode subestacion = null, iec61850 = null, ied = null, iec101, temp;
         DefaultMutableTreeNode nodeRoot = (DefaultMutableTreeNode) theView.panelConf.treeConf.getModel().getRoot();
-
+        if(nodeRoot.getChildCount()>0){
+        	nodeRoot.removeAllChildren();
+        }
+        
         List<Drivers> driverList = GenericManager.getListBasedOnCriteria("From Drivers drivers ORDER BY "
         		+ "drivers.subestation DESC,"
         		+ "drivers.iec61850 DESC,"

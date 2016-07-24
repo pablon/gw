@@ -31,7 +31,7 @@ public class UrcbManager {
 	 * @param ied
 	 * @param serverModel
 	 */
-	public static void saveAllTagWithOutBuffer(Ied ied, ServerModel serverModel, Session session, Transaction tx) {
+	public static void saveAllTagWithOutBuffer(Ied ied, ServerModel serverModel) {
 		logger.info("inicio");
 		int reportingCapacibiliyBrcbId = ReportingCapabilityManager.getObjectBrcb();
 		int reportingCapacibiliyUrcbId = ReportingCapabilityManager.getObjectUrcb();
@@ -47,7 +47,7 @@ public class UrcbManager {
 			report.setIedId(ied.getId());
 			report.setReferent(modelNodercbs.getReference().toString());				//UC_SSAACTRL/LLN0.urcbESTADOS2
 			report.setDataset(datasetReferent);											//?
-			GenericManager.saveObject(report, session);
+			GenericManager.saveObject(report);
 			
 			DataSet dataset = serverModel.getDataSet(datasetReferent);
 		    for (ModelNode modelNode : dataset) {
@@ -70,7 +70,7 @@ public class UrcbManager {
 		    			tagMonitor.setReportingCapacibiliyId(reportingCapacibiliyBothId);
 		    		}		    		
 		    		
-		    		GenericManager.updateObject(tagMonitor, session);
+		    		GenericManager.updateObject(tagMonitor);
 		    	}
 			}
 		}

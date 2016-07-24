@@ -61,7 +61,7 @@ public class DriversManager {
 	}
 
 	public void valueChangedOfTheTree(DefaultMutableTreeNode node) {
-		System.out.println("DriversManager.valueChange");
+		//System.out.println("DriversManager.valueChange");
 		if (node == null){
 			System.out.println("nada fue seleccionoda");
 			return;
@@ -72,10 +72,10 @@ public class DriversManager {
 		List<Drivers> driverList = GenericManager.getAllObjects(Drivers.class, Order.asc("id"));
 		//List<Drivers> driverList = GenericManager.getAllObjects(Drivers.class, "id");
 		for (Drivers driver : driverList) {
-			System.out.println("driver: "+driver.getDescription());
+			//System.out.println("driver: "+driver.getDescription());
 			if(driver.getIec61850() == true){
 				if(Objects.equals(driver.getDescription(), nodeInfo)){
-					System.out.println("click en 61850");
+					//System.out.println("click en 61850");
 					this.setIec61850(true);
 					break;
 				}else{
