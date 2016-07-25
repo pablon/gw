@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.List;
 
@@ -39,6 +40,7 @@ import py.gov.ande.control.gateway.manager.UrcbManager;
 import py.gov.ande.control.gateway.model.Ied;
 import py.gov.ande.control.gateway.model.ReportingCapability;
 import py.gov.ande.control.gateway.util.GenericManager;
+import py.gov.ande.control.gateway.util.TestConnections;
 
 public class TabConfigurationIec61850Listener extends Thread implements ActionListener, ServerEventListener{
 	
@@ -168,17 +170,7 @@ public class TabConfigurationIec61850Listener extends Thread implements ActionLi
 			e.printStackTrace();
 			return false;
 		}
-		/*int count = 1;
-		
-		for (BasicDataAttribute bda : serverModel.getBasicDataAttributes()) {
-			if(bda.getFc() == Fc.ST){
-				if(bda.getBasicType() == BdaType.BOOLEAN){
-					System.out.println("Tag Nro "+count+": "+bda.getParent().getReference().toString());	//UC_SSAACTRL/GGIO3.Ind01);
-					count++;
-				}
-			}
-		}
-		System.out.println("fin. Cantidad: "+count);*/
+
         association.disconnect();
         serverSapServer.stop();
         return true;
@@ -211,17 +203,28 @@ public class TabConfigurationIec61850Listener extends Thread implements ActionLi
 	 * @author pablo
 	 */
 	private Boolean connectToIed(){
+		
+		
         ClientSap clientSap = new ClientSap();
 
         InetAddress address = null;
         try {
             address = InetAddress.getByName(theView.tabConfIec61850View.getInputIp());
+            if(!TestConnections.testConnection(address)){
+            	JOptionPane.showMessageDialog(null,"Error: Test de conexión fallida",
+          		      "Advertencia",JOptionPane.WARNING_MESSAGE);
+            	return false;
+            }
         } catch (UnknownHostException e1) {
         	logger.error("error de ip");
         	JOptionPane.showMessageDialog(null,"Error: Verifique que la dirección ip sea valida",
         		      "Advertencia",JOptionPane.WARNING_MESSAGE);
-            e1.printStackTrace();
             return false;
+        } catch (IOException e) {
+        	logger.error("error de red");
+        	JOptionPane.showMessageDialog(null,"Error: Verifique que está conectado a una red válida",
+        		      "Advertencia",JOptionPane.WARNING_MESSAGE);
+			return false;
         }
 
         int remotePort = 102;
