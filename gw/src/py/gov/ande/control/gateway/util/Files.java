@@ -1,4 +1,4 @@
-package py.gov.ande.control.gateway.configuration;
+package py.gov.ande.control.gateway.util;
 
 import java.io.BufferedWriter;
 import java.io.File;

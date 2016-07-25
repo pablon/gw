@@ -15,6 +15,7 @@ import org.openmuc.openiec61850.BdaQuality;
 import org.openmuc.openiec61850.BdaReasonForInclusion;
 import org.openmuc.openiec61850.BdaTimestamp;
 import org.openmuc.openiec61850.BdaTriggerConditions;
+import org.openmuc.openiec61850.BdaType;
 import org.openmuc.openiec61850.Brcb;
 import org.openmuc.openiec61850.ClientAssociation;
 import org.openmuc.openiec61850.ClientAssociation.ClientReceiver;
@@ -33,6 +34,10 @@ import org.openmuc.openiec61850.Urcb;
 import org.slf4j.Logger;		//agregue la libreria slf4j-jdk14 para que funcione
 import org.slf4j.LoggerFactory;
 
+import py.gov.ande.control.gateway.manager.ReportingCapabilityManager;
+import py.gov.ande.control.gateway.model.TagMonitorIec61850;
+import py.gov.ande.control.gateway.util.GenericManager;
+
 public class SampleClientFile  implements ClientEventListener {
 
 	private static final Logger logger = LoggerFactory.getLogger(SampleClient.class);
@@ -45,8 +50,8 @@ public class SampleClientFile  implements ClientEventListener {
             System.out.println(usageString);
             return;
         } */
-        //String remoteHost = "127.0.0.1";
-        String remoteHost = "10.2.28.231";
+        String remoteHost = "127.0.0.1";
+        //String remoteHost = "10.2.28.231";
         InetAddress address;
         try {
             address = InetAddress.getByName(remoteHost);
@@ -56,7 +61,6 @@ public class SampleClientFile  implements ClientEventListener {
         }
         int remotePort;
         try {
-//            remotePort = Integer.parseInt("10002");
         	remotePort = Integer.parseInt("102");
         } catch (NumberFormatException e) {
             System.out.println(usageString);
@@ -76,84 +80,28 @@ public class SampleClientFile  implements ClientEventListener {
        
         ServerModel serverModel;
         try {
-            //serverModel = association.retrieveModel();
-        	
-            // serverModel = association.getModelFromSclFile("../sampleServer/sampleModel.icd");
-            // } catch (SclParseException e1) {
-        	
-            serverModel = association.getModelFromSclFile("/home/pn/Documentos/uc_lt2.cid");
+            //serverModel = association.getModelFromSclFile("/home/pn/Documentos/uc_lt2.cid");
             //serverModel = association.getModelFromSclFile("/home/pn/Documentos/respaldo/openiec61850/run-scripts/sample/sample-model.icd");
+        	serverModel = association.getModelFromSclFile("/home/pn/Documentos/Siprotec_WR24_F003.cid");
             
-            logger.info("Se disparo un GetDirectory y un GetDefintion con exito");
-
-/*        } catch (ServiceError e) {
-            logger.error("Service Error requesting model.", e);
-            association.close();
-            return;
-        } catch (IOException e) {
-            logger.error("Fatal IOException requesting model.", e);
-            return;
-        }            
-*/            
         } catch (SclParseException e1) {
             logger.error("Fatal IOException requesting model.", e1);
             return;
         }
-        System.out.println("Inicio de exploracion del servidor");
-        association.getAllDataValues();
         
-        //for (BasicDataAttribute bda : serverModel.getBasicDataAttributes()) {
-        //    System.out.println("BDA: " + bda);
-        //}        
-        
-        Brcb brcb = serverModel.getBrcb("UC_SSAACTRL/LLN0.brcbESTADOS");
-        //Brcb brcb = serverModel.getBrcb("UC_SSAACTRL/LLN0.brcbESTADOS2");
-        
-        if (brcb == null) {
-        	logger.error("ReportControlBlock not found");
-        }
-        else {
-        	association.getRcbValues(brcb);
-            brcb.getTrgOps().setIntegrity(false);					//prueba de eliminar integridad pera que llegue solo por DCHG o GI
-            //brcb.getIntgPd().setValue(0); 
-            //brcb.getTrgOps().setGeneralInterrogation(false);		//anula la interrogacion general
-            brcb.getOptFlds().setBufferOverflow(true);
-            brcb.getOptFlds().setConfigRevision(true);
-            brcb.getOptFlds().setDataReference(true);
-            brcb.getOptFlds().setDataSetName(true);
-            brcb.getOptFlds().setEntryId(true);
-            brcb.getOptFlds().setReasonForInclusion(true);
-            brcb.getOptFlds().setReportTimestamp(true);
-            brcb.getOptFlds().setSegmentation(true);
-            brcb.getOptFlds().setSequenceNumber(true);
-                        
-            logger.info("brcb name: " + brcb.getName());
-            logger.info("RptId: " + brcb.getRptId());
-            logger.info("RptEna: " + brcb.getRptEna().getValue());	//false
-            logger.info("Rpt.getTrgOps isIntegrity: " 					+ brcb.getTrgOps().isIntegrity()); 	//true
-            logger.info("getIntgPd: " + brcb.getIntgPd());			//UC_SSAACTRL/LLN0.brcbESTADOS.IntgPd: 2000
-            logger.info("brcb.getTrgOps().isGeneralInterrogation: " + brcb.getTrgOps().isGeneralInterrogation());
-            int tiempo = 20000;
-
-          //association.setRcbValues(rcb, setRptId, setDatSet, setOptFlds, setBufTm, setTrgOps, setIntgPd, setPurgeBuf, setEntryId)
-            association.setRcbValues(brcb, true,    true,     true,       true,     true,      true, 	   true,       true);
-            association.getRcbValues(brcb);
-            
-            association.enableReporting(brcb);
-            //association.startGi(brcb);
-            logger.info("RptEna: " 										+ brcb.getRptEna().getValue());	//true
-            logger.info("Rpt.getTrgOps isIntegrity: " 					+ brcb.getTrgOps().isIntegrity());	//false
-            logger.info("getIntgPd: " + brcb.getIntgPd());			//UC_SSAACTRL/LLN0.brcbESTADOS.IntgPd: 2000
-            
-            System.out.println("inicio de interrogacion general");
-			try {
-				Thread.sleep(tiempo);
-			} catch (InterruptedException e) {
-				logger.info("DemoApp thread interrupted: will stop");
+		TagMonitorIec61850 tag;
+		int count = 1;
+		
+		for (BasicDataAttribute bda : serverModel.getBasicDataAttributes()) {
+			if(bda.getFc() == Fc.ST){
+				if(bda.getBasicType() == BdaType.BOOLEAN){
+					System.out.println("Tag Nro "+count+": "+bda.getParent().getReference().toString());	//UC_SSAACTRL/GGIO3.Ind01);
+					count++;
+				}
 			}
-            association.disableReporting(brcb);
-            association.disconnect();
-        }
+		}
+		System.out.println("fin. Cantidad: "+count);
+        association.disconnect();
         System.out.println("fin del MAIN");
 	}
 	

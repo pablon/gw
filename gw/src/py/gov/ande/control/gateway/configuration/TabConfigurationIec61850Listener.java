@@ -16,11 +16,17 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
+import org.openmuc.openiec61850.BasicDataAttribute;
+import org.openmuc.openiec61850.BdaType;
 import org.openmuc.openiec61850.ClientAssociation;
 import org.openmuc.openiec61850.ClientEventListener;
 import org.openmuc.openiec61850.ClientSap;
+import org.openmuc.openiec61850.Fc;
 import org.openmuc.openiec61850.Report;
+import org.openmuc.openiec61850.SclParseException;
+import org.openmuc.openiec61850.ServerEventListener;
 import org.openmuc.openiec61850.ServerModel;
+import org.openmuc.openiec61850.ServerSap;
 import org.openmuc.openiec61850.ServiceError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +40,7 @@ import py.gov.ande.control.gateway.model.Ied;
 import py.gov.ande.control.gateway.model.ReportingCapability;
 import py.gov.ande.control.gateway.util.GenericManager;
 
-public class TabConfigurationIec61850Listener implements ActionListener{
+public class TabConfigurationIec61850Listener extends Thread implements ActionListener, ServerEventListener{
 	
 	TabConfigurationView theView;
 	private ClientAssociation association;
@@ -43,6 +49,8 @@ public class TabConfigurationIec61850Listener implements ActionListener{
 	private ServerModel serverModel;
 	private Ied ied;
 	ConfigurationController controller;
+	String sclFilePath = "/home/pn/Documentos/Siprotec_WR24_F003.cid";
+	private ServerSap serverSapServer = null;
 	
 	public TabConfigurationIec61850Listener(TabConfigurationView theView, IedManager iedModel, ConfigurationController controller){
 		this.theView = theView;
@@ -93,10 +101,110 @@ public class TabConfigurationIec61850Listener implements ActionListener{
 			if (result == JFileChooser.APPROVE_OPTION) {
 			    File selectedFile = fileChooser.getSelectedFile();
 			    System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+			    if(exploreCid(selectedFile.getAbsolutePath())){
+		        	int option = JOptionPane.showConfirmDialog(null, "Archivo cid válido. Confirmar que se quiere guardar los TAGS encontrados", "Advertencia", JOptionPane.OK_CANCEL_OPTION);
+		        	if(option == JOptionPane.OK_OPTION){
+		        		try {
+		        			ied = iedModel.saveIed("127.0.0.1", 102);
+		                	TagMonitorIec61850Manager.saveAllTagIec61850(ied, serverModel);
+		                	BrcbManager.saveAllTagWithBuffer(ied, serverModel);
+		                	UrcbManager.saveAllTagWithOutBuffer(ied, serverModel);
+	
+		            		JOptionPane.showMessageDialog(null,"Información: Los datos del IED fueron guardados",
+		              		      "Advertencia",JOptionPane.INFORMATION_MESSAGE);      
+		            		controller.buildTree();
+						} catch (Exception e2) {
+		            		JOptionPane.showMessageDialog(null,"Información: Los datos del IED no fueron guardados",
+		                		      "Advertencia",JOptionPane.ERROR_MESSAGE);            	
+						}		        		
+		        	}
+			    }
 			}
 		}
 	}
 	
+	/**
+	 * Aun no se como explorar un archivo cid sin conectarme a un server.
+	 * Se procede a instanciar un server 127.0.0.1 de forma provisoria hasta tener una respuesta de los creadores de la librería.
+	 * Se procede a dar de baja al servidor una vez que se logre realizar la asociación.
+	 * @param selectedFile
+	 */
+	private boolean exploreCid(String selectedFile) {
+		logger.info("inicio");
+		try {
+			runServer(sclFilePath, 102);
+		} catch (SclParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			return false;
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			return false;
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		//logger.info("creando clientSap");
+		
+		 ClientSap clientSap = new ClientSap();
+		 ClientAssociation association;  
+		 TabConfigurationIec61850View eventHandler = new TabConfigurationIec61850View();
+		 
+        try {
+            association = clientSap.associate(InetAddress.getByName("127.0.0.1"), 102, null, eventHandler);
+            logger.info("Conectado con exito");
+        } catch (IOException e) {
+            logger.error("Error connecting to server: " + e.getMessage());
+            return false;
+        }  
+        
+        serverModel = null;
+        
+        try {
+			serverModel = association.getModelFromSclFile(selectedFile);
+		} catch (SclParseException e) {
+			e.printStackTrace();
+			return false;
+		}
+		/*int count = 1;
+		
+		for (BasicDataAttribute bda : serverModel.getBasicDataAttributes()) {
+			if(bda.getFc() == Fc.ST){
+				if(bda.getBasicType() == BdaType.BOOLEAN){
+					System.out.println("Tag Nro "+count+": "+bda.getParent().getReference().toString());	//UC_SSAACTRL/GGIO3.Ind01);
+					count++;
+				}
+			}
+		}
+		System.out.println("fin. Cantidad: "+count);*/
+        association.disconnect();
+        serverSapServer.stop();
+        return true;
+	}
+	
+	/**
+	 * Método que crea una instancia de servidor IEC61850. Se debe implementar ServerEventListener
+	 * @param sclFilePath
+	 * @param port
+	 * @throws SclParseException
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	private void runServer(String sclFilePath, int port) throws SclParseException, IOException, InterruptedException {
+		logger.info("inicio");
+		serverSapServer = null;
+		ServerModel serversServerModel = null;
+        List<ServerSap> serverSaps = null;
+        serverSaps = ServerSap.getSapsFromSclFile(sclFilePath);
+        serverSapServer = serverSaps.get(0);
+        serverSapServer.setPort(port);
+        serverSapServer.startListening(this);
+        serversServerModel = serverSapServer.getModelCopy();
+        start();
+    }
+
 	/**
 	 * Método que realiza una conexión al ied para comprobar el ip/port
 	 * @return
@@ -172,6 +280,18 @@ public class TabConfigurationIec61850Listener implements ActionListener{
 			logger.error("Disconnect Error", e);
 			return false;
 		}
+	}
+
+	@Override
+	public List<ServiceError> write(List<BasicDataAttribute> bdas) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void serverStoppedListening(ServerSap serverSAP) {
+		// TODO Auto-generated method stub
+		
 	}
 
 

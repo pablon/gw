@@ -7,15 +7,20 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import org.hibernate.SessionFactory;
+import org.openmuc.openiec61850.BasicDataAttribute;
 import org.openmuc.openiec61850.ClientAssociation;
 import org.openmuc.openiec61850.ClientEventListener;
 import org.openmuc.openiec61850.Report;
+import org.openmuc.openiec61850.ServerEventListener;
+import org.openmuc.openiec61850.ServerSap;
+import org.openmuc.openiec61850.ServiceError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.swing.SwingConstants;
@@ -223,10 +228,6 @@ public class TabConfigurationIec61850View extends JPanel implements ClientEventL
 		btnExploreCid.addActionListener(listenForBtnClick);
 	}
 	
-	/*void addBtnExploreCid(ActionListener listenForBtnExploreCid){
-		btnExploreCid.addActionListener(listenForBtnExploreCid);
-	}*/
-
 	@Override
 	public void newReport(Report report) {
 		// TODO Auto-generated method stub

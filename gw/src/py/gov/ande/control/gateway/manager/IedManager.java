@@ -22,7 +22,7 @@ public class IedManager {
 	 */
 	public Ied saveIed(String ip, int port){
 		logger.info("metodo saveIed. Address: " + ip + ", port: " + port);
-		String name = "Nombre Provisorio";
+		String name = "Nombre Provisorio-"+ip;
 		ied = new Ied();
 		ied.setIpAddress(ip);
 		ied.setPortAddress(port);
