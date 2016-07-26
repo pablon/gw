@@ -10,6 +10,7 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 
 import py.gov.ande.control.gateway.model.Drivers;
+import py.gov.ande.control.gateway.model.Ied;
 import py.gov.ande.control.gateway.util.DatabaseUtil;
 import py.gov.ande.control.gateway.util.GenericManager;
 
@@ -20,8 +21,23 @@ public class DriversManager {
     Boolean substation = false;
 	Boolean iec101 = false;
     Boolean ied = false;
+    Integer iedId = 0;
     
-    public Boolean getSubstation() {
+    /**
+	 * @return the iedId
+	 */
+	private Integer getIedId() {
+		return iedId;
+	}
+
+	/**
+	 * @param iedId the iedId to set
+	 */
+	private void setIedId(Integer iedId) {
+		this.iedId = iedId;
+	}
+
+	public Boolean getSubstation() {
 		return substation;
 	}
 
@@ -56,26 +72,19 @@ public class DriversManager {
 	}
 
 	public DriversManager() {
-		
-		//this.session = DatabaseUtil.getSessionFactory().getCurrentSession();
+
 	}
 
 	public void valueChangedOfTheTree(DefaultMutableTreeNode node) {
-		//System.out.println("DriversManager.valueChange");
 		if (node == null){
 			System.out.println("nada fue seleccionoda");
 			return;
 		}
 		Object nodeInfo = node.getUserObject();
-		//theView.panelConf.scrollPaneDetails.removeAll();
-		
 		List<Drivers> driverList = GenericManager.getAllObjects(Drivers.class, Order.asc("id"));
-		//List<Drivers> driverList = GenericManager.getAllObjects(Drivers.class, "id");
 		for (Drivers driver : driverList) {
-			//System.out.println("driver: "+driver.getDescription());
 			if(driver.getIec61850() == true){
 				if(Objects.equals(driver.getDescription(), nodeInfo)){
-					//System.out.println("click en 61850");
 					this.setIec61850(true);
 					break;
 				}else{
@@ -83,13 +92,25 @@ public class DriversManager {
 				}
 			}else if(driver.getIec101() == true){
 				if(Objects.equals(driver.getDescription(), nodeInfo)){
-					//System.out.println("click en 101");
 					this.setIec101(true);
 					break;
 				}else{
 					this.setIec101(false);
 				}
 			}
+		}
+        /*Se explora lista de ied's */
+    	List<Ied> iedList = GenericManager.getAllObjects(Ied.class, Order.asc("id"));
+    	for (Ied ieds : iedList) {
+    		if(Objects.equals(ieds.getName(), nodeInfo)){
+    			this.setIed(true);
+    			this.setIedId(ieds.getId());
+    			break;
+    		}else{
+    			this.setIed(false);
+    			this.setIedId(0);
+    		}
+
 		}
 		
 	}

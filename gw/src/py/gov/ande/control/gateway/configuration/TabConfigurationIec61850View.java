@@ -69,7 +69,6 @@ public class TabConfigurationIec61850View extends JPanel implements ClientEventL
 		gbc_lblPropiedades.gridwidth = 3;
 		gbc_lblPropiedades.fill = GridBagConstraints.BOTH;
 		gbc_lblPropiedades.anchor = GridBagConstraints.NORTH;
-		//gbc_lblPropiedades.gridwidth = 3;
 		gbc_lblPropiedades.insets = new Insets(5, 5, 5, 0);
 		gbc_lblPropiedades.gridx = 0;
 		gbc_lblPropiedades.gridy = 0;

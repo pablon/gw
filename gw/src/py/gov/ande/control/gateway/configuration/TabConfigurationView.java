@@ -23,6 +23,7 @@ public class TabConfigurationView extends JPanel {
 	protected JScrollPane scrollPaneDetails;
 	protected TabConfigurationIec61850View tabConfIec61850View = new TabConfigurationIec61850View();
 	protected TabConfigurationIec101View tabConfIec101View = new TabConfigurationIec101View();
+	protected TabConfigurationIedView tabConfIedView = new TabConfigurationIedView();
 	public JTree treeConf;
 	private GridBagLayout gridBagLayout;
 	protected JPanel panelDetails = new JPanel(); 
@@ -60,9 +61,11 @@ public class TabConfigurationView extends JPanel {
 
 		panelDetails.add(tabConfIec61850View);
 		panelDetails.add(tabConfIec101View);
+		panelDetails.add(tabConfIedView);
 		scrollPaneDetails.add(panelDetails);
 		tabConfIec61850View.setVisible(false);
 		tabConfIec101View.setVisible(false);
+		tabConfIedView.setVisible(false);
 		
 	}
 	
@@ -86,21 +89,21 @@ public class TabConfigurationView extends JPanel {
 	 * @param valueChangedOfTheTree
 	 */
 	public void valueChangedOfTheTree(DriversManager driverModel) {
-		//System.out.println("TabConfigurationView.valueChange");
 		if(driverModel.getValueChangedOfTheTree().getIec61850()){
-			//System.out.println("getIec61850 true");
 			scrollPaneDetails.setViewportView(tabConfIec61850View);
 			tabConfIec61850View.setVisible(true);
 		}else if(driverModel.getValueChangedOfTheTree().getIec101()){
-			//System.out.println("getIec101 true");
 			scrollPaneDetails.setViewportView(tabConfIec101View);
 			tabConfIec101View.setVisible(true);
-			
+		}else if(driverModel.getValueChangedOfTheTree().getIed()){
+			scrollPaneDetails.setViewportView(tabConfIedView);
+			tabConfIedView.setVisible(true);
 		}
 		else{
 			//scrollPaneDetails.removeAll();
 			tabConfIec61850View.setVisible(false);
 			tabConfIec101View.setVisible(false);
+			tabConfIedView.setVisible(false);
 		}
 		
 		//scrollPaneDetails.repaint();

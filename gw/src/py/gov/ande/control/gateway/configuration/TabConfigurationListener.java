@@ -25,11 +25,12 @@ public class TabConfigurationListener implements TreeSelectionListener{
 	
 	@Override
 	public void valueChanged(TreeSelectionEvent e) {
-		//System.out.println("TabConfigurationListener - valueChanged");
-		
-		driverModel.valueChangedOfTheTree((DefaultMutableTreeNode) theView.treeConf.getLastSelectedPathComponent());
-		
-		theView.valueChangedOfTheTree(driverModel.getValueChangedOfTheTree());
+		driverModel.valueChangedOfTheTree(
+				(DefaultMutableTreeNode) theView.treeConf.getLastSelectedPathComponent()
+				);
+		theView.valueChangedOfTheTree(
+				driverModel.getValueChangedOfTheTree()
+				);
 	}
 
 }
