@@ -215,6 +215,12 @@ public class TabConfigurationIec61850Listener extends Thread implements ActionLi
         InetAddress address = null;
         try {
             address = InetAddress.getByName(theView.tabConfIec61850View.getInputIp());
+            //FALTA PROBAR
+            if(IedManager.findIedForIpAddress(address.toString())){
+            	JOptionPane.showMessageDialog(null,"Error: Ya se encuentra registrado un IED con la dirección ip: "+address,
+            		      "Advertencia",JOptionPane.WARNING_MESSAGE);
+              	return false;
+            }
             if(!TestConnections.testConnection(address)){
             	JOptionPane.showMessageDialog(null,"Error: Test de conexión fallida",
           		      "Advertencia",JOptionPane.WARNING_MESSAGE);

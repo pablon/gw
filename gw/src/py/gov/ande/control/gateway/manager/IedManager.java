@@ -1,7 +1,11 @@
 package py.gov.ande.control.gateway.manager;
 
+import java.net.InetAddress;
+import java.util.Arrays;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,6 +40,26 @@ public class IedManager {
 			e.printStackTrace();
 			logger.error("Error, luego del metodo generic manager Save()");
 			return null;
+		}
+	}
+
+	/**
+	 * Método que busca un ied en la BD en base a la ip.
+	 * Retorna true si lo encuentra
+	 * @param String address
+	 * @return Boolean
+	 * @author Pablo
+	 * @date 2016-07-26
+	 */
+	public static boolean findIedForIpAddress(String address) {
+		Ied ied = (Ied) GenericManager.getFilteredObject(Ied.class, 
+    			Arrays.asList(
+    					Restrictions.eq("ipAddress", address)
+				));		
+		if(ied != null){
+			return true;
+		}else{
+		return false;
 		}
 	}
 }
