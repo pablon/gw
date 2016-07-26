@@ -74,7 +74,7 @@ public class TabConfigurationView extends JPanel {
 	 * @param listenForTreeClick
 	 */
 	void addTreeListener(TreeSelectionListener listenForTreeClick){
-		System.out.println("AddTreeListener");
+		//System.out.println("AddTreeListener");
 		treeConf.addTreeSelectionListener(listenForTreeClick);
 	}
 
@@ -96,6 +96,7 @@ public class TabConfigurationView extends JPanel {
 			scrollPaneDetails.setViewportView(tabConfIec101View);
 			tabConfIec101View.setVisible(true);
 		}else if(driverModel.getValueChangedOfTheTree().getIed()){
+			tabConfIedView = new TabConfigurationIedView(driverModel);
 			scrollPaneDetails.setViewportView(tabConfIedView);
 			tabConfIedView.setVisible(true);
 		}

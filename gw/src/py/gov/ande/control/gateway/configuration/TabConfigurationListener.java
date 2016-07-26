@@ -23,6 +23,10 @@ public class TabConfigurationListener implements TreeSelectionListener{
 		this.driverModel = driverModel;
 	} 
 	
+	/**
+	 * Evento del addTreeListener. Cuando el arbol de drivers recibe un click.
+	 * Refresca la pantalla de detalles de la derecha.
+	 */
 	@Override
 	public void valueChanged(TreeSelectionEvent e) {
 		driverModel.valueChangedOfTheTree(

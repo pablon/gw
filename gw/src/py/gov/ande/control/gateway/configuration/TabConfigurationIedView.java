@@ -11,15 +11,21 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import py.gov.ande.control.gateway.manager.DriversManager;
+
 public class TabConfigurationIedView extends JPanel {
 
-	protected JTextField inputIp;
-	protected JTextField inputPort;
-	protected JTextField inputName;
+	private JTextField inputIp;
+	private JTextField inputPort;
+	private JTextField inputName;
+	private DriversManager driverModel;
 	
 	
 	public TabConfigurationIedView() {
-
+		initialize();
+	}
+	
+	private void initialize(){
 		setAlignmentX(Component.LEFT_ALIGNMENT);
 		setVisible(false);
 		
@@ -52,7 +58,7 @@ public class TabConfigurationIedView extends JPanel {
 		gbc_lblName.gridy = 2;
 		add(lblName, gbc_lblName);
 		
-		inputName = new JTextField();
+		inputName = new JTextField(getIedName());
 		GridBagConstraints gbc_inputName = new GridBagConstraints();
 		gbc_inputName.gridwidth = 2;
 		gbc_inputName.fill = GridBagConstraints.HORIZONTAL;
@@ -70,7 +76,7 @@ public class TabConfigurationIedView extends JPanel {
 		gbc_lblIp.gridy = 3;
 		add(lblIp, gbc_lblIp);
 		
-		inputIp = new JTextField("10.2.28.231");
+		inputIp = new JTextField(getIedIp());
 		GridBagConstraints gbc_inputIp = new GridBagConstraints();
 		gbc_inputIp.gridwidth = 2;
 		gbc_inputIp.fill = GridBagConstraints.HORIZONTAL;
@@ -88,7 +94,7 @@ public class TabConfigurationIedView extends JPanel {
 		gbc_lblPort.gridy = 4;
 		add(lblPort, gbc_lblPort);
 		
-		inputPort = new JTextField("102");
+		inputPort = new JTextField(getIedPort());
 		GridBagConstraints gbc_inputPort = new GridBagConstraints();
 		gbc_inputPort.gridwidth = 2;
 		gbc_inputPort.insets = new Insets(5, 5, 5, 0);
@@ -96,7 +102,35 @@ public class TabConfigurationIedView extends JPanel {
 		gbc_inputPort.gridx = 1;
 		gbc_inputPort.gridy = 4;
 		add(inputPort, gbc_inputPort);
-		
+	}
+	
+	public TabConfigurationIedView(DriversManager driverModel) {
+		this.driverModel = driverModel;
+		initialize();
+	}
+
+	private String getIedIp(){
+		if(driverModel != null){
+			return driverModel.getIedIp();
+		}else{
+			return "";	
+		}
+	}
+	
+	private String getIedPort(){
+		if(driverModel != null){
+			return driverModel.getIedPort().toString();
+		}else{
+			return "";	
+		}
+	}
+	
+	private String getIedName(){
+		if(driverModel != null){
+			return driverModel.getIedName();
+		}else{
+			return "";	
+		}
 	}
 
 }

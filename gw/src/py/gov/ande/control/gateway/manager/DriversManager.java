@@ -22,11 +22,56 @@ public class DriversManager {
 	Boolean iec101 = false;
     Boolean ied = false;
     Integer iedId = 0;
+    String ip = "";
+    Integer port = 0;
+    String iedName = "";
     
     /**
+	 * @return the iedName
+	 */
+	public String getIedName() {
+		return iedName;
+	}
+
+	/**
+	 * @param iedName the iedName to set
+	 */
+	private void setIedName(String iedName) {
+		this.iedName = iedName;
+	}
+
+	/**
+	 * @return the ip
+	 */
+	public String getIedIp() {
+		return ip;
+	}
+
+	/**
+	 * @param ip the ip to set
+	 */
+	private void setIedIp(String ip) {
+		this.ip = ip;
+	}
+
+	/**
+	 * @return the port
+	 */
+	public Integer getIedPort() {
+		return port;
+	}
+
+	/**
+	 * @param port the port to set
+	 */
+	private void setIedPort(Integer port) {
+		this.port = port;
+	}
+
+	/**
 	 * @return the iedId
 	 */
-	private Integer getIedId() {
+	public Integer getIedId() {
 		return iedId;
 	}
 
@@ -105,10 +150,17 @@ public class DriversManager {
     		if(Objects.equals(ieds.getName(), nodeInfo)){
     			this.setIed(true);
     			this.setIedId(ieds.getId());
+    			this.setIedIp(ieds.getIpAddress());
+    			this.setIedPort(ieds.getPortAddress());
+    			this.setIedName(ieds.getName());
     			break;
+    		//}
     		}else{
     			this.setIed(false);
     			this.setIedId(0);
+    			this.setIedIp("");
+    			this.setIedPort(0);
+    			this.setIedName("");
     		}
 
 		}
