@@ -67,7 +67,6 @@ public class ConfigurationController {
     
         /*Se explora lista de ied's */
     	List<Ied> iedList = GenericManager.getAllObjects(Ied.class, Order.asc("id"));
-    	//List<Ied> iedList = GenericManager.getAllObjects(Ied.class, "id");
     	for (Ied ieds : iedList) {
     		ied = new DefaultMutableTreeNode(ieds.getName());
     		iec61850.add(ied);

@@ -85,8 +85,11 @@ public class TabConfigurationView extends JPanel {
 	}
 
 	/**
-	 * mostrará el panel de detalles según se le haya dado click en el arbol de drivers.
+	 * Acción que mostrará el panel de detalles según se le haya dado click en el arbol de drivers..
+	 * Muestra las propiedades del driver iec61850, 101, e Ied.
 	 * @param valueChangedOfTheTree
+	 * @author pablo
+	 * @date 2016-07-26
 	 */
 	public void valueChangedOfTheTree(DriversManager driverModel) {
 		if(driverModel.getValueChangedOfTheTree().getIec61850()){
@@ -96,7 +99,7 @@ public class TabConfigurationView extends JPanel {
 			scrollPaneDetails.setViewportView(tabConfIec101View);
 			tabConfIec101View.setVisible(true);
 		}else if(driverModel.getValueChangedOfTheTree().getIed()){
-			tabConfIedView = new TabConfigurationIedView(driverModel);
+			refreshJTextFields(driverModel);
 			scrollPaneDetails.setViewportView(tabConfIedView);
 			tabConfIedView.setVisible(true);
 		}
@@ -106,9 +109,21 @@ public class TabConfigurationView extends JPanel {
 			tabConfIec101View.setVisible(false);
 			tabConfIedView.setVisible(false);
 		}
-		
 		//scrollPaneDetails.repaint();
 		//scrollPaneDetails.updateUI();
-		
 	}
+
+	/**
+	 * Método utilizado para refrescar los campos de la vista de las propiedades de los IEDs
+	 * @param driverModel
+	 * @author pablo
+	 * @date 2016-07-26
+	 */
+	private void refreshJTextFields(DriversManager driverModel) {
+		tabConfIedView.inputIp.setText(driverModel.getIedIp());
+		tabConfIedView.inputPort.setText(driverModel.getIedPort().toString());
+		tabConfIedView.inputName.setText(driverModel.getIedName());
+	}
+	
+	
 }
