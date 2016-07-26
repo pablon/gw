@@ -38,6 +38,7 @@ import py.gov.ande.control.gateway.manager.ReportingCapabilityManager;
 import py.gov.ande.control.gateway.manager.TagMonitorIec61850Manager;
 import py.gov.ande.control.gateway.manager.UrcbManager;
 import py.gov.ande.control.gateway.model.Ied;
+import py.gov.ande.control.gateway.model.IedHome;
 import py.gov.ande.control.gateway.model.ReportingCapability;
 import py.gov.ande.control.gateway.util.GenericManager;
 import py.gov.ande.control.gateway.util.TestConnections;
@@ -83,6 +84,10 @@ public class TabConfigurationIec61850Listener extends Thread implements ActionLi
 		                	TagMonitorIec61850Manager.saveAllTagIec61850(ied, serverModel);
 		                	BrcbManager.saveAllTagWithBuffer(ied, serverModel);
 		                	UrcbManager.saveAllTagWithOutBuffer(ied, serverModel);
+		                	
+		                	/* PENDIENTE PROBAR */
+		                	ied.setName(TagMonitorIec61850Manager.getFirstElement(ied.getId()));
+		                	GenericManager.saveObject(ied);
 	
 		            		JOptionPane.showMessageDialog(null,"Información: Los datos del IED fueron guardados",
 		              		      "Advertencia",JOptionPane.INFORMATION_MESSAGE);      
