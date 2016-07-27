@@ -67,13 +67,16 @@ public class TabConfigurationIec61850Listener extends Thread implements ActionLi
 	 * guarda todos los tags encontrados con sus respectivos telegramAddress.
 	 * identifica cuales tags corresponden a un reporte con su dataset.
 	 * 
-	 * Acción sobre el boton de exploración del archivo CID.
+	 * Acción para registrar un nuevo ied. Dos modos: 
+	 * 1) conectandose directamente al ied y obteniendo su modelo.
+	 * 2) importando el archivo de configuración del Ied
 	 * @author pablo
+	 * @date 2016-07-26
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
-		if(e.getSource() == theView.tabConfIec61850View.btnAddIED){
+		if(e.getSource() == theView.tabConfIec61850View.btnConnectToIED){
 			logger.info("btnAddIed");
 	        if(connectToIed()){
 	        	int option = JOptionPane.showConfirmDialog(null, "Se a realizado la conexión al IED. Confirmar que se quiere guardar los TAGS encontrados", "Advertencia", JOptionPane.OK_CANCEL_OPTION);
@@ -85,9 +88,8 @@ public class TabConfigurationIec61850Listener extends Thread implements ActionLi
 		                	BrcbManager.saveAllTagWithBuffer(ied, serverModel);
 		                	UrcbManager.saveAllTagWithOutBuffer(ied, serverModel);
 		                	
-		                	/* PENDIENTE PROBAR */
 		                	ied.setName(TagMonitorIec61850Manager.getFirstElement(ied.getId()));
-		                	GenericManager.saveObject(ied);
+		                	GenericManager.updateObject(ied);
 	
 		            		JOptionPane.showMessageDialog(null,"Información: Los datos del IED fueron guardados",
 		              		      "Advertencia",JOptionPane.INFORMATION_MESSAGE);      
@@ -116,7 +118,10 @@ public class TabConfigurationIec61850Listener extends Thread implements ActionLi
 		                	TagMonitorIec61850Manager.saveAllTagIec61850(ied, serverModel);
 		                	BrcbManager.saveAllTagWithBuffer(ied, serverModel);
 		                	UrcbManager.saveAllTagWithOutBuffer(ied, serverModel);
-	
+
+		                	ied.setName(TagMonitorIec61850Manager.getFirstElement(ied.getId()));
+		                	GenericManager.updateObject(ied);
+		                	
 		            		JOptionPane.showMessageDialog(null,"Información: Los datos del IED fueron guardados",
 		              		      "Advertencia",JOptionPane.INFORMATION_MESSAGE);      
 		            		controller.buildTree();
@@ -153,7 +158,6 @@ public class TabConfigurationIec61850Listener extends Thread implements ActionLi
 			e.printStackTrace();
 			return false;
 		}
-		//logger.info("creando clientSap");
 		
 		 ClientSap clientSap = new ClientSap();
 		 ClientAssociation association;  
@@ -208,16 +212,14 @@ public class TabConfigurationIec61850Listener extends Thread implements ActionLi
 	 * @author pablo
 	 */
 	private Boolean connectToIed(){
-		
-		
         ClientSap clientSap = new ClientSap();
-
         InetAddress address = null;
+        
         try {
-            address = InetAddress.getByName(theView.tabConfIec61850View.getInputIp());
-            //FALTA PROBAR
-            if(IedManager.findIedForIpAddress(address.toString())){
-            	JOptionPane.showMessageDialog(null,"Error: Ya se encuentra registrado un IED con la dirección ip: "+address,
+        	String iedIp = theView.tabConfIec61850View.getInputIp();
+            address = InetAddress.getByName(iedIp);
+            if(IedManager.findIedForIpAddress(iedIp)){
+            	JOptionPane.showMessageDialog(null,"Error: Ya se encuentra registrado un IED con la dirección ip: "+iedIp,
             		      "Advertencia",JOptionPane.WARNING_MESSAGE);
               	return false;
             }

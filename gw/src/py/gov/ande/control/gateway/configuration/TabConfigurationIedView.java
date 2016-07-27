@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionListener;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -12,16 +13,23 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import py.gov.ande.control.gateway.manager.DriversManager;
+import javax.swing.JButton;
 
 public class TabConfigurationIedView extends JPanel {
 
 	protected JTextField inputIp;
 	protected JTextField inputPort;
 	protected JTextField inputName;
-	private DriversManager driverModel;
-	
+	protected JButton btnDeleteIed;
+	protected JButton btnSaveChanges;
+	/**
+	 * El campo id de la base de dato para la tabla Ied
+	 */
+	protected Integer iedId;
 	
 	public TabConfigurationIedView() {
+		
+		iedId = 0;
 		
 		setAlignmentX(Component.LEFT_ALIGNMENT);
 		setVisible(false);
@@ -99,6 +107,74 @@ public class TabConfigurationIedView extends JPanel {
 		gbc_inputPort.gridx = 1;
 		gbc_inputPort.gridy = 4;
 		add(inputPort, gbc_inputPort);
+		
+		JLabel lblCantidadDeTags = new JLabel("Cantidad de Tags");
+		GridBagConstraints gbc_lblCantidadDeTags = new GridBagConstraints();
+		gbc_lblCantidadDeTags.insets = new Insets(0, 0, 5, 5);
+		gbc_lblCantidadDeTags.gridx = 0;
+		gbc_lblCantidadDeTags.gridy = 6;
+		add(lblCantidadDeTags, gbc_lblCantidadDeTags);
+		
+		JLabel lblTags = new JLabel("0");
+		GridBagConstraints gbc_lblTags = new GridBagConstraints();
+		gbc_lblTags.insets = new Insets(0, 0, 5, 5);
+		gbc_lblTags.gridx = 1;
+		gbc_lblTags.gridy = 6;
+		add(lblTags, gbc_lblTags);
+		
+		JLabel lblCaan = new JLabel("Reportes con Buffer");
+		GridBagConstraints gbc_lblCaan = new GridBagConstraints();
+		gbc_lblCaan.insets = new Insets(0, 0, 5, 5);
+		gbc_lblCaan.gridx = 0;
+		gbc_lblCaan.gridy = 7;
+		add(lblCaan, gbc_lblCaan);
+		
+		JLabel lblReportWithB = new JLabel("0");
+		GridBagConstraints gbc_lblReportWithB = new GridBagConstraints();
+		gbc_lblReportWithB.insets = new Insets(0, 0, 5, 5);
+		gbc_lblReportWithB.gridx = 1;
+		gbc_lblReportWithB.gridy = 7;
+		add(lblReportWithB, gbc_lblReportWithB);
+		
+		JLabel lblNewLabel = new JLabel("Reportes sin Buffers");
+		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
+		gbc_lblNewLabel.insets = new Insets(0, 0, 5, 5);
+		gbc_lblNewLabel.gridx = 0;
+		gbc_lblNewLabel.gridy = 8;
+		add(lblNewLabel, gbc_lblNewLabel);
+		
+		JLabel lblReportWithOutB = new JLabel("0");
+		GridBagConstraints gbc_lblReportWithOutB = new GridBagConstraints();
+		gbc_lblReportWithOutB.insets = new Insets(0, 0, 5, 5);
+		gbc_lblReportWithOutB.gridx = 1;
+		gbc_lblReportWithOutB.gridy = 8;
+		add(lblReportWithOutB, gbc_lblReportWithOutB);
+		
+		btnSaveChanges = new JButton("Guardar Cambios");
+		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
+		gbc_btnNewButton.anchor = GridBagConstraints.SOUTH;
+		gbc_btnNewButton.insets = new Insets(0, 0, 5, 5);
+		gbc_btnNewButton.gridx = 0;
+		gbc_btnNewButton.gridy = GridBagConstraints.SOUTH;
+		add(btnSaveChanges, gbc_btnNewButton);
+		
+		btnDeleteIed = new JButton("Eliminar Ied");
+		GridBagConstraints gbc_btnEliminarIed = new GridBagConstraints();
+		gbc_btnEliminarIed.anchor = GridBagConstraints.SOUTH;
+		gbc_btnEliminarIed.insets = new Insets(0, 0, 5, 5);
+		gbc_btnEliminarIed.gridx = 1;
+		gbc_btnEliminarIed.gridy = GridBagConstraints.SOUTH;
+		add(btnDeleteIed, gbc_btnEliminarIed);
+	}
+	
+	/**
+	 * Método que agrega los listener correspondientes a cada botón de la vista.
+	 * Actualizar ied, y borrar ied
+	 * @param listenForBtnClick
+	 */
+	void addBtnIed(ActionListener listenForBtnClick){
+		btnDeleteIed.addActionListener(listenForBtnClick);
+		btnSaveChanges.addActionListener(listenForBtnClick);
 	}
 	
 }

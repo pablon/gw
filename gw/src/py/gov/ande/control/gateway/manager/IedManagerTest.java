@@ -15,5 +15,11 @@ public class IedManagerTest {
 		assert(IedManager.findIedForIpAddress("127.0.0.1"));
 		assertFalse(IedManager.findIedForIpAddress(null));
 	}
+	
+	@Test
+	public final void testDeleteIed() {
+		assert(IedManager.deleteIed(79));
+		assertFalse(IedManager.deleteIed(80));
+	}
 
 }

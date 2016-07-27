@@ -40,7 +40,7 @@ public class TabConfigurationIec61850View extends JPanel implements ClientEventL
 	private JLabel lblIp;
 	private JTextField inputIp;
     private JTextField inputPort;
-    JButton btnAddIED = new JButton();
+    JButton btnConnectToIED = new JButton();
     JButton btnExploreCid = new JButton();
     
     private static final Logger logger = LoggerFactory.getLogger(TabConfigurationIec61850View.class);
@@ -164,13 +164,13 @@ public class TabConfigurationIec61850View extends JPanel implements ClientEventL
 		gbc_inputTsel2.gridy = 5;
 		add(tselRemoteField2, gbc_inputTsel2);	    
    		
-		btnAddIED = new JButton("Explorar IED");
+		btnConnectToIED = new JButton("Explorar IED");
 		GridBagConstraints gbc_btnAgregarIED = new GridBagConstraints();
 		gbc_btnAgregarIED.gridwidth = 2;
 		gbc_btnAgregarIED.insets = new Insets(0, 0, 5, 0);
 		gbc_btnAgregarIED.gridx = 1;
 		gbc_btnAgregarIED.gridy = 6;		
-		add(btnAddIED, gbc_btnAgregarIED);
+		add(btnConnectToIED, gbc_btnAgregarIED);
 		
 		JLabel lblExploreFileCid = new JLabel("Explorar archivo .cid");
 		GridBagConstraints gbc_lblExploreFileCid = new GridBagConstraints();
@@ -223,7 +223,7 @@ public class TabConfigurationIec61850View extends JPanel implements ClientEventL
     }
     
 	void addBtnExploreIed(ActionListener listenForBtnClick){
-		btnAddIED.addActionListener(listenForBtnClick);
+		btnConnectToIED.addActionListener(listenForBtnClick);
 		btnExploreCid.addActionListener(listenForBtnClick);
 	}
 	

@@ -99,7 +99,7 @@ public class TabConfigurationView extends JPanel {
 			scrollPaneDetails.setViewportView(tabConfIec101View);
 			tabConfIec101View.setVisible(true);
 		}else if(driverModel.getValueChangedOfTheTree().getIed()){
-			refreshJTextFields(driverModel);
+			refreshJTextFieldsIed(driverModel);
 			scrollPaneDetails.setViewportView(tabConfIedView);
 			tabConfIedView.setVisible(true);
 		}
@@ -119,10 +119,11 @@ public class TabConfigurationView extends JPanel {
 	 * @author pablo
 	 * @date 2016-07-26
 	 */
-	private void refreshJTextFields(DriversManager driverModel) {
+	private void refreshJTextFieldsIed(DriversManager driverModel) {
 		tabConfIedView.inputIp.setText(driverModel.getIedIp());
 		tabConfIedView.inputPort.setText(driverModel.getIedPort().toString());
 		tabConfIedView.inputName.setText(driverModel.getIedName());
+		tabConfIedView.iedId = driverModel.getIedId();
 	}
 	
 	

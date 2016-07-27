@@ -30,6 +30,9 @@ public class ConfigurationController {
 				new TabConfigurationIec61850Listener(
 						this.theView.panelConf, this.iedModel, this));
 		
+		this.theView.panelConf.tabConfIedView.addBtnIed(
+				new TabConfigurationIedListener(this.theView.panelConf, this));
+		
 	}
 
 	/**

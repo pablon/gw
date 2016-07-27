@@ -6,6 +6,7 @@ import java.util.Arrays;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.resource.transaction.spi.TransactionStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,7 +60,55 @@ public class IedManager {
 		if(ied != null){
 			return true;
 		}else{
-		return false;
+			return false;
+		}
+	}
+
+	/**
+	 * Método que elimina todos los datos relacionados al ied, como ser brcb, urcb, tags, y el propio Ied
+	 * @param iedId
+	 * @return
+	 */
+	public static Boolean deleteIed(int iedId) {
+		Session session = GenericManager.createNewSession();
+		
+		try {
+			session.getTransaction().begin();
+			logger.info("delete tag_monitor_iec61850");
+			session.createQuery(
+					"delete TagMonitorIec61850 " +
+					"where iedId = :id" )
+					.setParameter( "id", iedId )
+					.executeUpdate();
+			logger.info("delete buffered_rcb");
+			session.createQuery(
+					"delete BufferedRcb " +
+					"where iedId = :id" )
+					.setParameter( "id", iedId )
+					.executeUpdate();
+			logger.info("delete UnbufferedRcb");
+			session.createQuery(
+					"delete UnbufferedRcb " +
+					"where iedId = :id" )
+					.setParameter( "id", iedId )
+					.executeUpdate();
+			logger.info("delete Ied");
+			session.createQuery(
+					"delete Ied " +
+					"where id = :id" )
+					.setParameter( "id", iedId )
+					.executeUpdate();
+			
+			session.getTransaction().commit();
+			logger.info("luego del commit");
+			return true;
+		} catch (Exception e) {
+			if ( session.getTransaction().getStatus() == TransactionStatus.ACTIVE 
+					|| session.getTransaction().getStatus() == TransactionStatus.MARKED_ROLLBACK ) {
+				session.getTransaction().rollback();
+				}
+			logger.error("luego del rollback");
+			return false;
 		}
 	}
 }
