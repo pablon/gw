@@ -124,6 +124,9 @@ public class TabConfigurationView extends JPanel {
 		tabConfIedView.inputPort.setText(driverModel.getIedPort().toString());
 		tabConfIedView.inputName.setText(driverModel.getIedName());
 		tabConfIedView.iedId = driverModel.getIedId();
+		tabConfIedView.lblTags.setText(String.valueOf(driverModel.getTags()));
+		tabConfIedView.lblReportWithB.setText(String.valueOf(driverModel.getbReports()));
+		tabConfIedView.lblReportWithOutB.setText(String.valueOf(driverModel.getuReports()));
 	}
 	
 	

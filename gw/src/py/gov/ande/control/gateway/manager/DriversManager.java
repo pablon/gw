@@ -25,8 +25,53 @@ public class DriversManager {
     String ip = "";
     Integer port = 0;
     String iedName = "";
+    int tags = 0;
+    int bReports = 0;
+    int uReports = 0;
     
     /**
+	 * @return the tags
+	 */
+	public int getTags() {
+		return tags;
+	}
+
+	/**
+	 * @param tags the tags to set
+	 */
+	private void setTags(int tags) {
+		this.tags = tags;
+	}
+
+	/**
+	 * @return the bReports
+	 */
+	public int getbReports() {
+		return bReports;
+	}
+
+	/**
+	 * @param bReports the bReports to set
+	 */
+	private void setbReports(int bReports) {
+		this.bReports = bReports;
+	}
+
+	/**
+	 * @return the uReports
+	 */
+	public int getuReports() {
+		return uReports;
+	}
+
+	/**
+	 * @param uReports the uReports to set
+	 */
+	private void setuReports(int uReports) {
+		this.uReports = uReports;
+	}
+
+	/**
 	 * @return the iedName
 	 */
 	public String getIedName() {
@@ -153,6 +198,9 @@ public class DriversManager {
     			this.setIedIp(ieds.getIpAddress());
     			this.setIedPort(ieds.getPortAddress());
     			this.setIedName(ieds.getName());
+    			this.setTags(GenericManager.getCountObjets("From TagMonitorIec61850 tag where tag.iedId = "+ieds.getId()));
+    			this.setbReports(GenericManager.getCountObjets("From BufferedRcb tag where tag.iedId = "+ieds.getId()));
+    			this.setuReports(GenericManager.getCountObjets("From UnbufferedRcb tag where tag.iedId = "+ieds.getId()));
     			break;
     		//}
     		}else{
@@ -161,6 +209,8 @@ public class DriversManager {
     			this.setIedIp("");
     			this.setIedPort(0);
     			this.setIedName("");
+    			//From Articulo art where art.articulo.id = " + articuloOld.getArticulo().getId()
+    			
     		}
 
 		}

@@ -2,9 +2,13 @@ package py.gov.ande.control.gateway.configuration;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.InetAddress;
 
 import javax.swing.JOptionPane;
+import javax.xml.bind.ParseConversionEvent;
 
+import org.hibernate.mapping.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,10 +48,33 @@ public class TabConfigurationIedListener implements ActionListener {
 	                		      "Advertencia",JOptionPane.ERROR_MESSAGE);   
 	        		}
 	        	}
+			}else{
+        		JOptionPane.showMessageDialog(null,"Información: Hubo un error en el proceso de eliminación",
+          		      "Advertencia",JOptionPane.ERROR_MESSAGE); 
 			}
 		}else if(e.getSource() == theView.tabConfIedView.btnSaveChanges){
 			logger.info("btnSaveChanges");
+        	int option = JOptionPane.showConfirmDialog(null, "Confirmar los cambios realizados", "Advertencia", JOptionPane.OK_CANCEL_OPTION);
+        	if(option == JOptionPane.OK_OPTION){
+				int iedId =theView.tabConfIedView.iedId;
+				String iedIp = theView.tabConfIedView.inputIp.getText();
+				String iedName = theView.tabConfIedView.inputName.getText();
+				String iedPort = theView.tabConfIedView.inputPort.getText();
+				
+				if(!IedManager.validateWidget(iedIp, iedName, iedPort)){
+	        		JOptionPane.showMessageDialog(null,"Información: Existe un error en los campos ingresados",
+	          		      "Advertencia",JOptionPane.ERROR_MESSAGE);   
+	        		return;
+				}
+				
+				if(IedManager.updateIed(iedIp, iedName, iedPort, iedId)){
+	        		JOptionPane.showMessageDialog(null,"Información: Los datos del IED fueron actualizados de forma satisfactoria",
+	            		      "Advertencia",JOptionPane.INFORMATION_MESSAGE); 
+	        		controller.buildTree();
+				}
+        	}
 		}
+		logger.info("fin");
 	}
 
 }

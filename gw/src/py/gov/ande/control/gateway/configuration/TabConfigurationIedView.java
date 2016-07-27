@@ -22,6 +22,10 @@ public class TabConfigurationIedView extends JPanel {
 	protected JTextField inputName;
 	protected JButton btnDeleteIed;
 	protected JButton btnSaveChanges;
+	protected JLabel lblTags;
+	protected JLabel lblReportWithB;
+	protected JLabel lblReportWithOutB;
+	
 	/**
 	 * El campo id de la base de dato para la tabla Ied
 	 */
@@ -115,7 +119,7 @@ public class TabConfigurationIedView extends JPanel {
 		gbc_lblCantidadDeTags.gridy = 6;
 		add(lblCantidadDeTags, gbc_lblCantidadDeTags);
 		
-		JLabel lblTags = new JLabel("0");
+		lblTags = new JLabel("0");
 		GridBagConstraints gbc_lblTags = new GridBagConstraints();
 		gbc_lblTags.insets = new Insets(0, 0, 5, 5);
 		gbc_lblTags.gridx = 1;
@@ -129,7 +133,7 @@ public class TabConfigurationIedView extends JPanel {
 		gbc_lblCaan.gridy = 7;
 		add(lblCaan, gbc_lblCaan);
 		
-		JLabel lblReportWithB = new JLabel("0");
+		lblReportWithB = new JLabel("0");
 		GridBagConstraints gbc_lblReportWithB = new GridBagConstraints();
 		gbc_lblReportWithB.insets = new Insets(0, 0, 5, 5);
 		gbc_lblReportWithB.gridx = 1;
@@ -143,7 +147,7 @@ public class TabConfigurationIedView extends JPanel {
 		gbc_lblNewLabel.gridy = 8;
 		add(lblNewLabel, gbc_lblNewLabel);
 		
-		JLabel lblReportWithOutB = new JLabel("0");
+		lblReportWithOutB = new JLabel("0");
 		GridBagConstraints gbc_lblReportWithOutB = new GridBagConstraints();
 		gbc_lblReportWithOutB.insets = new Insets(0, 0, 5, 5);
 		gbc_lblReportWithOutB.gridx = 1;

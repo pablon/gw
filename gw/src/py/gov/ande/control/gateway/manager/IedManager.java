@@ -7,12 +7,14 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.resource.transaction.spi.TransactionStatus;
+import org.omg.CORBA.portable.ValueOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import py.gov.ande.control.gateway.configuration.TabConfigurationIec61850Listener;
 import py.gov.ande.control.gateway.model.Ied;
 import py.gov.ande.control.gateway.util.GenericManager;
+import py.gov.ande.control.gateway.util.GenericValidations;
 
 public class IedManager {
 	
@@ -110,5 +112,55 @@ public class IedManager {
 			logger.error("luego del rollback");
 			return false;
 		}
+	}
+
+	/**
+	 * Método que valida la ip, puerto y nombre del ied
+	 * @param iedIp
+	 * @param iedName
+	 * @param iedPort
+	 * @return boolean
+	 */
+	public static boolean validateWidget(String iedIp, String iedName, String iedPort) {
+		logger.info("inicio");
+		boolean b1 = GenericValidations.validateIpAddress(iedIp);
+		//boolean b2 = !(IedManager.findIedForIpAddress(iedIp));
+		boolean b3 = GenericValidations.validatePortAddress(iedPort);
+		boolean b4 = GenericValidations.validateString(iedName);
+		
+		if(b1 && b3 && b4){
+			logger.info("validado");
+			return true;
+		}else{
+			logger.error("invalido. "+b1+", "+b3+", "+b4);
+			return false;
+		}
+	}
+
+	/**
+	 * Método que actualiza los datos del Ied
+	 * @param iedIp
+	 * @param iedName
+	 * @param iedPort
+	 * @param iedId
+	 * @return
+	 */
+	public static boolean updateIed(String iedIp, String iedName, String iedPort, int iedId) {
+		logger.info("String iedIp: "+iedIp+", String iedName: "+iedName+", String iedPort: "+iedPort);
+		Ied ied = GenericManager.getObjectById(Ied.class, iedId);
+		ied.setIpAddress(iedIp);
+		ied.setPortAddress(Integer.valueOf(iedPort));
+		ied.setName(iedName);
+
+		try {
+			GenericManager.updateObject(ied);
+			//logger.info("luego del metodo generic manager Save()");
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("Error, luego del metodo generic manager Save()");
+			return false;
+		}
+		
 	}
 }
