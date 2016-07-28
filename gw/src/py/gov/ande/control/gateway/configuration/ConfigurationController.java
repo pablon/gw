@@ -20,7 +20,8 @@ public class ConfigurationController {
 		this.theView = theView;
 		this.driverModel = driverModel;
 		this.iedModel = new IedManager();
-		buildTree();
+		buildTreeConfiguration();
+		buildTreeMapping();
 		
 		this.theView.panelConf.addTreeListener(
 				new TabConfigurationListener(
@@ -36,12 +37,37 @@ public class ConfigurationController {
 	}
 
 	/**
-	 * Construye el arbol de drivers, así como la lista de IED
+	 * Construye el arbol de drivers para el Tab Configuración
 	 * @author pablo
 	 */
-	public void buildTree() {
-        DefaultMutableTreeNode subestacion = null, iec61850 = null, ied = null, iec101, temp;
+	public void buildTreeConfiguration() {
         DefaultMutableTreeNode nodeRoot = (DefaultMutableTreeNode) theView.panelConf.treeConf.getModel().getRoot();
+
+        buildTree(nodeRoot);
+    	/*Se refresca el arbol*/
+        theView.panelConf.treeConf.repaint();
+        theView.panelConf.treeConf.updateUI();
+	}
+	
+	/**
+	 * Construye el arbol de drivers para el Tab Mapping
+	 */
+	public void buildTreeMapping() {
+        DefaultMutableTreeNode nodeRoot = (DefaultMutableTreeNode) theView.panelMapping.treeConf.getModel().getRoot();
+        
+        buildTree(nodeRoot);
+ 
+    	/*Se refresca el arbol*/
+        theView.panelMapping.treeConf.repaint();
+        theView.panelMapping.treeConf.updateUI();
+	}
+	
+	/**
+	 * 	Construye el arbol de drivers para el Tab Configuración, así como la lista de IED
+	 * @param nodeRoot
+	 */
+	public void buildTree(DefaultMutableTreeNode nodeRoot){
+        DefaultMutableTreeNode subestacion = null, iec61850 = null, ied = null, iec101, temp;
         if(nodeRoot.getChildCount()>0){
         	nodeRoot.removeAllChildren();
         }
@@ -75,8 +101,6 @@ public class ConfigurationController {
     		iec61850.add(ied);
 		}
 
-    	/*Se refresca el arbol*/
-        theView.panelConf.treeConf.repaint();
-        theView.panelConf.treeConf.updateUI();
 	}
+
 }

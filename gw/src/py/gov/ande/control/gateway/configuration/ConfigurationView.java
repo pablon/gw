@@ -30,7 +30,7 @@ public class ConfigurationView extends JFrame {
 	private JTabbedPane tabbedPane;
 	private GridBagConstraints gbc_tabbedPane;
 	protected TabConfigurationView panelConf;
-	protected TabMapping panelMapping;
+	protected TabMappingView panelMapping;
 	protected TabTopology panelTopology;
 
 	public ConfigurationView() {
@@ -78,11 +78,11 @@ public class ConfigurationView extends JFrame {
 		//getContentPane().add(tabbedPane, gbc_tabbedPane);
 		
 		panelConf = new TabConfigurationView();
-		tabbedPane.addTab("Configuracion", null, panelConf, "Configuraciones generales de los drivers");
-		panelMapping = new TabMapping();
+		tabbedPane.addTab("Configuración", null, panelConf, "Configuraciones generales de los drivers");
+		panelMapping = new TabMappingView();
 		tabbedPane.addTab("Mapeo", null, panelMapping, "Mapeo de cada señal de cada driver");	
 		panelTopology = new TabTopology();
-		tabbedPane.addTab("Topologia", null, panelTopology, "Estructura topologica de cada señal de cada equipo");
+		tabbedPane.addTab("Topología", null, panelTopology, "Estructura topologica de cada señal de cada equipo");
 		
 		setSize(900, 500);
 		setMinimumSize(new Dimension(420, 420));

@@ -93,7 +93,7 @@ public class TabConfigurationIec61850Listener extends Thread implements ActionLi
 	
 		            		JOptionPane.showMessageDialog(null,"Información: Los datos del IED fueron guardados",
 		              		      "Advertencia",JOptionPane.INFORMATION_MESSAGE);      
-		            		controller.buildTree();
+		            		controller.buildTreeConfiguration();
 						} catch (Exception e2) {
 		            		JOptionPane.showMessageDialog(null,"Información: Los datos del IED no fueron guardados",
 		                		      "Advertencia",JOptionPane.ERROR_MESSAGE);            	
@@ -124,7 +124,7 @@ public class TabConfigurationIec61850Listener extends Thread implements ActionLi
 		                	
 		            		JOptionPane.showMessageDialog(null,"Información: Los datos del IED fueron guardados",
 		              		      "Advertencia",JOptionPane.INFORMATION_MESSAGE);      
-		            		controller.buildTree();
+		            		controller.buildTreeConfiguration();
 						} catch (Exception e2) {
 		            		JOptionPane.showMessageDialog(null,"Información: Los datos del IED no fueron guardados",
 		                		      "Advertencia",JOptionPane.ERROR_MESSAGE);            	
