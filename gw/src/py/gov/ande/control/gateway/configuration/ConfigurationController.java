@@ -21,7 +21,8 @@ public class ConfigurationController {
 		this.driverModel = driverModel;
 		this.iedModel = new IedManager();
 		buildTreeConfiguration();
-		buildTreeMapping();
+		//buildTreeMapping();
+		//BuildTableOfMapping();
 		
 		this.theView.panelConf.addTreeListener(
 				new TabConfigurationListener(
@@ -33,8 +34,18 @@ public class ConfigurationController {
 		
 		this.theView.panelConf.tabConfIedView.addBtnIed(
 				new TabConfigurationIedListener(this.theView.panelConf, this));
+
+		//this.theView.panelMapping.addTabMappingIedView(IedManager.getAllObjects());
+		
+		/*this.theView.panelMapping.addTreeListener(
+				new TabMappingListener(
+						this.theView.panelMapping, this.driverModel));*/
+		
+
+		
 		
 	}
+
 
 	/**
 	 * Construye el arbol de drivers para el Tab Configuración
@@ -52,15 +63,15 @@ public class ConfigurationController {
 	/**
 	 * Construye el arbol de drivers para el Tab Mapping
 	 */
-	public void buildTreeMapping() {
+/*	public void buildTreeMapping() {
         DefaultMutableTreeNode nodeRoot = (DefaultMutableTreeNode) theView.panelMapping.treeConf.getModel().getRoot();
         
         buildTree(nodeRoot);
  
-    	/*Se refresca el arbol*/
+    	
         theView.panelMapping.treeConf.repaint();
         theView.panelMapping.treeConf.updateUI();
-	}
+	}*/
 	
 	/**
 	 * 	Construye el arbol de drivers para el Tab Configuración, así como la lista de IED

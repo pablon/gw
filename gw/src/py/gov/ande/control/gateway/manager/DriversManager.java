@@ -8,13 +8,18 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import py.gov.ande.control.gateway.configuration.TabMappingView;
 import py.gov.ande.control.gateway.model.Drivers;
 import py.gov.ande.control.gateway.model.Ied;
 import py.gov.ande.control.gateway.util.DatabaseUtil;
 import py.gov.ande.control.gateway.util.GenericManager;
 
 public class DriversManager {
+	
+	private static final Logger logger = LoggerFactory.getLogger(DriversManager.class);
 	
     //Session session = null;
     protected Boolean iec61850 = false;
@@ -28,8 +33,18 @@ public class DriversManager {
     int tags = 0;
     int bReports = 0;
     int uReports = 0;
+    int arrayId = 0;
     
-    /**
+    
+    public int getArrayId() {
+		return arrayId;
+	}
+
+	protected void setArrayId(int arrayId) {
+		this.arrayId = arrayId;
+	}
+
+	/**
 	 * @return the tags
 	 */
 	public int getTags() {
@@ -191,8 +206,10 @@ public class DriversManager {
 		}
         /*Se explora lista de ied's */
     	List<Ied> iedList = GenericManager.getAllObjects(Ied.class, Order.asc("id"));
+    	int i= 0;
     	for (Ied ieds : iedList) {
     		if(Objects.equals(ieds.getName(), nodeInfo)){
+    			logger.info("explorar lista de ied. IedId: "+ieds.getId()+", i: "+i);
     			this.setIed(true);
     			this.setIedId(ieds.getId());
     			this.setIedIp(ieds.getIpAddress());
@@ -201,22 +218,24 @@ public class DriversManager {
     			this.setTags(GenericManager.getCountObjets("From TagMonitorIec61850 tag where tag.iedId = "+ieds.getId()));
     			this.setbReports(GenericManager.getCountObjets("From BufferedRcb tag where tag.iedId = "+ieds.getId()));
     			this.setuReports(GenericManager.getCountObjets("From UnbufferedRcb tag where tag.iedId = "+ieds.getId()));
+    			this.setArrayId(i);
     			break;
-    		//}
     		}else{
     			this.setIed(false);
     			this.setIedId(0);
     			this.setIedIp("");
     			this.setIedPort(0);
     			this.setIedName("");
-    			//From Articulo art where art.articulo.id = " + articuloOld.getArticulo().getId()
-    			
+    			this.setArrayId(0);
     		}
-
+    		i++;
 		}
-		
 	}
 
+	/**
+	 * Retorna el Drivers o Ied actual seleccionado en el arbol
+	 * @return
+	 */
 	public  DriversManager getValueChangedOfTheTree(){ 
 		return this;
 	}

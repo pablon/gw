@@ -1,29 +1,33 @@
 package py.gov.ande.control.gateway.configuration;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.ToolTipManager;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
+import java.awt.FlowLayout;
+import javax.swing.JLabel;
+import javax.swing.JInternalFrame;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
+
 public class TabMappingView extends JPanel {
-
+	
 	private GridBagLayout gridBagLayout;
-	public JTree treeConf;
-	protected JScrollPane scrollPaneConf;
-	protected JScrollPane scrollPaneDetails;
-	protected TabMappingDetailsView panelDetails = new TabMappingDetailsView();
-	protected JPanel panel = new JPanel();
+	protected JTree treeConf;
+	private JScrollPane scrollPaneConf;
+	private JScrollPane scrollPaneDetails;
+	private JLabel lblNewLabel;
+	protected JPanel panelDetails = new JPanel(); 
+	protected TabMappingIedView tabMappingIedView = new TabMappingIedView();
 
+	/**
+	 * Create the panel.
+	 */
 	public TabMappingView() {
-
 		gridBagLayout = new GridBagLayout();
 		setLayout(gridBagLayout);
 				
@@ -43,7 +47,7 @@ public class TabMappingView extends JPanel {
 		gbc_scrollPaneConf.insets = new Insets(5, 5, 5, 5);
 		add(scrollPaneConf, gbc_scrollPaneConf);
 		
-		scrollPaneDetails = new JScrollPane();
+		scrollPaneDetails = new JScrollPane(new JPanel());
 		GridBagConstraints gbc_scrollPaneDetails = new GridBagConstraints();
 		gbc_scrollPaneDetails.fill = GridBagConstraints.BOTH;
 		gbc_scrollPaneDetails.anchor = GridBagConstraints.NORTHWEST;
@@ -53,25 +57,16 @@ public class TabMappingView extends JPanel {
 		gbc_scrollPaneDetails.weighty = 1;
 		add(scrollPaneDetails, gbc_scrollPaneDetails);
 		
-		panel.add(panelDetails);
-		scrollPaneDetails.add(panel);
-		panelDetails.setVisible(false);
+		lblNewLabel = new JLabel("Mappeo de Tags");
+		((JPanel)scrollPaneDetails.getViewport().getView()).add(lblNewLabel);
+		((JPanel)scrollPaneDetails.getViewport().getView()).add(tabMappingIedView);
+		// ((JPanel)scrollPane.getViewport().getView()).add(new JLabel("First"));
+		//lblNewLabel_1 = new JLabel("New label");
+		//scrollPaneDetails.setColumnHeaderView(lblNewLabel_1);
 
-	}
-	
-	/**
-	 * metodo para eventos del arbol de drivers.
-	 * @param listenForTreeClick
-	 */
-	void addTreeListener(TreeSelectionListener listenForTreeClick){
-		//System.out.println("AddTreeListener");
-		treeConf.addTreeSelectionListener(listenForTreeClick);
-	}
-	
-	void displayErrorMessage(String errorMessage){
-		
-		JOptionPane.showMessageDialog(this, errorMessage);
-		
+		//panelDetails.add(tabMappingIedView);
+		//scrollPaneDetails.add(panelDetails);
+		//tabMappingIedView.setVisible(true);
 	}
 
 }

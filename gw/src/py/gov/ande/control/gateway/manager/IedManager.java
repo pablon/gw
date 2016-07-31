@@ -2,9 +2,11 @@ package py.gov.ande.control.gateway.manager;
 
 import java.net.InetAddress;
 import java.util.Arrays;
+import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.resource.transaction.spi.TransactionStatus;
 import org.omg.CORBA.portable.ValueOutputStream;
@@ -162,5 +164,14 @@ public class IedManager {
 			return false;
 		}
 		
+	}
+	
+	/**
+	 * Método que retorna una lista de Ied
+	 * @return List<Ied>
+	 */
+	public static List<Ied> getAllObjects(){
+		List<Ied> iedList = GenericManager.getAllObjects(Ied.class, Order.asc("id"));
+		return iedList;
 	}
 }
