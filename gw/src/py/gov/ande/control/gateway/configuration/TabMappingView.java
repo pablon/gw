@@ -7,12 +7,21 @@ import javax.swing.ToolTipManager;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
+import org.hibernate.criterion.Order;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import py.gov.ande.control.gateway.manager.DriversManager;
+import py.gov.ande.control.gateway.model.Ied;
+import py.gov.ande.control.gateway.util.GenericManager;
+
 import java.awt.FlowLayout;
 import javax.swing.JLabel;
 import javax.swing.JInternalFrame;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.util.List;
 
 public class TabMappingView extends JPanel {
 	
@@ -20,9 +29,9 @@ public class TabMappingView extends JPanel {
 	protected JTree treeConf;
 	private JScrollPane scrollPaneConf;
 	private JScrollPane scrollPaneDetails;
-	private JLabel lblNewLabel;
 	protected JPanel panelDetails = new JPanel(); 
-	protected TabMappingIedView tabMappingIedView = new TabMappingIedView();
+	public TabMappingIedView [] tabMappingIedView;
+	private static final Logger logger = LoggerFactory.getLogger(TabMappingView.class);
 
 	/**
 	 * Create the panel.
@@ -57,9 +66,18 @@ public class TabMappingView extends JPanel {
 		gbc_scrollPaneDetails.weighty = 1;
 		add(scrollPaneDetails, gbc_scrollPaneDetails);
 		
-		lblNewLabel = new JLabel("Mappeo de Tags");
-		((JPanel)scrollPaneDetails.getViewport().getView()).add(lblNewLabel);
-		((JPanel)scrollPaneDetails.getViewport().getView()).add(tabMappingIedView);
+		List<Ied> iedList = GenericManager.getAllObjects(Ied.class, Order.asc("id"));
+		tabMappingIedView = new TabMappingIedView[iedList.size()];
+		int i = 0;
+		for (Ied ied : iedList) {
+			((JPanel)scrollPaneDetails.getViewport().getView()).add(tabMappingIedView[i] = new TabMappingIedView(i));
+			tabMappingIedView[i].setVisible(false);
+			logger.info("vista del ied creado. i: "+i+", class: "+tabMappingIedView[i].getClass());
+			i++;
+		}
+		
+
+		
 		// ((JPanel)scrollPane.getViewport().getView()).add(new JLabel("First"));
 		//lblNewLabel_1 = new JLabel("New label");
 		//scrollPaneDetails.setColumnHeaderView(lblNewLabel_1);
@@ -67,6 +85,38 @@ public class TabMappingView extends JPanel {
 		//panelDetails.add(tabMappingIedView);
 		//scrollPaneDetails.add(panelDetails);
 		//tabMappingIedView.setVisible(true);
+	}
+
+	/**
+	 * Método que agrega un listener al arbol de mapping.
+	 * Esto se ejecuta una sola vez.
+	 * @param tabMappingListener
+	 * @author Pablo
+	 * @date 2016-07-31
+	 */
+	public void addTreeListener(TabMappingListener tabMappingListener) {
+		treeConf.addTreeSelectionListener(tabMappingListener);
+		
+	}
+
+	/**
+	 * Método que captura los eventos del arbol.
+	 * Obtiene la lista de ied, oculta sus vistas,
+	 * y finalmente hace visible el que corresponde.
+	 * @param model
+	 */
+	public void valueChangedOfTheTree(DriversManager model) {
+		//logger.info("ArrayId: "+model.getValueChangedOfTheTree().getArrayId());
+		List<Ied> iedList = GenericManager.getAllObjects(Ied.class, Order.asc("id"));
+		for (int i = 0; i < iedList.size(); i++) {
+			tabMappingIedView[i]
+					.setVisible(false);	
+		}
+		
+		if(model.getValueChangedOfTheTree().getIed()){
+			tabMappingIedView[model.getValueChangedOfTheTree().getArrayId()]
+					.setVisible(true);
+		}		
 	}
 
 }

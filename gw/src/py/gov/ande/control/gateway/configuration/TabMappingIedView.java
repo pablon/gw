@@ -8,10 +8,7 @@ import java.awt.Font;
 
 public class TabMappingIedView extends JPanel {
 
-	/**
-	 * Create the panel.
-	 */
-	public TabMappingIedView() {
+	public TabMappingIedView(int i2) {
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0, 0};
 		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0};
@@ -19,7 +16,7 @@ public class TabMappingIedView extends JPanel {
 		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		setLayout(gridBagLayout);
 		
-		JLabel lblNewLabel = new JLabel("Mapeo del Ied");
+		JLabel lblNewLabel = new JLabel("Mapeo del Ied "+i2);
 		lblNewLabel.setFont(new Font("Dialog", Font.BOLD, 24));
 		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
 		gbc_lblNewLabel.gridx = 1;
@@ -27,5 +24,6 @@ public class TabMappingIedView extends JPanel {
 		add(lblNewLabel, gbc_lblNewLabel);
 
 	}
+
 
 }

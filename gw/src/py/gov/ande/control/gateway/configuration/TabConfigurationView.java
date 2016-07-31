@@ -91,15 +91,15 @@ public class TabConfigurationView extends JPanel {
 	 * @author pablo
 	 * @date 2016-07-26
 	 */
-	public void valueChangedOfTheTree(DriversManager driverModel) {
-		if(driverModel.getValueChangedOfTheTree().getIec61850()){
+	public void valueChangedOfTheTree(DriversManager model) {
+		if(model.getValueChangedOfTheTree().getIec61850()){
 			scrollPaneDetails.setViewportView(tabConfIec61850View);
 			tabConfIec61850View.setVisible(true);
-		}else if(driverModel.getValueChangedOfTheTree().getIec101()){
+		}else if(model.getValueChangedOfTheTree().getIec101()){
 			scrollPaneDetails.setViewportView(tabConfIec101View);
 			tabConfIec101View.setVisible(true);
-		}else if(driverModel.getValueChangedOfTheTree().getIed()){
-			refreshJTextFieldsIed(driverModel);
+		}else if(model.getValueChangedOfTheTree().getIed()){
+			refreshJTextFieldsIed(model);
 			scrollPaneDetails.setViewportView(tabConfIedView);
 			tabConfIedView.setVisible(true);
 		}
