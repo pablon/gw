@@ -6,7 +6,11 @@
     <class name="py.gov.ande.control.gateway.model.TagMonitorIec61850" table="tag_monitor_iec61850" schema="public" optimistic-lock="version">
         <id name="id" type="int">
             <column name="id" />
-            <generator class="assigned" />
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
+			    <param name="optimizer">none</param>
+			    <param name="increment_size">1</param>
+			    <param name="sequence_name">tag_monitor_iec61850_seq</param>
+			</generator>
         </id>
         <property name="use" type="java.lang.Boolean">
             <column name="use" />
