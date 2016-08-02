@@ -1,9 +1,11 @@
 package py.gov.ande.control.gateway.manager;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.openmuc.openiec61850.BasicDataAttribute;
 import org.openmuc.openiec61850.BdaType;
@@ -83,6 +85,16 @@ public class TagMonitorIec61850Manager {
 		}else {
 			return "Rename Ied";
 		}
+	}
+
+	/**
+	 * Método que retorna la lista de tags de un Ied
+	 * @param ied
+	 * @return List<TagMonitorIec61850>
+	 */
+	public static List<TagMonitorIec61850> getAllObjects(Ied ied) {
+		
+		return GenericManager.getListBasedOnCriteria("from TagMonitorIec61850 as tag where tag.iedId = "+ied.getId());
 	}
 	
 

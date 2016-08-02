@@ -70,7 +70,7 @@ public class TabMappingView extends JPanel {
 		tabMappingIedView = new TabMappingIedView[iedList.size()];
 		int i = 0;
 		for (Ied ied : iedList) {
-			((JPanel)scrollPaneDetails.getViewport().getView()).add(tabMappingIedView[i] = new TabMappingIedView(i));
+			((JPanel)scrollPaneDetails.getViewport().getView()).add(tabMappingIedView[i] = new TabMappingIedView(ied));
 			tabMappingIedView[i].setVisible(false);
 			logger.info("vista del ied creado. i: "+i+", class: "+tabMappingIedView[i].getClass());
 			i++;

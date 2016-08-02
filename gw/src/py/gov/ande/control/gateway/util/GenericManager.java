@@ -353,5 +353,29 @@ public class GenericManager {
        else
            return query;        
    }
+   
+   /**
+    * Método que retorna el nombre de las columnas de una tabla cualquiera
+    * @param <T>
+    * @param clazz
+    * @return String[]
+    * @author pablo
+    * @date 2016-08-01
+    */
+   public static String[] getColumnNames(Class clazz){
+	   RuntimeException exception = null;
+	   String [] columnNames = null;
+       try {
+           Session session = createNewSession();
+           columnNames = session.getSessionFactory().getClassMetadata(clazz).getPropertyNames();
+           
+       } catch (RuntimeException e) {
+    	   exception = e;
+    	   columnNames = new String []{"Hubo un error"};
+    	   System.out.println("error: "+e.getMessage());
+       }
+	   
+	   return columnNames;
+   }
 
 }
