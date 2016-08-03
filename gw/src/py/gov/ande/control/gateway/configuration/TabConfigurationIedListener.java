@@ -41,8 +41,11 @@ public class TabConfigurationIedListener implements ActionListener {
 	        	if(option == JOptionPane.OK_OPTION){
 	        		if(IedManager.deleteIed(iedId)){
 	            		JOptionPane.showMessageDialog(null,"Información: Los datos del IED fueron eliminados de forma satisfactoria",
-		              		      "Advertencia",JOptionPane.INFORMATION_MESSAGE); 
+		              		      "Advertencia",JOptionPane.INFORMATION_MESSAGE);
+	            		
 	            		controller.buildTreeConfiguration();
+	            		controller.rebuildMapping();
+	            		
 	        		}else{
 	            		JOptionPane.showMessageDialog(null,"Información: Hubo un error en el proceso de eliminación",
 	                		      "Advertencia",JOptionPane.ERROR_MESSAGE);   
@@ -69,8 +72,10 @@ public class TabConfigurationIedListener implements ActionListener {
 				
 				if(IedManager.updateIed(iedIp, iedName, iedPort, iedId)){
 	        		JOptionPane.showMessageDialog(null,"Información: Los datos del IED fueron actualizados de forma satisfactoria",
-	            		      "Advertencia",JOptionPane.INFORMATION_MESSAGE); 
+	            		      "Advertencia",JOptionPane.INFORMATION_MESSAGE);
+	        		
 	        		controller.buildTreeConfiguration();
+	        		controller.rebuildMapping();
 				}
         	}
 		}

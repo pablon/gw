@@ -92,8 +92,11 @@ public class TabConfigurationIec61850Listener extends Thread implements ActionLi
 		                	GenericManager.updateObject(ied);
 	
 		            		JOptionPane.showMessageDialog(null,"Información: Los datos del IED fueron guardados",
-		              		      "Advertencia",JOptionPane.INFORMATION_MESSAGE);      
+		              		      "Advertencia",JOptionPane.INFORMATION_MESSAGE);
+		            		
 		            		controller.buildTreeConfiguration();
+		            		controller.rebuildMapping();
+		            		
 						} catch (Exception e2) {
 		            		JOptionPane.showMessageDialog(null,"Información: Los datos del IED no fueron guardados",
 		                		      "Advertencia",JOptionPane.ERROR_MESSAGE);            	
@@ -123,8 +126,11 @@ public class TabConfigurationIec61850Listener extends Thread implements ActionLi
 		                	GenericManager.updateObject(ied);
 		                	
 		            		JOptionPane.showMessageDialog(null,"Información: Los datos del IED fueron guardados",
-		              		      "Advertencia",JOptionPane.INFORMATION_MESSAGE);      
+		              		      "Advertencia",JOptionPane.INFORMATION_MESSAGE);
+		            		
 		            		controller.buildTreeConfiguration();
+		            		controller.rebuildMapping();
+		            		
 						} catch (Exception e2) {
 		            		JOptionPane.showMessageDialog(null,"Información: Los datos del IED no fueron guardados",
 		                		      "Advertencia",JOptionPane.ERROR_MESSAGE);            	
@@ -309,6 +315,18 @@ public class TabConfigurationIec61850Listener extends Thread implements ActionLi
 		// TODO Auto-generated method stub
 		
 	}
+	
+	/*private void rebuildMapping(){
+		//intentar borrar todo el mapping,
+		TabMappingView.deleteMappingIedView();
+		
+		//y instanciar todo de vuelta. buildMappingIedView
+		TabMappingView.buildMappingIedView();
+		
+		//construir arbol. buildTreeMapping
+		//listener del arbol. this.theView.panelMapping.addTreeListener
+
+	}*/
 
 
 

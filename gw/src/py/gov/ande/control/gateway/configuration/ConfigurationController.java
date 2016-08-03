@@ -105,5 +105,21 @@ public class ConfigurationController {
 		}
 
 	}
+	
+	/**
+	 * Método que reconstruye la vista de la pestaña mapping.
+	 * Borra el mapping de ied actual. reconstruye las tablas.
+	 * reconstruye el arbol de drivers. y finalmente agrega el listener al arbol
+	 * @author pablo
+	 * @date 2016-08-02
+	 */
+	public void rebuildMapping(){
+		theView.panelMapping.deleteMappingIedView();
+		theView.panelMapping.buildMappingIedView();
+		buildTreeMapping();
+		this.theView.panelMapping.addTreeListener(
+				new TabMappingListener(
+						this.theView.panelMapping, this.driverModel));
+	}
 
 }

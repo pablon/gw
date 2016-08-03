@@ -21,6 +21,7 @@ import javax.swing.JInternalFrame;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.ScrollPane;
 import java.util.List;
 
 public class TabMappingView extends JPanel {
@@ -32,6 +33,7 @@ public class TabMappingView extends JPanel {
 	protected JPanel panelDetails = new JPanel(); 
 	public TabMappingIedView [] tabMappingIedView;
 	private static final Logger logger = LoggerFactory.getLogger(TabMappingView.class);
+	List<Ied> iedList;
 
 	/**
 	 * Create the panel.
@@ -66,7 +68,16 @@ public class TabMappingView extends JPanel {
 		gbc_scrollPaneDetails.weighty = 1;
 		add(scrollPaneDetails, gbc_scrollPaneDetails);
 		
-		List<Ied> iedList = GenericManager.getAllObjects(Ied.class, Order.asc("id"));
+		buildMappingIedView();
+	}
+	
+	/**
+	 * Método que construye la vista del Mapping para los Ied's
+	 * @author pablo
+	 * @date 2016-08-02
+	 */
+	public void buildMappingIedView(){
+		iedList = GenericManager.getAllObjects(Ied.class, Order.asc("id"));
 		tabMappingIedView = new TabMappingIedView[iedList.size()];
 		int i = 0;
 		for (Ied ied : iedList) {
@@ -75,16 +86,21 @@ public class TabMappingView extends JPanel {
 			logger.info("vista del ied creado. i: "+i+", class: "+tabMappingIedView[i].getClass());
 			i++;
 		}
-		
-
-		
-		// ((JPanel)scrollPane.getViewport().getView()).add(new JLabel("First"));
-		//lblNewLabel_1 = new JLabel("New label");
-		//scrollPaneDetails.setColumnHeaderView(lblNewLabel_1);
-
-		//panelDetails.add(tabMappingIedView);
-		//scrollPaneDetails.add(panelDetails);
-		//tabMappingIedView.setVisible(true);
+	}
+	
+	/**
+	 * Método que libera memoria de la vista de las tablas del mapping
+	 * @author pablo
+	 * @date 2016-08-02
+	 */
+	public void deleteMappingIedView(){
+		((JPanel)scrollPaneDetails.getViewport().getView()).removeAll();
+		int i = 0;
+		for (Ied ied : iedList) {
+			tabMappingIedView[i] = null;
+			i++;
+		}
+		tabMappingIedView = null;
 	}
 
 	/**
@@ -116,6 +132,10 @@ public class TabMappingView extends JPanel {
 		if(model.getValueChangedOfTheTree().getIed()){
 			tabMappingIedView[model.getValueChangedOfTheTree().getArrayId()]
 					.setVisible(true);
+			tabMappingIedView[model.getValueChangedOfTheTree().getArrayId()]
+					.invalidate();
+			tabMappingIedView[model.getArrayId()].setPreferredSize(tabMappingIedView[model.getArrayId()].getParent().getSize());
+			
 		}		
 	}
 

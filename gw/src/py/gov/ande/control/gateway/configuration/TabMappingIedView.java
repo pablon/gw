@@ -7,6 +7,7 @@ import javax.swing.JTable;
 import py.gov.ande.control.gateway.manager.TagMonitorIec61850Manager;
 import py.gov.ande.control.gateway.model.Ied;
 import py.gov.ande.control.gateway.model.TagMonitorIec61850;
+import py.gov.ande.control.gateway.util.ListUtil;
 import py.gov.ande.control.gateway.util.MyTableModel;
 
 import java.awt.GridBagLayout;
@@ -25,10 +26,6 @@ public class TabMappingIedView extends JPanel {
 	public TabMappingIedView(Ied ied) {
 		this.ied = ied;
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		/*gridBagLayout.columnWidths = new int[]{0, 0, 0};
-		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0};
-		gridBagLayout.columnWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};*/
 		setLayout(gridBagLayout);
 		
 		JLabel lblNewLabel = new JLabel("Mapeo del Ied "+ied.getName());
@@ -38,15 +35,13 @@ public class TabMappingIedView extends JPanel {
 		gbc_lblNewLabel.gridy = 0;
 		add(lblNewLabel, gbc_lblNewLabel);
 		
-		//obtener lista de tags.
 		List<TagMonitorIec61850> tags = TagMonitorIec61850Manager.getAllObjects(ied);
+		Object[] [] data = ListUtil.ListToArray(tags, TagMonitorIec61850Manager.getColumnNames());
+		MyTableModel myTableModel = new MyTableModel(data, TagMonitorIec61850Manager.getColumnNames());
+		final JTable table = new JTable(myTableModel);
 
-		//instanciar una tabla
-        final JTable table = new JTable(new MyTableModel(tags));
-        //table.setPreferredScrollableViewportSize(new Dimension(500, 70));
         table.setFillsViewportHeight(true);
 
-		//mostrar
         JScrollPane scrollPane = new JScrollPane(table);
 		GridBagConstraints gbc_scroll = new GridBagConstraints();
 		gbc_scroll.gridx = 0;

@@ -327,6 +327,14 @@ public class GenericManager {
            return query.list();        
    }
    
+   /*public static List getListBasedOnCriteria(String criterio){
+	   	List<Object[]> results;
+		Session session = GenericManager.createNewSession();
+		List q=session.createQuery("from TagMonitorIec61850").getResultList();
+		results  = (List<Object[]>)q;
+	   
+   }*/
+   
    /**
     * Método que retorna un objeto en base a un criterio de busqueda.
     * @param criterio de busqueda. Ejemplo: "From Articulo art where art.articulo.id = " + articuloOld.getArticulo().getId()

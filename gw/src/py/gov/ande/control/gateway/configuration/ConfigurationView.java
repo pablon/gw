@@ -84,7 +84,7 @@ public class ConfigurationView extends JFrame {
 		panelTopology = new TabTopology();
 		tabbedPane.addTab("Topología", null, panelTopology, "Estructura topologica de cada señal de cada equipo");
 		
-		setSize(900, 500);
+		setSize(900, 600);
 		setMinimumSize(new Dimension(420, 420));
 		
 	}

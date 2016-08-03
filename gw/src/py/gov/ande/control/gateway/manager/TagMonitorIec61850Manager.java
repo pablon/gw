@@ -1,5 +1,6 @@
 package py.gov.ande.control.gateway.manager;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -46,6 +47,9 @@ public class TagMonitorIec61850Manager {
 					tag.setIedId(ied.getId());
 					tag.setTelegramAddress(bda.getParent().getReference().toString());	//UC_SSAACTRL/GGIO3.Ind01
 					tag.setReportingCapacibiliyId(reportingCapacibiliyId);
+					tag.setUse(false);
+					tag.setBuffered(false);
+					tag.setUnbuffered(false);
 					if(bda.getBasicType() == BdaType.BOOLEAN){
 						tag.setInformationTypeId(sp);
 					}else if(bda.getBasicType() == BdaType.DOUBLE_BIT_POS){
@@ -95,6 +99,16 @@ public class TagMonitorIec61850Manager {
 	public static List<TagMonitorIec61850> getAllObjects(Ied ied) {
 		
 		return GenericManager.getListBasedOnCriteria("from TagMonitorIec61850 as tag where tag.iedId = "+ied.getId());
+	}
+	
+	/**
+	 * Devuelve una lista de string con el nombre de las columnas
+	 * @return ArrayList<String>
+	 * @date 2016-08-01
+	 */
+	public static String[] getColumnNames(){
+		return GenericManager.getColumnNames(TagMonitorIec61850.class);
+
 	}
 	
 
