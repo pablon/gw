@@ -3,6 +3,7 @@ package py.gov.ande.control.gateway.configuration;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.ToolTipManager;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
@@ -66,6 +67,8 @@ public class TabMappingView extends JPanel {
 		gbc_scrollPaneDetails.gridy = 0;
 		gbc_scrollPaneDetails.weightx = 0.8;
 		gbc_scrollPaneDetails.weighty = 1;
+		//scrollPaneDetails.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+		//scrollPaneDetails.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		add(scrollPaneDetails, gbc_scrollPaneDetails);
 		
 		buildMappingIedView();
@@ -76,14 +79,13 @@ public class TabMappingView extends JPanel {
 	 * @author pablo
 	 * @date 2016-08-02
 	 */
-	public void buildMappingIedView(){
+	protected void buildMappingIedView(){
 		iedList = GenericManager.getAllObjects(Ied.class, Order.asc("id"));
 		tabMappingIedView = new TabMappingIedView[iedList.size()];
 		int i = 0;
 		for (Ied ied : iedList) {
 			((JPanel)scrollPaneDetails.getViewport().getView()).add(tabMappingIedView[i] = new TabMappingIedView(ied));
 			tabMappingIedView[i].setVisible(false);
-			logger.info("vista del ied creado. i: "+i+", class: "+tabMappingIedView[i].getClass());
 			i++;
 		}
 	}
@@ -93,7 +95,7 @@ public class TabMappingView extends JPanel {
 	 * @author pablo
 	 * @date 2016-08-02
 	 */
-	public void deleteMappingIedView(){
+	protected void deleteMappingIedView(){
 		((JPanel)scrollPaneDetails.getViewport().getView()).removeAll();
 		int i = 0;
 		for (Ied ied : iedList) {
@@ -110,7 +112,7 @@ public class TabMappingView extends JPanel {
 	 * @author Pablo
 	 * @date 2016-07-31
 	 */
-	public void addTreeListener(TabMappingListener tabMappingListener) {
+	protected void addTreeListener(TabMappingListener tabMappingListener) {
 		treeConf.addTreeSelectionListener(tabMappingListener);
 		
 	}
@@ -132,10 +134,10 @@ public class TabMappingView extends JPanel {
 		if(model.getValueChangedOfTheTree().getIed()){
 			tabMappingIedView[model.getValueChangedOfTheTree().getArrayId()]
 					.setVisible(true);
+
+			//tabMappingIedView[model.getArrayId()].setMaximumSize(tabMappingIedView[model.getArrayId()].getParent().getSize());
 			tabMappingIedView[model.getValueChangedOfTheTree().getArrayId()]
 					.invalidate();
-			tabMappingIedView[model.getArrayId()].setPreferredSize(tabMappingIedView[model.getArrayId()].getParent().getSize());
-			
 		}		
 	}
 

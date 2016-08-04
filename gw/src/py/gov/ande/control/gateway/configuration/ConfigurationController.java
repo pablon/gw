@@ -46,7 +46,7 @@ public class ConfigurationController {
 	 * Construye el arbol de drivers para el Tab Configuración
 	 * @author pablo
 	 */
-	public void buildTreeConfiguration() {
+	protected void buildTreeConfiguration() {
         DefaultMutableTreeNode nodeRoot = (DefaultMutableTreeNode) theView.panelConf.treeConf.getModel().getRoot();
 
         buildTree(nodeRoot);
@@ -58,7 +58,7 @@ public class ConfigurationController {
 	/**
 	 * Construye el arbol de drivers para el Tab Mapping
 	 */
-	public void buildTreeMapping() {
+	private void buildTreeMapping() {
         DefaultMutableTreeNode nodeRoot = (DefaultMutableTreeNode) theView.panelMapping.treeConf.getModel().getRoot();
         buildTree(nodeRoot);
      	theView.panelMapping.treeConf.repaint();
@@ -69,7 +69,7 @@ public class ConfigurationController {
 	 * 	Construye el arbol de drivers para el Tab Configuración, así como la lista de IED
 	 * @param nodeRoot
 	 */
-	public void buildTree(DefaultMutableTreeNode nodeRoot){
+	private void buildTree(DefaultMutableTreeNode nodeRoot){
         DefaultMutableTreeNode subestacion = null, iec61850 = null, ied = null, iec101, temp;
         if(nodeRoot.getChildCount()>0){
         	nodeRoot.removeAllChildren();
@@ -113,7 +113,7 @@ public class ConfigurationController {
 	 * @author pablo
 	 * @date 2016-08-02
 	 */
-	public void rebuildMapping(){
+	protected void rebuildMapping(){
 		theView.panelMapping.deleteMappingIedView();
 		theView.panelMapping.buildMappingIedView();
 		buildTreeMapping();

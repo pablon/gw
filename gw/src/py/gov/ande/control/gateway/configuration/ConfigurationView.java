@@ -48,7 +48,7 @@ public class ConfigurationView extends JFrame {
         }		
 		
         gbl=new GridBagLayout();
-        setLayout(gbl);
+        this.getContentPane().setLayout(gbl);
         
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		topPanel = new JPanel();
@@ -84,7 +84,7 @@ public class ConfigurationView extends JFrame {
 		panelTopology = new TabTopology();
 		tabbedPane.addTab("Topología", null, panelTopology, "Estructura topologica de cada señal de cada equipo");
 		
-		setSize(900, 600);
+		setSize(1100, 650);
 		setMinimumSize(new Dimension(420, 420));
 		
 	}

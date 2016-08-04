@@ -110,6 +110,5 @@ public class TagMonitorIec61850Manager {
 		return GenericManager.getColumnNames(TagMonitorIec61850.class);
 
 	}
-	
 
 }
