@@ -16,6 +16,7 @@ import py.gov.ande.control.gateway.manager.DriversManager;
 import py.gov.ande.control.gateway.model.Ied;
 import py.gov.ande.control.gateway.util.GenericManager;
 
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import javax.swing.JLabel;
 import javax.swing.JInternalFrame;
@@ -42,6 +43,7 @@ public class TabMappingView extends JPanel {
 	public TabMappingView() {
 		gridBagLayout = new GridBagLayout();
 		setLayout(gridBagLayout);
+		GridBagConstraints gbc = new GridBagConstraints();
 				
 		DefaultMutableTreeNode top = new DefaultMutableTreeNode("Gateway");
 		treeConf = new JTree(top);
@@ -49,27 +51,27 @@ public class TabMappingView extends JPanel {
 		treeConf.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		
 		scrollPaneConf = new JScrollPane(treeConf);
-		GridBagConstraints gbc_scrollPaneConf = new GridBagConstraints();
-		gbc_scrollPaneConf.fill = GridBagConstraints.BOTH;
-		gbc_scrollPaneConf.anchor = GridBagConstraints.WEST;
-		gbc_scrollPaneConf.gridx = 0;
-		gbc_scrollPaneConf.gridy = 0;
-		gbc_scrollPaneConf.weightx = 0.2;
-		gbc_scrollPaneConf.weighty = 1;
-		gbc_scrollPaneConf.insets = new Insets(5, 5, 5, 5);
-		add(scrollPaneConf, gbc_scrollPaneConf);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 1;
+        gbc.gridheight = 1;
+        gbc.weightx = 0.2;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.anchor = GridBagConstraints.CENTER;
+		gbc.insets = new Insets(5, 5, 5, 5);
+		add(scrollPaneConf, gbc);
 		
 		scrollPaneDetails = new JScrollPane(new JPanel());
-		GridBagConstraints gbc_scrollPaneDetails = new GridBagConstraints();
-		gbc_scrollPaneDetails.fill = GridBagConstraints.BOTH;
-		gbc_scrollPaneDetails.anchor = GridBagConstraints.NORTHWEST;
-		gbc_scrollPaneDetails.gridx = 1;
-		gbc_scrollPaneDetails.gridy = 0;
-		gbc_scrollPaneDetails.weightx = 0.8;
-		gbc_scrollPaneDetails.weighty = 1;
-		//scrollPaneDetails.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-		//scrollPaneDetails.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		add(scrollPaneDetails, gbc_scrollPaneDetails);
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.gridwidth = 1;
+        gbc.gridheight = 1;
+        gbc.weightx = 0.8;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.anchor = GridBagConstraints.CENTER;
+		add(scrollPaneDetails, gbc);
 		
 		buildMappingIedView();
 	}
@@ -86,6 +88,7 @@ public class TabMappingView extends JPanel {
 		for (Ied ied : iedList) {
 			((JPanel)scrollPaneDetails.getViewport().getView()).add(tabMappingIedView[i] = new TabMappingIedView(ied));
 			tabMappingIedView[i].setVisible(false);
+			tabMappingIedView[i].addBtnUpdateTags( new TabMappingTagsListener(this) );
 			i++;
 		}
 	}
@@ -124,7 +127,6 @@ public class TabMappingView extends JPanel {
 	 * @param model
 	 */
 	public void valueChangedOfTheTree(DriversManager model) {
-		//logger.info("ArrayId: "+model.getValueChangedOfTheTree().getArrayId());
 		List<Ied> iedList = GenericManager.getAllObjects(Ied.class, Order.asc("id"));
 		for (int i = 0; i < iedList.size(); i++) {
 			tabMappingIedView[i]
@@ -134,8 +136,6 @@ public class TabMappingView extends JPanel {
 		if(model.getValueChangedOfTheTree().getIed()){
 			tabMappingIedView[model.getValueChangedOfTheTree().getArrayId()]
 					.setVisible(true);
-
-			//tabMappingIedView[model.getArrayId()].setMaximumSize(tabMappingIedView[model.getArrayId()].getParent().getSize());
 			tabMappingIedView[model.getValueChangedOfTheTree().getArrayId()]
 					.invalidate();
 		}		

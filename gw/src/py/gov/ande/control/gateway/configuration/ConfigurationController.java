@@ -1,5 +1,6 @@
 package py.gov.ande.control.gateway.configuration;
 
+import java.awt.Dimension;
 import java.util.List;
 import javax.swing.tree.DefaultMutableTreeNode;
 import org.hibernate.criterion.Order;
@@ -22,7 +23,6 @@ public class ConfigurationController {
 		this.iedModel = new IedManager();
 		buildTreeConfiguration();
 		buildTreeMapping();
-		//BuildTableOfMapping();
 		
 		this.theView.panelConf.addTreeListener(
 				new TabConfigurationListener(
@@ -38,6 +38,10 @@ public class ConfigurationController {
 		this.theView.panelMapping.addTreeListener(
 				new TabMappingListener(
 						this.theView.panelMapping, this.driverModel));
+		
+		/*this.theView.panelMapping.tabMappingIedView[0].addBtnUpdateTags(
+				null
+				);*/
 		
 	}
 

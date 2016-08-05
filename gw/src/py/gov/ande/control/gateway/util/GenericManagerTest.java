@@ -29,5 +29,15 @@ public class GenericManagerTest {
 		
 		assertEquals("use", GenericManager.getColumnNames(tags.get(0).getClass())[0]);
 	}
+	
+	@Test
+	public void testGetNaturalIdentifierProperties() {
+		int [] id = GenericManager.getNaturalIdentifierProperties(TagMonitorIec61850.class);
+		if(id!= null){
+			for (int i : id) {
+				System.out.println("x: "+i);	
+			}
+		}
+	}
 
 }

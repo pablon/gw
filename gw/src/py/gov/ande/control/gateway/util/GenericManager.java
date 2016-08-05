@@ -385,5 +385,25 @@ public class GenericManager {
 	   
 	   return columnNames;
    }
-
+   
+   /**
+    * Método de prueba
+    * @param clazz
+    * @return
+    */
+   public static int[] getNaturalIdentifierProperties(Class clazz){
+	   RuntimeException exception = null;
+	   int[] id = null;
+       try {
+           Session session = createNewSession();
+           id = session.getSessionFactory().getClassMetadata(clazz).getNaturalIdentifierProperties();
+           
+       } catch (RuntimeException e) {
+    	   exception = e;
+    	   id = new int []{0};
+    	   System.out.println("error: "+e.getMessage());
+       }
+	   
+	   return id;
+   }
 }

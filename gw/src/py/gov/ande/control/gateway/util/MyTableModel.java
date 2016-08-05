@@ -1,5 +1,6 @@
 package py.gov.ande.control.gateway.util;
 
+import java.util.HashSet;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
@@ -18,6 +19,7 @@ public class MyTableModel<T> extends AbstractTableModel {
 	private static final long serialVersionUID = -430490490783397713L;
 	private String[] columnNames;
 	private Object[][] data;
+	private HashSet updatedRows = new HashSet();
 
 	/**
 	 * Constructor de la tabla que recibe como parámetros, un array bidimensional del tipo Object, 
@@ -70,8 +72,25 @@ public class MyTableModel<T> extends AbstractTableModel {
     }
     
     public void setValueAt(Object value, int row, int col) {
-        data[row][col] = value;
-        fireTableCellUpdated(row, col);
+    	Object oldValue = getValueAt(row, col);
+		if ((oldValue == null) && (value != null)) {
+			updatedRows.add(new Integer(row));
+		} else if (!oldValue.equals(value)) {
+			updatedRows.add(new Integer(row));
+		}
+		data[row][col] = value;
+		fireTableCellUpdated(row, col);
     }
+    
+    /**
+     * Método que retorna un array de indice de filas actualizadas
+     * @return
+     * @author Pablo
+     * @date 2016-08-04
+     */
+	public Integer[] getUpdatedRowIndexes() {
+		Integer[] keys = (Integer[]) updatedRows.toArray(new Integer[0]);
+		return keys;
+	}
     
 }

@@ -21,35 +21,55 @@ import java.awt.Dimension;
 import java.awt.Font;
 import javax.swing.JButton;
 import java.awt.Insets;
+import java.awt.event.ActionListener;
 
 public class TabMappingIedView extends JPanel {
 
 	private Ied ied;
+	protected JButton btnUpdateTags;
+	protected final JTable table;
+	protected MyTableModel myTableModel;
+	private String[] columnNames;
+
+	protected String[] getColumnNames() {
+		return columnNames;
+	}
+
+	protected void setColumnNames(String[] columnNames) {
+		this.columnNames = columnNames;
+	}
 
 	public TabMappingIedView(Ied ied) {
 		this.ied = ied;
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		setLayout(gridBagLayout);
-		String[] columnNames = TagMonitorIec61850Manager.getColumnNames();
+		setColumnNames( TagMonitorIec61850Manager.getColumnNames());
+		GridBagConstraints gbc = new GridBagConstraints();
 		
-		/*JLabel lblNewLabel = new JLabel("Mapeo del Ied "+ied.getName());
-		lblNewLabel.setFont(new Font("Dialog", Font.BOLD, 24));
-		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
-		gbc_lblNewLabel.gridx = 1;
-		gbc_lblNewLabel.gridy = 0;
-		add(lblNewLabel, gbc_lblNewLabel);*/
+		JLabel lblName = new JLabel("Mapping del Ied "+ied.getName());
+		lblName.setFont(new Font("Dialog", Font.BOLD, 24));
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 1;
+        gbc.gridheight = 1;
+        gbc.weightx = 1.0;
+        gbc.weighty = 0.0;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.anchor = GridBagConstraints.CENTER;
+		add(lblName, gbc);
 		
 		List<TagMonitorIec61850> tags = TagMonitorIec61850Manager.getAllObjects(ied);
-		Object[] [] data = ListUtil.ListToArray(tags,columnNames);
-		MyTableModel myTableModel = new MyTableModel(data, columnNames);
-		final JTable table = new JTable(myTableModel);
+		Object[] [] data = ListUtil.ListToArray(tags,getColumnNames());
+		myTableModel = new MyTableModel(data, getColumnNames());
+		table = new JTable(myTableModel);
         table.setFillsViewportHeight(true);
+        table.setPreferredScrollableViewportSize(new Dimension(750, 450));
 
         //-------definir tamaño de columnas----
 		TableColumn column = null;
-		for (int i = 0; i < columnNames.length; i++) {
+		for (int i = 0; i < getColumnNames().length; i++) {
 			column = table.getColumnModel().getColumn(i);
-			if( columnNames[i] == "telegramAddress"){
+			if( getColumnNames()[i] == "telegramAddress"){
 				column.setPreferredWidth(2000);
 			}else{
 				column.setPreferredWidth(500);
@@ -57,25 +77,37 @@ public class TabMappingIedView extends JPanel {
 		}
         //-------------------------------------
         JScrollPane scrollPane = new JScrollPane(table);
-		GridBagConstraints gbc_scroll = new GridBagConstraints();
-		gbc_scroll.gridx = 0;
-		//gbc_scroll.gridy = 1;
-		gbc_scroll.gridy = 0;
-		//gbc_scroll.gridwidth = 3;
-		gbc_scroll.fill = GridBagConstraints.BOTH;
-		gbc_scroll.anchor = GridBagConstraints.CENTER;
-		gbc_scroll.weightx = 100;
-		gbc_scroll.weighty = 100;
-		add(scrollPane, gbc_scroll);
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.gridwidth = 1;
+        gbc.gridheight = 1;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.anchor = GridBagConstraints.CENTER;
+		add(scrollPane, gbc);
 		
-		JButton btnUpdateTags = new JButton("Actualizar Tags");
-		GridBagConstraints gbc_btnUpdateTags = new GridBagConstraints();
-		gbc_btnUpdateTags.gridx = 0;
-		gbc_btnUpdateTags.gridy = 1;
-		add(btnUpdateTags, gbc_btnUpdateTags);
-		
-		
+		btnUpdateTags = new JButton("Actualizar Tags");
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.gridwidth = 1;
+        gbc.gridheight = 1;
+        gbc.weightx = 1.0;
+        gbc.weighty = 0.0;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.anchor = GridBagConstraints.CENTER;
+		add(btnUpdateTags, gbc);
 	}
 
+	/**
+	 * Método que es llamado una sola vez, 
+	 * con la finalidad de agregar un Listener al botón de Actualizar los tags a la base de datos
+	 * @param listenForBtnClick
+	 * @author Pablo
+	 * @date 2016-08-03
+	 */
+	public void addBtnUpdateTags(ActionListener listenForBtnClick){
+		btnUpdateTags.addActionListener(listenForBtnClick);
+	}
 
 }

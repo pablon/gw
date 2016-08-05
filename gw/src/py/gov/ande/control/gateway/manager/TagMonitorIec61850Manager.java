@@ -111,4 +111,15 @@ public class TagMonitorIec61850Manager {
 
 	}
 
+	/**
+	 * Método que actualiza el campo Use de un tag.
+	 * @param id
+	 * @param Object valueAt
+	 */
+	public static void updateTag(int id, Object valueAt) {
+		TagMonitorIec61850 tag = GenericManager.getObjectById(TagMonitorIec61850.class, id);
+		tag.setUse(Boolean.valueOf((boolean) valueAt));
+		GenericManager.updateObject(tag);
+	}
+
 }

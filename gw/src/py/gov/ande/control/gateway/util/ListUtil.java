@@ -38,7 +38,7 @@ public class ListUtil {
 			//TODO
 		}
 
-		results = new Object[lists.size()][columnNames.length];
+		results = new Object[lists.size()][columnNames.length + 1];
 		int x = 0;
 		for ( Object item : lists) {
 
@@ -63,6 +63,23 @@ public class ListUtil {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+			}
+			// se intenta agregar una ultima columna con el id de la fila de la bd.
+			// utilizado al momento de rescatar las filas cambiadas, para actualizar la bd según el id
+			try {
+				results[x][columnNames.length] = item.getClass().getMethod("getId").invoke(item);
+			} catch (NoSuchMethodException | SecurityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			x++;
 		}
