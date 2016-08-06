@@ -1,26 +1,28 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 31/07/2016 03:04:37 PM by Hibernate Tools 5.1.0.Alpha1 -->
+<!-- Generated 04/08/2016 11:11:03 PM by Hibernate Tools 5.1.0.Alpha1 -->
 <hibernate-mapping>
     <class name="py.gov.ande.control.gateway.model.BufferedRcb" table="buffered_rcb" schema="public" optimistic-lock="version">
         <comment>lista de reportes con buffers de un ied</comment>
         <id name="id" type="int">
             <column name="id" />
-            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-			    <param name="optimizer">none</param>
-			    <param name="increment_size">1</param>
-			    <param name="sequence_name">brcb_id_seq</param>
-			</generator>	
+            <generator class="assigned" />
         </id>
-        <property name="iedId" type="int">
+        <many-to-one name="ied" class="py.gov.ande.control.gateway.model.Ied" fetch="select">
             <column name="ied_id" not-null="true" />
-        </property>
+        </many-to-one>
         <property name="reference" type="string">
             <column name="reference" not-null="true" />
         </property>
         <property name="dataset" type="string">
             <column name="dataset" />
         </property>
+        <set name="tagMonitorIec61850s" table="tag_monitor_iec61850" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="brcb_id" />
+            </key>
+            <one-to-many class="py.gov.ande.control.gateway.model.TagMonitorIec61850" />
+        </set>
     </class>
 </hibernate-mapping>

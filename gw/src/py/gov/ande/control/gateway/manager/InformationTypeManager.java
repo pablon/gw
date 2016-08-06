@@ -16,15 +16,15 @@ public class InformationTypeManager {
 	 * @version 1.0
 	 * @return int
 	 */
-	public static Integer getSpId() {
+	public static InformationType getSpId() {
 		InformationType type = (InformationType) GenericManager.getFilteredObject(InformationType.class, 
     			Arrays.asList(
     					Restrictions.eq("description", "SP") 
 				));
 		if(type != null){
-			return type.getId();
+			return type;
 		}else{
-			return 0;
+			return null;
 		}
 	}
 	
@@ -35,15 +35,15 @@ public class InformationTypeManager {
 	 * @version 1.0
 	 * @return int
 	 */
-	public static Integer getDpId() {
+	public static InformationType getDpId() {
 		InformationType type = (InformationType) GenericManager.getFilteredObject(InformationType.class, 
     			Arrays.asList(
     					Restrictions.eq("description", "DP") 
 				));
 		if(type != null){
-			return type.getId();
+			return type;
 		}else{
-			return 0;
+			return null;
 		}
 	}	
 

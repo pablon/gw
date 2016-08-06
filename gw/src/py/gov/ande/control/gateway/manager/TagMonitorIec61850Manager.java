@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import py.gov.ande.control.gateway.model.Ied;
 import py.gov.ande.control.gateway.model.InformationType;
+import py.gov.ande.control.gateway.model.ReportingCapability;
 import py.gov.ande.control.gateway.model.TagMonitorIec61850;
 import py.gov.ande.control.gateway.util.GenericManager;
 
@@ -34,26 +35,26 @@ public class TagMonitorIec61850Manager {
 		logger.info("inicio");
 		TagMonitorIec61850 tag;
 		int count = 0;
-		int sp = InformationTypeManager.getSpId();
-		int dp = InformationTypeManager.getDpId();
+		InformationType sp = InformationTypeManager.getSpId();
+		InformationType dp = InformationTypeManager.getDpId();
 		
-		int reportingCapacibiliyId = ReportingCapabilityManager.getObjectNoneRcb();
-		logger.info("reportingCapacibiliyId: "+reportingCapacibiliyId);
+		ReportingCapability reportingCapacibility = ReportingCapabilityManager.getObjectNoneRcb();
+		logger.info("reportingCapacibiliyId: "+reportingCapacibility);
 		
 		for (BasicDataAttribute bda : serverModel.getBasicDataAttributes()) {
 			if(bda.getFc() == Fc.ST){
 				if(bda.getBasicType() == BdaType.BOOLEAN || bda.getBasicType() == BdaType.DOUBLE_BIT_POS){
 					tag = new TagMonitorIec61850();
-					tag.setIedId(ied.getId());
+					tag.setIed(ied);
 					tag.setTelegramAddress(bda.getParent().getReference().toString());	//UC_SSAACTRL/GGIO3.Ind01
-					tag.setReportingCapacibiliyId(reportingCapacibiliyId);
+					tag.setReportingCapability(reportingCapacibility);
 					tag.setUse(false);
 					tag.setBuffered(false);
 					tag.setUnbuffered(false);
 					if(bda.getBasicType() == BdaType.BOOLEAN){
-						tag.setInformationTypeId(sp);
+						tag.setInformationType(sp);
 					}else if(bda.getBasicType() == BdaType.DOUBLE_BIT_POS){
-						tag.setInformationTypeId(dp);
+						tag.setInformationType(dp);
 					}
 
 					try {
@@ -98,7 +99,8 @@ public class TagMonitorIec61850Manager {
 	 */
 	public static List<TagMonitorIec61850> getAllObjects(Ied ied) {
 		
-		return GenericManager.getListBasedOnCriteria("from TagMonitorIec61850 as tag where tag.iedId = "+ied.getId());
+		//return GenericManager.getListBasedOnCriteria("from TagMonitorIec61850 as tag where tag.iedId = "+ied.getId());
+		return GenericManager.getListBasedOnCriteria("select tag From TagMonitorIec61850 as tag inner join tag.ied as ied where ied.id = "+ied.getId());
 	}
 	
 	/**

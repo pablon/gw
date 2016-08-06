@@ -15,6 +15,7 @@ import org.openmuc.openiec61850.ModelNode;
 import org.openmuc.openiec61850.ServerModel;
 
 import py.gov.ande.control.gateway.model.Ied;
+import py.gov.ande.control.gateway.model.ReportingCapability;
 import py.gov.ande.control.gateway.model.TagMonitorIec61850;
 import py.gov.ande.control.gateway.model.UnbufferedRcb;
 import py.gov.ande.control.gateway.util.GenericManager;
@@ -33,18 +34,17 @@ public class UrcbManager {
 	 */
 	public static void saveAllTagWithOutBuffer(Ied ied, ServerModel serverModel) {
 		logger.info("inicio");
-		int reportingCapacibiliyBrcbId = ReportingCapabilityManager.getObjectBrcb();
-		int reportingCapacibiliyUrcbId = ReportingCapabilityManager.getObjectUrcb();
-		int reportingCapacibiliyNoneId = ReportingCapabilityManager.getObjectNoneRcb();
-		int reportingCapacibiliyBothId = ReportingCapabilityManager.getObjectBothRcb();
+		ReportingCapability reportingCapacibiliyBrcb = ReportingCapabilityManager.getObjectBrcb();
+		ReportingCapability reportingCapacibiliyUrcb = ReportingCapabilityManager.getObjectUrcb();
+		ReportingCapability reportingCapacibiliyNone = ReportingCapabilityManager.getObjectNoneRcb();
+		ReportingCapability reportingCapacibiliyBoth = ReportingCapabilityManager.getObjectBothRcb();
 		
 		for (Urcb modelNodercbs : serverModel.getUrcbs()) {
 			String datasetOld = modelNodercbs.getDatSet().getStringValue();
 			String datasetReferent = datasetOld.replace('$', '.');
-			//String datasetReferent = modelNodercbs.getDatSet().getReference().toString();
 			
 			report = new UnbufferedRcb();
-			report.setIedId(ied.getId());
+			report.setIed(ied);
 			report.setReferent(modelNodercbs.getReference().toString());				//UC_SSAACTRL/LLN0.urcbESTADOS2
 			report.setDataset(datasetReferent);											//?
 			GenericManager.saveObject(report);
@@ -60,14 +60,14 @@ public class UrcbManager {
 		    			);		    	
 
 		    	if(tagMonitor != null){
-		    		tagMonitor.setUrcbId(report.getId());
+		    		tagMonitor.setUnbufferedRcb(report);
 		    		tagMonitor.setUnbuffered(true);
 
-		    		int currentCapability = tagMonitor.getReportingCapacibiliyId();
-		    		if(currentCapability == reportingCapacibiliyNoneId){
-		    			tagMonitor.setReportingCapacibiliyId(reportingCapacibiliyUrcbId);
-		    		}else if(currentCapability == reportingCapacibiliyBrcbId){
-		    			tagMonitor.setReportingCapacibiliyId(reportingCapacibiliyBothId);
+		    		int currentCapability = tagMonitor.getReportingCapability().getId();
+		    		if(currentCapability == reportingCapacibiliyNone.getId()){
+		    			tagMonitor.setReportingCapability(reportingCapacibiliyUrcb);
+		    		}else if(currentCapability == reportingCapacibiliyBrcb.getId()){
+		    			tagMonitor.setReportingCapability(reportingCapacibiliyBoth);
 		    		}		    		
 		    		
 		    		GenericManager.updateObject(tagMonitor);

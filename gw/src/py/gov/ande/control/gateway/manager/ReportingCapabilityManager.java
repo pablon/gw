@@ -16,16 +16,16 @@ public class ReportingCapabilityManager {
 	 * @return int
 	 * @author pablo
 	 */
-	public static Integer getObjectBrcb() {
+	public static ReportingCapability getObjectBrcb() {
 		ReportingCapability reporte = (ReportingCapability) GenericManager.getFilteredObject(ReportingCapability.class, 
     			Arrays.asList(
     					Restrictions.eq("brcb", true) ,
     					Restrictions.eq("urcb", false)) 
 				);
 		if(reporte != null){
-			return reporte.getId();
+			return reporte;
 		}else{
-			return 0;
+			return null;
 		}
 	}	
 	
@@ -34,16 +34,16 @@ public class ReportingCapabilityManager {
 	 * @return int
 	 * @author pablo
 	 */
-	public static Integer getObjectUrcb() {
+	public static ReportingCapability getObjectUrcb() {
 		ReportingCapability reporte = (ReportingCapability) GenericManager.getFilteredObject(ReportingCapability.class, 
     			Arrays.asList(
     					Restrictions.eq("brcb", false) ,
     					Restrictions.eq("urcb", true)) 
 				);
 		if(reporte != null){
-			return reporte.getId();
+			return reporte;
 		}else{
-			return 0;
+			return null;
 		}
 	}
 	
@@ -52,16 +52,16 @@ public class ReportingCapabilityManager {
 	 * @return
 	 * @author pablo
 	 */
-	public static Integer getObjectNoneRcb() {
+	public static ReportingCapability getObjectNoneRcb() {
 		ReportingCapability reporte = (ReportingCapability) GenericManager.getFilteredObject(ReportingCapability.class, 
     			Arrays.asList(
     					Restrictions.eq("brcb", false) ,
     					Restrictions.eq("urcb", false)) 
 				);
 		if(reporte != null){
-			return reporte.getId();
+			return reporte;
 		}else{
-			return 0;
+			return null;
 		}
 	}
 	
@@ -70,16 +70,16 @@ public class ReportingCapabilityManager {
 	 * @return
 	 * @author pablo
 	 */
-	public static Integer getObjectBothRcb() {
+	public static ReportingCapability getObjectBothRcb() {
 		ReportingCapability reporte = (ReportingCapability) GenericManager.getFilteredObject(ReportingCapability.class, 
     			Arrays.asList(
     					Restrictions.eq("brcb", true) ,
     					Restrictions.eq("urcb", true)) 
 				);
 		if(reporte != null){
-			return reporte.getId();
+			return reporte;
 		}else{
-			return 0;
+			return null;
 		}
 	}
 }

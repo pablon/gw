@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import py.gov.ande.control.gateway.model.BufferedRcb;
 import py.gov.ande.control.gateway.model.Ied;
+import py.gov.ande.control.gateway.model.ReportingCapability;
 import py.gov.ande.control.gateway.model.TagMonitorIec61850;
 import py.gov.ande.control.gateway.util.GenericManager;
 
@@ -34,17 +35,17 @@ public class BrcbManager {
 	 */
 	public static void saveAllTagWithBuffer(Ied ied, ServerModel serverModel) {
 		logger.info("inicio");
-		int reportingCapacibiliyBrcbId = ReportingCapabilityManager.getObjectBrcb();
-		int reportingCapacibiliyUrcbId = ReportingCapabilityManager.getObjectUrcb();
-		int reportingCapacibiliyNoneId = ReportingCapabilityManager.getObjectNoneRcb();
-		int reportingCapacibiliyBothId = ReportingCapabilityManager.getObjectBothRcb();
+		ReportingCapability reportingCapacibiliy = ReportingCapabilityManager.getObjectBrcb();
+		ReportingCapability reportingCapacibiliyUrcb = ReportingCapabilityManager.getObjectUrcb();
+		ReportingCapability reportingCapacibiliyNone = ReportingCapabilityManager.getObjectNoneRcb();
+		ReportingCapability reportingCapacibiliyBoth = ReportingCapabilityManager.getObjectBothRcb();
 		TagMonitorIec61850 tagMonitor = null;
 		
 		for (Brcb modelNodercbs : serverModel.getBrcbs()) {
 			String datasetOld = modelNodercbs.getDatSet().getStringValue();
 			String datasetReferent = datasetOld.replace('$', '.');
 			report = new BufferedRcb();
-			report.setIedId(ied.getId());
+			report.setIed(ied);
 			report.setReference(modelNodercbs.getReference().toString());				//UC_SSAACTRL/LLN0.brcbESTADOS2
 			report.setDataset(datasetReferent);
 			
@@ -62,14 +63,14 @@ public class BrcbManager {
 		    			);
 		    	if(tagMonitor != null){
 		    		//logger.info("tagMonitor: "+tagMonitor.getTelegramAddress()+", bufferedId: "+report.getId());
-		    		tagMonitor.setBrcbId(report.getId());
+		    		tagMonitor.setBufferedRcb(report);
 		    		tagMonitor.setBuffered(true);
 		    		
-		    		int currentCapability = tagMonitor.getReportingCapacibiliyId();
-		    		if(currentCapability == reportingCapacibiliyNoneId){
-		    			tagMonitor.setReportingCapacibiliyId(reportingCapacibiliyBrcbId);
-		    		}else if(currentCapability == reportingCapacibiliyUrcbId){
-		    			tagMonitor.setReportingCapacibiliyId(reportingCapacibiliyBothId);
+		    		int currentCapability = tagMonitor.getReportingCapability().getId();
+		    		if(currentCapability == reportingCapacibiliyNone.getId()){
+		    			tagMonitor.setReportingCapability(reportingCapacibiliy);
+		    		}else if(currentCapability == reportingCapacibiliyUrcb.getId()){
+		    			tagMonitor.setReportingCapability(reportingCapacibiliyBoth);
 		    		}
 		    		
 		    		GenericManager.updateObject(tagMonitor);

@@ -5,6 +5,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.TableColumn;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import py.gov.ande.control.gateway.manager.TagMonitorIec61850Manager;
 import py.gov.ande.control.gateway.model.Ied;
 import py.gov.ande.control.gateway.model.TagMonitorIec61850;
@@ -30,6 +33,7 @@ public class TabMappingIedView extends JPanel {
 	protected final JTable table;
 	protected MyTableModel myTableModel;
 	private String[] columnNames;
+	private static final Logger logger = LoggerFactory.getLogger(TabMappingIedView.class);
 
 	protected String[] getColumnNames() {
 		return columnNames;
@@ -59,6 +63,9 @@ public class TabMappingIedView extends JPanel {
 		add(lblName, gbc);
 		
 		List<TagMonitorIec61850> tags = TagMonitorIec61850Manager.getAllObjects(ied);
+		//logger.info(tags.isEmpty()?"tag isEmpty":"tag is not empty");
+		
+		
 		Object[] [] data = ListUtil.ListToArray(tags,getColumnNames());
 		myTableModel = new MyTableModel(data, getColumnNames());
 		table = new JTable(myTableModel);

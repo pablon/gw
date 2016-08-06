@@ -215,9 +215,9 @@ public class DriversManager {
     			this.setIedIp(ieds.getIpAddress());
     			this.setIedPort(ieds.getPortAddress());
     			this.setIedName(ieds.getName());
-    			this.setTags(GenericManager.getCountObjets("From TagMonitorIec61850 tag where tag.iedId = "+ieds.getId()));
-    			this.setbReports(GenericManager.getCountObjets("From BufferedRcb tag where tag.iedId = "+ieds.getId()));
-    			this.setuReports(GenericManager.getCountObjets("From UnbufferedRcb tag where tag.iedId = "+ieds.getId()));
+    			this.setTags(GenericManager.getCountObjets("from TagMonitorIec61850 as tag inner join tag.ied as ied where ied.id ="+ieds.getId()));
+    			this.setbReports(GenericManager.getCountObjets("From BufferedRcb as tag inner join tag.ied as ied where ied.id = "+ieds.getId()));
+    			this.setuReports(GenericManager.getCountObjets("From UnbufferedRcb as tag inner join tag.ied as ied where ied.id = "+ieds.getId()));
     			this.setArrayId(i);
     			break;
     		}else{
