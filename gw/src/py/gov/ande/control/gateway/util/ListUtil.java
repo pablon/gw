@@ -25,7 +25,7 @@ public class ListUtil {
 	 */
 	public static Object[][] ListToArray(java.util.List lists, String[] columnNames){
 		
-		return ListToArray(lists, columnNames, new String [] {""} );
+		return ListToArray(lists, columnNames, new String [] {""}, new String [] {""} );
 	}
 	
 	/**
@@ -36,7 +36,7 @@ public class ListUtil {
 	 * @return Object[][]
 	 * @date 2016-08-02
 	 */
-	public static Object[][] ListToArray(java.util.List lists, String[] columnNames, String[] excludesFields ){
+	public static Object[][] ListToArray(java.util.List lists, String[] columnNames, String[] excludesFields, String[] orderFields){
 		Object [][] results;
 		Object objectInvoked, objectFk, objectFk2;
 		if (lists == null) {
