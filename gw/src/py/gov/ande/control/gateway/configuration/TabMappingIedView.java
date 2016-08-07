@@ -63,11 +63,17 @@ public class TabMappingIedView extends JPanel {
 		add(lblName, gbc);
 		
 		List<TagMonitorIec61850> tags = TagMonitorIec61850Manager.getAllObjects(ied);
-		//logger.info(tags.isEmpty()?"tag isEmpty":"tag is not empty");
+				
+		String [] excludesFields = new String [] {"ied", "bufferedRcb", "unbufferedRcb", 
+				"buffered", "unbuffered", "name", "normalization"};
+		String [] orderFields = new String [] {"use", "telegramAddress"};
+
+		ListUtil list = new ListUtil();
+		Object[] [] data = list.ListToArray(tags,getColumnNames(), excludesFields, orderFields);
+		setColumnNames(list.getColumnNamesFinal());
 		
-		
-		Object[] [] data = ListUtil.ListToArray(tags,getColumnNames());
 		myTableModel = new MyTableModel(data, getColumnNames());
+		
 		table = new JTable(myTableModel);
         table.setFillsViewportHeight(true);
         table.setPreferredScrollableViewportSize(new Dimension(750, 450));
