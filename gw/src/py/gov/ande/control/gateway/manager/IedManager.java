@@ -14,7 +14,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import py.gov.ande.control.gateway.configuration.TabConfigurationIec61850Listener;
+import py.gov.ande.control.gateway.model.BufferedRcb;
 import py.gov.ande.control.gateway.model.Ied;
+import py.gov.ande.control.gateway.model.TagMonitorIec61850;
+import py.gov.ande.control.gateway.model.UnbufferedRcb;
 import py.gov.ande.control.gateway.util.GenericManager;
 import py.gov.ande.control.gateway.util.GenericValidations;
 
@@ -70,18 +73,32 @@ public class IedManager {
 
 	/**
 	 * Método que elimina todos los datos relacionados al ied, como ser brcb, urcb, tags, y el propio Ied
-	 * @param iedId
-	 * @return
+	 * @param int iedId
+	 * @return boolean
+	 * @author Pablo
+	 * @date 2016-08-07
+	 * Pendiente: implementar commit y rollback
 	 */
 	public static Boolean deleteIed(int iedId) {
 		Session session = GenericManager.createNewSession();
-		
+		Ied ied = GenericManager.getObjectById(Ied.class, iedId);
+
 		try {
+			GenericManager.BorrarTodosLosHijos(TagMonitorIec61850.class, ied);
+			GenericManager.BorrarTodosLosHijos(BufferedRcb.class, ied);
+			GenericManager.BorrarTodosLosHijos(UnbufferedRcb.class, ied);
+			GenericManager.deleteObjectById(Ied.class, iedId);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+
+		/*try {
 			session.getTransaction().begin();
 			logger.info("delete tag_monitor_iec61850");
 			session.createQuery(
-					"delete TagMonitorIec61850 " +
-					"where iedId = :id" )
+					"delete tag From TagMonitorIec61850 as tag inner join tag.ied as ied" +
+					"where ied.id = :id" )
 					.setParameter( "id", iedId )
 					.executeUpdate();
 			logger.info("delete buffered_rcb");
@@ -113,7 +130,7 @@ public class IedManager {
 				}
 			logger.error("luego del rollback");
 			return false;
-		}
+		}*/
 	}
 
 	/**

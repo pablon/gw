@@ -18,8 +18,8 @@ public class IedManagerTest {
 	
 	@Test
 	public final void testDeleteIed() {
-		assert(IedManager.deleteIed(81));
-		assertFalse(IedManager.deleteIed(82));
+		assertTrue(IedManager.deleteIed(95));
+		//assertFalse(IedManager.deleteIed(82));
 	}
 
 }

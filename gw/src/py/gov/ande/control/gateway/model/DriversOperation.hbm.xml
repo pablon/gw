@@ -3,7 +3,7 @@
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated 07/08/2016 10:31:57 AM by Hibernate Tools 5.1.0.Alpha1 -->
 <hibernate-mapping>
-    <class name="py.gov.ande.control.gateway.model.Drivers" table="drivers" schema="public" optimistic-lock="version">
+    <class name="py.gov.ande.control.gateway.model.DriversOperation" table="drivers_operation" schema="public" optimistic-lock="version">
         <id name="id" type="int">
             <column name="id" />
             <generator class="assigned" />

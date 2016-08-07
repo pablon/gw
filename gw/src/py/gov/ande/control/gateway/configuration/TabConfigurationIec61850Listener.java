@@ -98,6 +98,7 @@ public class TabConfigurationIec61850Listener extends Thread implements ActionLi
 		            		controller.rebuildMapping();
 		            		
 						} catch (Exception e2) {
+							logger.error("Los datos del IED no fueron guardados. Error: "+e2);
 		            		JOptionPane.showMessageDialog(null,"Información: Los datos del IED no fueron guardados",
 		                		      "Advertencia",JOptionPane.ERROR_MESSAGE);            	
 						}
@@ -132,6 +133,7 @@ public class TabConfigurationIec61850Listener extends Thread implements ActionLi
 		            		controller.rebuildMapping();
 		            		
 						} catch (Exception e2) {
+							logger.error("Los datos del IED no fueron guardados. Error: "+e2);
 		            		JOptionPane.showMessageDialog(null,"Información: Los datos del IED no fueron guardados",
 		                		      "Advertencia",JOptionPane.ERROR_MESSAGE);            	
 						}		        		

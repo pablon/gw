@@ -3,6 +3,8 @@ package py.gov.ande.control.gateway.configuration;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JOptionPane;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,16 +38,20 @@ public class TabMappingTagsListener implements ActionListener {
 			if(theView.tabMappingIedView[i].isVisible()){
 				if(e.getSource() == theView.tabMappingIedView[i].btnUpdateTags){
 					Integer[] updatedIndexes = theView.tabMappingIedView[i].myTableModel.getUpdatedRowIndexes();
-					for(int j = 0; j < updatedIndexes.length; j++){
-						int idx = updatedIndexes[j];
-						String name = theView.tabMappingIedView[i].myTableModel.getValueAt(idx, 0).toString();
-						System.out.println(name + " row has been updated");
-						
-						int id = (int) theView.tabMappingIedView[i].myTableModel.getValueAt(idx,theView.tabMappingIedView[i].getColumnNames().length); 
-						System.out.println("id: "+id);
-						TagMonitorIec61850Manager.updateTag(id, theView.tabMappingIedView[i].myTableModel.getValueAt(idx, 0));
+					if(updatedIndexes.length > 0){
+						int option = JOptionPane.showConfirmDialog(null, "Confirmar Cambios", "Advertencia", JOptionPane.OK_CANCEL_OPTION);
+			        	if(option == JOptionPane.OK_OPTION){
+							for(int j = 0; j < updatedIndexes.length; j++){
+								int idx = updatedIndexes[j];
+								String name = theView.tabMappingIedView[i].myTableModel.getValueAt(idx, 0).toString();
+								System.out.println(name + " row has been updated");
+								
+								int id = (int) theView.tabMappingIedView[i].myTableModel.getValueAt(idx,theView.tabMappingIedView[i].getColumnNames().length); 
+								System.out.println("id: "+id);
+								TagMonitorIec61850Manager.updateTag(id, theView.tabMappingIedView[i].myTableModel.getValueAt(idx, 0));
+							}
+			        	}
 					}
-					
 				}
 			}
 		}

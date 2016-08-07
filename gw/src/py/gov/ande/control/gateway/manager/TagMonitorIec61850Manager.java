@@ -78,11 +78,15 @@ public class TagMonitorIec61850Manager {
 	 * @return String name
 	 */
 	public static String getFirstElement(int id) {
+		Ied ied = GenericManager.getObjectById(Ied.class, id);
 		TagMonitorIec61850 object = null;
-		object = (TagMonitorIec61850) GenericManager.getFilteredObject(TagMonitorIec61850.class, 
+		/*object = (TagMonitorIec61850) GenericManager.getFilteredObject(TagMonitorIec61850.class, 
     			Arrays.asList(
     					Restrictions.eq("iedId", id)
-				));
+				));*/
+		List<TagMonitorIec61850> listTags = getAllObjects(ied);
+		object = listTags.get(0);
+		
 		if(object != null){
 			String[] name = object.getTelegramAddress().split("/");
 			System.out.println(name[0]);

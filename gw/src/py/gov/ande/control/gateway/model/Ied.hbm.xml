@@ -1,12 +1,16 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 04/08/2016 11:11:03 PM by Hibernate Tools 5.1.0.Alpha1 -->
+<!-- Generated 07/08/2016 10:31:57 AM by Hibernate Tools 5.1.0.Alpha1 -->
 <hibernate-mapping>
     <class name="py.gov.ande.control.gateway.model.Ied" table="ied" schema="public" optimistic-lock="version">
         <id name="id" type="int">
             <column name="id" />
-            <generator class="assigned" />
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
+			    <param name="optimizer">none</param>
+			    <param name="increment_size">1</param>
+			    <param name="sequence_name">ied_id_seq</param>
+			</generator>
         </id>
         <property name="name" type="string">
             <column name="name" />

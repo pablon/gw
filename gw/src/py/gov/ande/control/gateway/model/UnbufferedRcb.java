@@ -1,5 +1,5 @@
 package py.gov.ande.control.gateway.model;
-// Generated 04/08/2016 11:11:02 PM by Hibernate Tools 5.1.0.Alpha1
+// Generated 07/08/2016 10:31:56 AM by Hibernate Tools 5.1.0.Alpha1
 
 import java.util.HashSet;
 import java.util.Set;
@@ -72,10 +72,9 @@ public class UnbufferedRcb implements java.io.Serializable {
 	public void setTagMonitorIec61850s(Set<TagMonitorIec61850> tagMonitorIec61850s) {
 		this.tagMonitorIec61850s = tagMonitorIec61850s;
 	}
-	
+
     @Override
     public String toString(){
     	return getReferent();
     }
-
 }

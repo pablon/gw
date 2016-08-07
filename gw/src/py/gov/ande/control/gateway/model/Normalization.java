@@ -1,5 +1,5 @@
 package py.gov.ande.control.gateway.model;
-// Generated 04/08/2016 11:11:02 PM by Hibernate Tools 5.1.0.Alpha1
+// Generated 07/08/2016 10:31:56 AM by Hibernate Tools 5.1.0.Alpha1
 
 import java.util.HashSet;
 import java.util.Set;
@@ -12,6 +12,7 @@ public class Normalization implements java.io.Serializable {
 	private int id;
 	private String description;
 	private Boolean binary;
+	private Set<TagMonitorIec61850Operation> tagMonitorIec61850Operations = new HashSet<TagMonitorIec61850Operation>(0);
 	private Set<TagMonitorIec61850> tagMonitorIec61850s = new HashSet<TagMonitorIec61850>(0);
 
 	public Normalization() {
@@ -22,10 +23,13 @@ public class Normalization implements java.io.Serializable {
 		this.description = description;
 	}
 
-	public Normalization(int id, String description, Boolean binary, Set<TagMonitorIec61850> tagMonitorIec61850s) {
+	public Normalization(int id, String description, Boolean binary,
+			Set<TagMonitorIec61850Operation> tagMonitorIec61850Operations,
+			Set<TagMonitorIec61850> tagMonitorIec61850s) {
 		this.id = id;
 		this.description = description;
 		this.binary = binary;
+		this.tagMonitorIec61850Operations = tagMonitorIec61850Operations;
 		this.tagMonitorIec61850s = tagMonitorIec61850s;
 	}
 
@@ -51,6 +55,14 @@ public class Normalization implements java.io.Serializable {
 
 	public void setBinary(Boolean binary) {
 		this.binary = binary;
+	}
+
+	public Set<TagMonitorIec61850Operation> getTagMonitorIec61850Operations() {
+		return this.tagMonitorIec61850Operations;
+	}
+
+	public void setTagMonitorIec61850Operations(Set<TagMonitorIec61850Operation> tagMonitorIec61850Operations) {
+		this.tagMonitorIec61850Operations = tagMonitorIec61850Operations;
 	}
 
 	public Set<TagMonitorIec61850> getTagMonitorIec61850s() {

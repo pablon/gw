@@ -1,13 +1,17 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 04/08/2016 11:11:03 PM by Hibernate Tools 5.1.0.Alpha1 -->
+<!-- Generated 07/08/2016 10:31:57 AM by Hibernate Tools 5.1.0.Alpha1 -->
 <hibernate-mapping>
     <class name="py.gov.ande.control.gateway.model.ReportingCapability" table="reporting_capability" schema="public" optimistic-lock="version">
         <comment>capacidad de reportes. puede ser buffer unbuffer ambos ninguno</comment>
         <id name="id" type="int">
             <column name="id" />
-            <generator class="assigned" />
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
+			    <param name="optimizer">none</param>
+			    <param name="increment_size">1</param>
+			    <param name="sequence_name">reporting_capability_id_seq</param>
+			</generator>
         </id>
         <property name="description" type="string">
             <column name="description" not-null="true" />
@@ -18,6 +22,12 @@
         <property name="urcb" type="java.lang.Boolean">
             <column name="urcb" />
         </property>
+        <set name="tagMonitorIec61850Operations" table="tag_monitor_iec61850_operation" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="reporting_capacibiliy_id" />
+            </key>
+            <one-to-many class="py.gov.ande.control.gateway.model.TagMonitorIec61850Operation" />
+        </set>
         <set name="tagMonitorIec61850s" table="tag_monitor_iec61850" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="reporting_capacibiliy_id" />
