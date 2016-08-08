@@ -239,4 +239,48 @@ public class DriversManager {
 	public  DriversManager getValueChangedOfTheTree(){ 
 		return this;
 	}
+	
+	/**
+	 * Método que construye un arbol de drivers con la lista de IED
+	 * @param nodeRoot
+	 * @return DefaultMutableTreeNode
+	 * @author Pablo
+	 * @date 2016-08-08
+	 */
+	public static DefaultMutableTreeNode buildTree(DefaultMutableTreeNode nodeRoot){
+        DefaultMutableTreeNode subestacion = null, iec61850 = null, ied = null, iec101, temp;
+        if(nodeRoot.getChildCount()>0){
+        	nodeRoot.removeAllChildren();
+        }
+        
+        List<Drivers> driverList = GenericManager.getListBasedOnCriteria("From Drivers drivers ORDER BY "
+        		+ "drivers.subestation DESC,"
+        		+ "drivers.iec61850 DESC,"
+        		+ "drivers.iec101 DESC");
+
+        for (Drivers drivers : driverList) {
+        	if(drivers.getSubestation()){
+        		subestacion = new DefaultMutableTreeNode(drivers.getDescription());
+        		nodeRoot.add(subestacion);
+        	}else if(drivers.getIec61850()){
+        		iec61850 = new DefaultMutableTreeNode(drivers.getDescription());
+        		subestacion.add(iec61850);
+        	}else if(drivers.getIec101()){
+        		iec101 = new DefaultMutableTreeNode(drivers.getDescription());
+        		subestacion.add(iec101);
+        	}else{
+        		temp = new DefaultMutableTreeNode(drivers.getDescription());
+        		subestacion.add(temp);
+        	} 
+		}
+    
+    	List<Ied> iedList = GenericManager.getAllObjects(Ied.class, Order.asc("id"));
+    	for (Ied ieds : iedList) {
+    		ied = new DefaultMutableTreeNode(ieds.getName());
+    		iec61850.add(ied);
+		}		
+
+		return nodeRoot;
+		
+	}
 }

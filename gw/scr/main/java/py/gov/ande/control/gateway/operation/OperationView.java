@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
@@ -92,6 +93,16 @@ public class OperationView extends JFrame {
 		setSize(850, 650);
 		setMinimumSize(new Dimension(420, 420));
 		
+	}
+	
+	/**
+	 * Método que agrega un listener al tree
+	 * @param listenForTreeClick
+	 * @author Pablo
+	 * @date 2016-08-08
+	 */
+	void addTreeListener(TreeSelectionListener listenForTreeClick){
+		treeConf.addTreeSelectionListener(listenForTreeClick);
 	}
 
 }
