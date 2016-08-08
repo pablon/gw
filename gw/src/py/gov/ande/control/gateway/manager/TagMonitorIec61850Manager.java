@@ -78,6 +78,7 @@ public class TagMonitorIec61850Manager {
 	 * @return String name
 	 */
 	public static String getFirstElement(int id) {
+		logger.info("inicio. Id: "+id);
 		Ied ied = GenericManager.getObjectById(Ied.class, id);
 		TagMonitorIec61850 object = null;
 		/*object = (TagMonitorIec61850) GenericManager.getFilteredObject(TagMonitorIec61850.class, 
@@ -85,13 +86,15 @@ public class TagMonitorIec61850Manager {
     					Restrictions.eq("iedId", id)
 				));*/
 		List<TagMonitorIec61850> listTags = getAllObjects(ied);
+		logger.info("cantidad de tags: "+listTags.size());
 		object = listTags.get(0);
 		
 		if(object != null){
 			String[] name = object.getTelegramAddress().split("/");
-			System.out.println(name[0]);
+			logger.info("getTelegramAddress().split: "+name[0]);
 			return name[0];
 		}else {
+			logger.error("no se encontraron tags para obtener el nombre del equipo");
 			return "Rename Ied";
 		}
 	}
@@ -102,7 +105,7 @@ public class TagMonitorIec61850Manager {
 	 * @return List<TagMonitorIec61850>
 	 */
 	public static List<TagMonitorIec61850> getAllObjects(Ied ied) {
-		
+		logger.info("inicio");
 		//return GenericManager.getListBasedOnCriteria("from TagMonitorIec61850 as tag where tag.iedId = "+ied.getId());
 		return GenericManager.getListBasedOnCriteria("select tag From TagMonitorIec61850 as tag inner join tag.ied as ied where ied.id = "+ied.getId());
 	}

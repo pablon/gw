@@ -14,6 +14,8 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.exception.ConstraintViolationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Clase para utilidades de acceso a la BBDD mediante metodos genericos
@@ -27,6 +29,7 @@ import org.hibernate.exception.ConstraintViolationException;
  */
 public class GenericManager {
 
+	private static final Logger logger = LoggerFactory.getLogger(GenericManager.class);
     /**
      * Obtener un objeto de la base de datos a partir de su clase y su id
      *
@@ -341,13 +344,14 @@ public class GenericManager {
     * @return Object
     */
    public static <T> Object getObjectBasedOnCriteria(String criterio){
+	   logger.info("inicio. criterio: "+criterio);
        DatabaseOperationResult.ErrorType errorType = null;
        RuntimeException exception = null;
-       Query query = null;
+       List query = null;
        try {
            Session session = createNewSession();
            Transaction tx = session.beginTransaction();
-           query = session.createQuery(criterio);
+           query = session.createQuery(criterio).getResultList();
        } catch (RuntimeException e) {
            if (e instanceof ConstraintViolationException) {
                errorType = DatabaseOperationResult.ErrorType.CONSTRAINT_VIOLATION;
@@ -356,10 +360,10 @@ public class GenericManager {
            }
            exception = e;
        }
-       if(query == null)
+       if(query.isEmpty() || query.size() < 1 || query == null)
            return null;
        else
-           return query;        
+           return query.get(0);        
    }
    
    /**

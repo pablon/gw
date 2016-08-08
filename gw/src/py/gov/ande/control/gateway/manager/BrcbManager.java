@@ -56,11 +56,12 @@ public class BrcbManager {
 		    for (ModelNode modelNode : dataset) {
 		    	String tag = modelNode.getReference().toString();						//UC_SSAACTRL/GGIO2.Ind02
 		    	//logger.info("iedId:"+ied.getId()+", telegramAddress: "+tag);
-		    	tagMonitor = (TagMonitorIec61850) GenericManager.getFilteredObject(TagMonitorIec61850.class, 
+		    	/*tagMonitor = (TagMonitorIec61850) GenericManager.getFilteredObject(TagMonitorIec61850.class, 
 		    			Arrays.asList(
 		    					Restrictions.eq("iedId", ied.getId()) ,
 		    					Restrictions.eq("telegramAddress", tag)) 
-		    			);
+		    			);*/
+		    	tagMonitor = (TagMonitorIec61850) GenericManager.getObjectBasedOnCriteria("Select tag From TagMonitorIec61850 as tag inner join tag.ied as ied where ied.id ="+ied.getId()+" and tag.telegramAddress = '"+tag+"'");
 		    	if(tagMonitor != null){
 		    		//logger.info("tagMonitor: "+tagMonitor.getTelegramAddress()+", bufferedId: "+report.getId());
 		    		tagMonitor.setBufferedRcb(report);

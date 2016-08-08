@@ -87,6 +87,7 @@ public class TabConfigurationIec61850Listener extends Thread implements ActionLi
 		                	TagMonitorIec61850Manager.saveAllTagIec61850(ied, serverModel);
 		                	BrcbManager.saveAllTagWithBuffer(ied, serverModel);
 		                	UrcbManager.saveAllTagWithOutBuffer(ied, serverModel);
+		                	//logger.info("Se guardaron los tags, con y sin buffers");
 		                	
 		                	ied.setName(TagMonitorIec61850Manager.getFirstElement(ied.getId()));
 		                	GenericManager.updateObject(ied);
@@ -113,7 +114,7 @@ public class TabConfigurationIec61850Listener extends Thread implements ActionLi
 			int result = fileChooser.showOpenDialog(theView.tabConfIec61850View);
 			if (result == JFileChooser.APPROVE_OPTION) {
 			    File selectedFile = fileChooser.getSelectedFile();
-			    System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+			    //System.out.println("Selected file: " + selectedFile.getAbsolutePath());
 			    if(exploreCid(selectedFile.getAbsolutePath())){
 		        	int option = JOptionPane.showConfirmDialog(null, "Archivo cid válido. Confirmar que se quiere guardar los TAGS encontrados", "Advertencia", JOptionPane.OK_CANCEL_OPTION);
 		        	if(option == JOptionPane.OK_OPTION){

@@ -35,7 +35,7 @@ public class TagMonitorIec61850ManagerTest {
 
 	@Test
 	public final void testGetFirstElement() {
-		String val = TagMonitorIec61850Manager.getFirstElement(95);
+		String val = TagMonitorIec61850Manager.getFirstElement(102);
 		assertNotEquals("UC_SSAACTRL/ETSW1.Port1linkB", val);
 		assertEquals("UC_SSAACTRL", val);
 	}
