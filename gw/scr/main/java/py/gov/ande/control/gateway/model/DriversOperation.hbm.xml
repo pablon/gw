@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 07/08/2016 10:31:57 AM by Hibernate Tools 5.1.0.Alpha1 -->
+<hibernate-mapping>
+    <class name="py.gov.ande.control.gateway.model.DriversOperation" table="drivers_operation" schema="public" optimistic-lock="version">
+        <id name="id" type="int">
+            <column name="id" />
+            <generator class="assigned" />
+        </id>
+        <property name="description" type="string">
+            <column name="description" not-null="true" />
+        </property>
+        <property name="observation" type="string">
+            <column name="observation" />
+        </property>
+        <property name="iec61850" type="java.lang.Boolean">
+            <column name="iec61850">
+                <comment>con este campo se define que registro corresponde al driver 61850</comment>
+            </column>
+        </property>
+        <property name="iec101" type="java.lang.Boolean">
+            <column name="iec101">
+                <comment>con este campo se define que el registro corresponde al driver 101</comment>
+            </column>
+        </property>
+        <property name="ied" type="java.lang.Boolean">
+            <column name="ied">
+                <comment>con este campo se define que el registro corresponde al ied</comment>
+            </column>
+        </property>
+        <property name="subestation" type="java.lang.Boolean">
+            <column name="subestation">
+                <comment>esta opcion es para definir cual registro corresponde al nombre de la subestaci&#195;&#179;n</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

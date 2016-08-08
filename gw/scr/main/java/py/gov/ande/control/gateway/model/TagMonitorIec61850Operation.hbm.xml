@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 07/08/2016 10:31:57 AM by Hibernate Tools 5.1.0.Alpha1 -->
+<hibernate-mapping>
+    <class name="py.gov.ande.control.gateway.model.TagMonitorIec61850Operation" table="tag_monitor_iec61850_operation" schema="public" optimistic-lock="version">
+        <id name="id" type="int">
+            <column name="id" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="bufferedRcbOperation" class="py.gov.ande.control.gateway.model.BufferedRcbOperation" fetch="select">
+            <column name="brcb_id" />
+        </many-to-one>
+        <many-to-one name="iedOperation" class="py.gov.ande.control.gateway.model.IedOperation" fetch="select">
+            <column name="ied_id" not-null="true" />
+        </many-to-one>
+        <many-to-one name="informationType" class="py.gov.ande.control.gateway.model.InformationType" fetch="select">
+            <column name="information_type_id" />
+        </many-to-one>
+        <many-to-one name="normalization" class="py.gov.ande.control.gateway.model.Normalization" fetch="select">
+            <column name="normalization_id" />
+        </many-to-one>
+        <many-to-one name="reportingCapability" class="py.gov.ande.control.gateway.model.ReportingCapability" fetch="select">
+            <column name="reporting_capacibiliy_id" />
+        </many-to-one>
+        <many-to-one name="unbufferedRcbOperation" class="py.gov.ande.control.gateway.model.UnbufferedRcbOperation" fetch="select">
+            <column name="urcb_id" />
+        </many-to-one>
+        <property name="use" type="java.lang.Boolean">
+            <column name="use" />
+        </property>
+        <property name="name" type="string">
+            <column name="name" />
+        </property>
+        <property name="telegramAddress" type="string">
+            <column name="telegram_address" not-null="true" />
+        </property>
+        <property name="buffered" type="java.lang.Boolean">
+            <column name="buffered" />
+        </property>
+        <property name="unbuffered" type="java.lang.Boolean">
+            <column name="unbuffered" />
+        </property>
+    </class>
+</hibernate-mapping>

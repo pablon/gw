@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 07/08/2016 10:31:57 AM by Hibernate Tools 5.1.0.Alpha1 -->
+<hibernate-mapping>
+    <class name="py.gov.ande.control.gateway.model.UnbufferedRcbOperation" table="unbuffered_rcb_operation" schema="public" optimistic-lock="version">
+        <id name="id" type="int">
+            <column name="id" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="iedOperation" class="py.gov.ande.control.gateway.model.IedOperation" fetch="select">
+            <column name="ied_id" not-null="true" />
+        </many-to-one>
+        <property name="referent" type="string">
+            <column name="referent" not-null="true" />
+        </property>
+        <property name="dataset" type="string">
+            <column name="dataset" />
+        </property>
+        <set name="tagMonitorIec61850Operations" table="tag_monitor_iec61850_operation" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="urcb_id" />
+            </key>
+            <one-to-many class="py.gov.ande.control.gateway.model.TagMonitorIec61850Operation" />
+        </set>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,36 @@
+BufferedRcb
+
+    @Override
+    public String toString(){
+    	return getReference();
+    }
+    
+ied
+    @Override
+    public String toString(){
+    	return getName();
+    }
+    
+InformationType
+    @Override
+    public String toString(){
+    	return getDescription();
+    }
+    
+normalization
+    @Override
+    public String toString(){
+    	return getDescription();
+    }
+    
+ReportingCapability
+    @Override
+    public String toString(){
+    	return getDescription();
+    }
+    
+UnbufferedRcb
+    @Override
+    public String toString(){
+    	return getReferent();
+    }
