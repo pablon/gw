@@ -81,8 +81,8 @@ public class ConfigurationView extends JFrame {
 		tabbedPane.addTab("Configuración", null, panelConf, "Configuraciones generales de los drivers");
 		panelMapping = new TabMappingView();
 		tabbedPane.addTab("Mapeo", null, panelMapping, "Mapeo de cada señal de cada driver");	
-		panelTopology = new TabTopology();
-		tabbedPane.addTab("Topología", null, panelTopology, "Estructura topologica de cada señal de cada equipo");
+		/*panelTopology = new TabTopology();
+		tabbedPane.addTab("Topología", null, panelTopology, "Estructura topologica de cada señal de cada equipo");*/
 		
 		setSize(1100, 650);
 		setMinimumSize(new Dimension(420, 420));

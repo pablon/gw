@@ -7,13 +7,17 @@ import java.util.Objects;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
+import org.hibernate.exception.ConstraintViolationException;
+import org.hibernate.resource.transaction.spi.TransactionStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import py.gov.ande.control.gateway.configuration.TabMappingView;
 import py.gov.ande.control.gateway.model.Drivers;
 import py.gov.ande.control.gateway.model.Ied;
+import py.gov.ande.control.gateway.util.DatabaseOperationResult;
 import py.gov.ande.control.gateway.util.DatabaseUtil;
 import py.gov.ande.control.gateway.util.GenericManager;
 
@@ -282,5 +286,63 @@ public class DriversManager {
 
 		return nodeRoot;
 		
+	}
+
+	/**
+	 * Método que copia los datos de las tablas de configuración a las tablas de operación.
+	 * De modo a que se pueda configurar sin afectar a la operación.
+	 * tablas: drivers, ied, tag_monitor_iec61850, buffered_rcb, unbuffered_rcb
+	 * @author Pablo
+	 * @date 2016-08-09
+	 */
+	public void rebuildDBOperation() {
+		rebuildDriversOperation();
+		
+		
+	}
+
+	/**
+	 * Método que realiza una copia de los drivers a la tabla de operación, previo a un truncate
+	 * @return DatabaseOperationResult
+	 */
+	public static DatabaseOperationResult rebuildDriversOperation() {
+        DatabaseOperationResult.ErrorType errorType = null;
+        int recordsAffected = 0;
+        RuntimeException exception = null;
+		String criterioDrivers = "insert into DriversOperation (id, description, observation, iec61850, iec101, ied, subestation) "
+				+ "select d.id, d.description, d.observation, d.iec61850, d.iec101, d.ied, d.subestation"
+				+ " from Drivers d";
+		Session session = GenericManager.createNewSession();
+		try {
+			
+			//Transaction tx = session.beginTransaction();
+			session.getTransaction().begin();
+			session.createSQLQuery("TRUNCATE TABLE drivers_operation").executeUpdate();
+			recordsAffected = session.createQuery(criterioDrivers).executeUpdate();
+			session.getTransaction().commit();
+			session.close();
+		} catch (RuntimeException e) {
+			if (e instanceof ConstraintViolationException) {
+				errorType = DatabaseOperationResult.ErrorType.CONSTRAINT_VIOLATION;
+			} else {
+				errorType = DatabaseOperationResult.ErrorType.OTHER;
+			}
+			exception = e;
+			if ( session.getTransaction().getStatus() == TransactionStatus.ACTIVE
+					  || session.getTransaction().getStatus() == TransactionStatus.MARKED_ROLLBACK ) {
+							session.getTransaction().rollback();
+			}
+		}catch (Exception e) {
+			if ( session.getTransaction().getStatus() == TransactionStatus.ACTIVE
+			  || session.getTransaction().getStatus() == TransactionStatus.MARKED_ROLLBACK ) {
+					session.getTransaction().rollback();
+					errorType = DatabaseOperationResult.ErrorType.OTHER;
+					exception = (RuntimeException) e;
+					}
+		}		
+		finally {
+			session.close();
+		}
+		return new DatabaseOperationResult(errorType, recordsAffected, exception);
 	}
 }

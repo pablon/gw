@@ -19,6 +19,9 @@ import javax.swing.tree.TreeSelectionModel;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import py.gov.ande.control.gateway.configuration.TabMappingIedView;
+
 import javax.swing.JSplitPane;
 import javax.swing.JTree;
 import javax.swing.ToolTipManager;
@@ -27,11 +30,13 @@ import javax.swing.JScrollPane;
 public class OperationView extends JFrame {
 
 	private static final Logger logger = LoggerFactory.getLogger(OperationView.class);
-	private GridBagLayout gbl;
-	private JPanel topPanel;
+	protected GridBagLayout gbl;
+	protected JPanel topPanel;
 	protected JTree treeConf;
-	private JScrollPane scrollPaneConf;
-	private JScrollPane scrollPaneDetails;
+	protected JScrollPane scrollPaneConf;
+	protected JScrollPane scrollPaneDetails;
+	protected GatewayView mappingGateway;
+	protected JPanel panelDetails = new JPanel(); 
 
 	public OperationView() {
 
@@ -48,7 +53,7 @@ public class OperationView extends JFrame {
         }		
 		
         gbl=new GridBagLayout();
-        this.getContentPane().setLayout(gbl);
+        getContentPane().setLayout(gbl);
         
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		topPanel = new JPanel();
@@ -78,18 +83,22 @@ public class OperationView extends JFrame {
 		gbc_scrollPaneConf.weightx = 0.2;
 		gbc_scrollPaneConf.weighty = 1;
 		gbc_scrollPaneConf.insets = new Insets(5, 5, 5, 5);
-		add(scrollPaneConf, gbc_scrollPaneConf);
+		getContentPane().add(scrollPaneConf, gbc_scrollPaneConf);
 		
-		scrollPaneDetails = new JScrollPane();
-		GridBagConstraints gbc_scrollPaneDetails = new GridBagConstraints();
-		gbc_scrollPaneDetails.fill = GridBagConstraints.BOTH;
-		gbc_scrollPaneDetails.anchor = GridBagConstraints.NORTHWEST;
-		gbc_scrollPaneDetails.gridx = 1;
-		gbc_scrollPaneDetails.gridy = 0;
-		gbc_scrollPaneDetails.weightx = 0.8;
-		gbc_scrollPaneDetails.weighty = 1;
-		add(scrollPaneDetails, gbc_scrollPaneDetails);
-        
+		scrollPaneDetails = new JScrollPane(new JPanel());
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.anchor = GridBagConstraints.NORTHWEST;
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		gbc.weightx = 0.8;
+		gbc.weighty = 1;
+		getContentPane().add(scrollPaneDetails, gbc);
+		
+		((JPanel)scrollPaneDetails.getViewport().getView()).add(mappingGateway = new GatewayView());
+				
+		
+        mappingGateway.setVisible(true);
 		setSize(850, 650);
 		setMinimumSize(new Dimension(420, 420));
 		

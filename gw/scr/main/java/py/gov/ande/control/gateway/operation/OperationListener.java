@@ -17,8 +17,9 @@ public class OperationListener implements TreeSelectionListener {
 
 	@Override
 	public void valueChanged(TreeSelectionEvent e) {
-		logger.info("valueChanged");
-
+		//logger.info("valueChanged");
+		//theView.mappingGateway.setVisible(true);
+		
 	}
 
 }

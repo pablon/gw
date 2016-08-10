@@ -2,6 +2,8 @@ package py.gov.ande.control.gateway.operation;
 
 import java.awt.EventQueue;
 
+import py.gov.ande.control.gateway.manager.DriversManager;
+
 public class OperationGUI {
 
 	public static void main(String[] args) {
@@ -9,7 +11,8 @@ public class OperationGUI {
 			public void run() {
 				try {
 					OperationView view = new OperationView();
-					OperationController controller = new OperationController(view);
+					DriversManager driver = new DriversManager();
+					OperationController controller = new OperationController(view, driver);
 					view.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();

@@ -7,15 +7,22 @@ import py.gov.ande.control.gateway.manager.DriversManager;
 public class OperationController {
 
 	private OperationView theView;
+	private DriversManager driver;
 
-	public OperationController(OperationView theView) {
+	public OperationController(OperationView theView, DriversManager driver) {
 		this.theView = theView;
+		this.driver = driver;
 		
 		buildTree();
 		
 		this.theView.addTreeListener(
 				new OperationListener(
 						this.theView));
+		
+		this.theView.mappingGateway.addBtnListener(
+				new GatewayListener(this.theView, this.driver)
+				);
+		
 		}
 	
 	/**
