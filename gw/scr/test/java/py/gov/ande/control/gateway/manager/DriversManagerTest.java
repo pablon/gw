@@ -13,9 +13,7 @@ public class DriversManagerTest {
 
 	@Test
 	public void testRebuildDriversOperation() {
-		DatabaseOperationResult result = DriversManager.rebuildDriversOperation();
-		//System.out.println("getErrorType: "+result.getErrorType());
-		//System.out.println("getException: "+result.getException());
+		DatabaseOperationResult result = DriversManager.rebuildDBOperation();
 		assertEquals(null, result.getErrorType());
 	}
 

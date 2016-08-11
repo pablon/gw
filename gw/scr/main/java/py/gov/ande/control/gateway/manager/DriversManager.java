@@ -291,56 +291,49 @@ public class DriversManager {
 	/**
 	 * Método que copia los datos de las tablas de configuración a las tablas de operación.
 	 * De modo a que se pueda configurar sin afectar a la operación.
-	 * tablas: drivers, ied, tag_monitor_iec61850, buffered_rcb, unbuffered_rcb
+	 * Previamente realiza un truncate de todas las tablas relacionadas.
+	 * tablas: drivers, ied, buffered_rcb, unbuffered_rcb, tag_monitor_iec61850
 	 * @author Pablo
 	 * @date 2016-08-09
-	 */
-	public void rebuildDBOperation() {
-		rebuildDriversOperation();
-		
-		
-	}
-
-	/**
-	 * Método que realiza una copia de los drivers a la tabla de operación, previo a un truncate
 	 * @return DatabaseOperationResult
 	 */
-	public static DatabaseOperationResult rebuildDriversOperation() {
+	public static DatabaseOperationResult rebuildDBOperation() {
+		logger.info("inicio");
         DatabaseOperationResult.ErrorType errorType = null;
         int recordsAffected = 0;
         RuntimeException exception = null;
-		String criterioDrivers = "insert into DriversOperation (id, description, observation, iec61850, iec101, ied, subestation) "
+        String criterioIed = "insert into IedOperation (id, name, bufferTime, portAddress,connectionTest,ipAddress, createdAt, updateAt) select ied.id, ied.name, ied.bufferTime, ied.portAddress, ied.connectionTest, ied.ipAddress, ied.createdAt, ied.updateAt from Ied ied";
+        String criterioTags = "insert into tag_monitor_iec61850_operation (id, use, telegram_address, ied_id) select tag.id, tag.use, tag.telegram_address, ied_id from tag_monitor_iec61850 tag where tag.use = true";
+        String criterioDrivers = "insert into DriversOperation (id, description, observation, iec61850, iec101, ied, subestation) "
 				+ "select d.id, d.description, d.observation, d.iec61850, d.iec101, d.ied, d.subestation"
 				+ " from Drivers d";
+        String criterioBrcb = "insert into buffered_rcb_operation (id, reference, dataset, ied_id) select brcb.id, brcb.reference, brcb.dataset, brcb.ied_id from buffered_rcb brcb";
+		String criterioUrcb = "insert into unbuffered_rcb_operation (id, referent, dataset, ied_id) select urcb.id, urcb.referent, urcb.dataset, urcb.ied_id from unbuffered_rcb urcb";
+
 		Session session = GenericManager.createNewSession();
 		try {
-			
-			//Transaction tx = session.beginTransaction();
 			session.getTransaction().begin();
-			session.createSQLQuery("TRUNCATE TABLE drivers_operation").executeUpdate();
-			recordsAffected = session.createQuery(criterioDrivers).executeUpdate();
+			session.createSQLQuery("TRUNCATE TABLE drivers_operation, ied_operation, buffered_rcb_operation, unbuffered_rcb_operation, tag_monitor_iec61850_operation").executeUpdate();
+			recordsAffected = recordsAffected + session.createQuery(criterioIed).executeUpdate();
+			recordsAffected = recordsAffected + session.createSQLQuery(criterioBrcb).executeUpdate();			
+			recordsAffected = recordsAffected + session.createSQLQuery(criterioUrcb).executeUpdate();
+			recordsAffected = recordsAffected + session.createQuery(criterioDrivers).executeUpdate();			
+			recordsAffected = recordsAffected + session.createSQLQuery(criterioTags).executeUpdate();
+			
 			session.getTransaction().commit();
-			session.close();
 		} catch (RuntimeException e) {
 			if (e instanceof ConstraintViolationException) {
 				errorType = DatabaseOperationResult.ErrorType.CONSTRAINT_VIOLATION;
 			} else {
 				errorType = DatabaseOperationResult.ErrorType.OTHER;
 			}
-			exception = e;
-			if ( session.getTransaction().getStatus() == TransactionStatus.ACTIVE
-					  || session.getTransaction().getStatus() == TransactionStatus.MARKED_ROLLBACK ) {
-							session.getTransaction().rollback();
-			}
-		}catch (Exception e) {
 			if ( session.getTransaction().getStatus() == TransactionStatus.ACTIVE
 			  || session.getTransaction().getStatus() == TransactionStatus.MARKED_ROLLBACK ) {
-					session.getTransaction().rollback();
-					errorType = DatabaseOperationResult.ErrorType.OTHER;
-					exception = (RuntimeException) e;
-					}
-		}		
-		finally {
+							session.getTransaction().rollback();
+			}
+			exception = e;
+			logger.error(e.toString());
+		} finally {
 			session.close();
 		}
 		return new DatabaseOperationResult(errorType, recordsAffected, exception);
