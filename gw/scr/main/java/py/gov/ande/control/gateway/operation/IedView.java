@@ -16,7 +16,7 @@ public class IedView extends JPanel {
 
 	protected JButton btnStartExploration;
 	protected JButton btnEndExploration;
-	private IedOperation ied;
+	protected IedOperation ied;
 
 	/**
 	 * Create the panel.

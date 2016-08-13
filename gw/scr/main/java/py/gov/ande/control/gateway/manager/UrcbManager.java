@@ -15,9 +15,11 @@ import org.openmuc.openiec61850.ModelNode;
 import org.openmuc.openiec61850.ServerModel;
 
 import py.gov.ande.control.gateway.model.Ied;
+import py.gov.ande.control.gateway.model.IedOperation;
 import py.gov.ande.control.gateway.model.ReportingCapability;
 import py.gov.ande.control.gateway.model.TagMonitorIec61850;
 import py.gov.ande.control.gateway.model.UnbufferedRcb;
+import py.gov.ande.control.gateway.model.UnbufferedRcbOperation;
 import py.gov.ande.control.gateway.util.GenericManager;
 
 public class UrcbManager {
@@ -87,6 +89,11 @@ public class UrcbManager {
 			}
 		}
 		//logger.info("fin");
+	}
+
+	public static List<UnbufferedRcbOperation> getAllReportsWithSelectedTags(IedOperation ied) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -318,19 +318,4 @@ public class TabConfigurationIec61850Listener extends Thread implements ActionLi
 		// TODO Auto-generated method stub
 		
 	}
-	
-	/*private void rebuildMapping(){
-		//intentar borrar todo el mapping,
-		TabMappingView.deleteMappingIedView();
-		
-		//y instanciar todo de vuelta. buildMappingIedView
-		TabMappingView.buildMappingIedView();
-		
-		//construir arbol. buildTreeMapping
-		//listener del arbol. this.theView.panelMapping.addTreeListener
-
-	}*/
-
-
-
 }

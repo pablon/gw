@@ -16,9 +16,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import py.gov.ande.control.gateway.model.Ied;
+import py.gov.ande.control.gateway.model.IedOperation;
 import py.gov.ande.control.gateway.model.InformationType;
 import py.gov.ande.control.gateway.model.ReportingCapability;
 import py.gov.ande.control.gateway.model.TagMonitorIec61850;
+import py.gov.ande.control.gateway.model.TagMonitorIec61850Operation;
 import py.gov.ande.control.gateway.util.GenericManager;
 
 public class TagMonitorIec61850Manager {
@@ -129,6 +131,16 @@ public class TagMonitorIec61850Manager {
 		TagMonitorIec61850 tag = GenericManager.getObjectById(TagMonitorIec61850.class, id);
 		tag.setUse(Boolean.valueOf((boolean) valueAt));
 		GenericManager.updateObject(tag);
+	}
+
+	/**
+	 * Método que retorna la lista de tags seleccionados que no se encuentren dentro de ningún reporte
+	 * @param ied
+	 * @return
+	 */
+	public static List<TagMonitorIec61850Operation> getAllTagsWithOutAnyReport(IedOperation ied) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

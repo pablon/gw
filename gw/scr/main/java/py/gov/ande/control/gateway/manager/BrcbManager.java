@@ -15,7 +15,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import py.gov.ande.control.gateway.model.BufferedRcb;
+import py.gov.ande.control.gateway.model.BufferedRcbOperation;
 import py.gov.ande.control.gateway.model.Ied;
+import py.gov.ande.control.gateway.model.IedOperation;
 import py.gov.ande.control.gateway.model.ReportingCapability;
 import py.gov.ande.control.gateway.model.TagMonitorIec61850;
 import py.gov.ande.control.gateway.util.GenericManager;
@@ -80,6 +82,11 @@ public class BrcbManager {
 		
 		}
 		logger.info("fin");
+	}
+
+	public static List<BufferedRcbOperation> getAllReportsWithSelectedTags(IedOperation ied) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
