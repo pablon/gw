@@ -6,6 +6,7 @@ import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
@@ -17,10 +18,16 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
+import org.hibernate.criterion.Order;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import py.gov.ande.control.gateway.configuration.TabMappingIedView;
+import py.gov.ande.control.gateway.configuration.TabMappingTagsListener;
+import py.gov.ande.control.gateway.manager.DriversManager;
+import py.gov.ande.control.gateway.model.Ied;
+import py.gov.ande.control.gateway.model.IedOperation;
+import py.gov.ande.control.gateway.util.GenericManager;
 
 import javax.swing.JSplitPane;
 import javax.swing.JTree;
@@ -35,8 +42,10 @@ public class OperationView extends JFrame {
 	protected JTree treeConf;
 	protected JScrollPane scrollPaneConf;
 	protected JScrollPane scrollPaneDetails;
-	protected GatewayView mappingGateway;
-	protected JPanel panelDetails = new JPanel(); 
+	protected GatewayView gatewayView;
+	protected IedView[] iedView;
+	protected JPanel panelDetails = new JPanel();
+	private List<IedOperation> iedList; 
 
 	public OperationView() {
 
@@ -95,13 +104,33 @@ public class OperationView extends JFrame {
 		gbc.weighty = 1;
 		getContentPane().add(scrollPaneDetails, gbc);
 		
-		((JPanel)scrollPaneDetails.getViewport().getView()).add(mappingGateway = new GatewayView());
-				
+		((JPanel)scrollPaneDetails.getViewport().getView()).add(gatewayView = new GatewayView());
+		//((JPanel)scrollPaneDetails.getViewport().getView()).add(iedView = new IedView());
 		
-        mappingGateway.setVisible(true);
+		buildIedView();
+				
+        gatewayView.setVisible(false);
+        //iedView.setVisible(false);
 		setSize(850, 650);
 		setMinimumSize(new Dimension(420, 420));
 		
+	}
+	
+	/**
+	 * Método que crea la vista de cada ied
+	 * @author Pablo
+	 * @date 2016-08-11
+	 */
+	protected void buildIedView(){
+		iedList = GenericManager.getAllObjects(IedOperation.class, Order.asc("id"));
+		iedView = new IedView[iedList.size()];
+		int i = 0;
+		for (IedOperation ied : iedList) {
+			((JPanel)scrollPaneDetails.getViewport().getView()).add(iedView[i] = new IedView(ied));
+			iedView[i].setVisible(false);
+			//iedView[i].addBtnUpdateTags( new TabMappingTagsListener(this) );
+			i++;
+		}
 	}
 	
 	/**
@@ -112,6 +141,27 @@ public class OperationView extends JFrame {
 	 */
 	void addTreeListener(TreeSelectionListener listenForTreeClick){
 		treeConf.addTreeSelectionListener(listenForTreeClick);
+	}
+
+	/**
+	 * Método que muestra las vistas de la derecha según corresponda el click.
+	 * Primeramente oculto todas las vistas
+	 * @param model
+	 * @author Pablo
+	 * @date 2016-08-11
+	 */
+	public void valueChangedOfTheTree(DriversManager model) {
+		List<IedOperation> iedList = GenericManager.getAllObjects(IedOperation.class, Order.asc("id"));
+		for (int i = 0; i < iedList.size(); i++) {
+			iedView[i].setVisible(false);	
+		}
+		gatewayView.setVisible(false);
+		
+		if(model.getValueChangedOfTheTree().getIed()){
+			iedView[model.getValueChangedOfTheTree().getArrayId()].setVisible(true);
+		}else if(model.getValueChangedOfTheTree().getGw()){
+			gatewayView.setVisible(true);
+		}
 	}
 
 }

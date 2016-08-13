@@ -2,6 +2,7 @@ package py.gov.ande.control.gateway.operation;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.DriverManager;
 
 import javax.swing.JOptionPane;
 
@@ -28,14 +29,17 @@ public class GatewayListener implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		//logger.info("button");
-		DatabaseOperationResult rebuildDBOperation = driver.rebuildDBOperation();
-		if(rebuildDBOperation.getErrorType() == null){
-    		JOptionPane.showMessageDialog(null,"Información: Se actualizó el sistema satisfactoriamente",
-        		      "Advertencia",JOptionPane.INFORMATION_MESSAGE);
-		}else {
-    		JOptionPane.showMessageDialog(null,"Información: Ocurrió un problema. " + rebuildDBOperation.getException(),
-      		      "Advertencia",JOptionPane.ERROR_MESSAGE); 		
-		}
+		int option = JOptionPane.showConfirmDialog(null, "Confirmar que se quiere actualizar el sistema. Se importarán los datos de configuración nuevamente", "Advertencia", JOptionPane.OK_CANCEL_OPTION);
+    	if(option == JOptionPane.OK_OPTION){
+			DatabaseOperationResult rebuildDBOperation = DriversManager.rebuildDBOperation();
+			if(rebuildDBOperation.getErrorType() == null){
+	    		JOptionPane.showMessageDialog(null,"Información: Se actualizó el sistema satisfactoriamente",
+	        		      "Advertencia",JOptionPane.INFORMATION_MESSAGE);
+			}else {
+	    		JOptionPane.showMessageDialog(null,"Información: Ocurrió un problema. " + rebuildDBOperation.getException(),
+	      		      "Advertencia",JOptionPane.ERROR_MESSAGE); 		
+			}
+    	}
 	}
 
 }

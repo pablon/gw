@@ -17,9 +17,9 @@ public class OperationController {
 		
 		this.theView.addTreeListener(
 				new OperationListener(
-						this.theView));
+						this.theView, this.driver));
 		
-		this.theView.mappingGateway.addBtnListener(
+		this.theView.gatewayView.addBtnListener(
 				new GatewayListener(this.theView, this.driver)
 				);
 		
@@ -32,7 +32,7 @@ public class OperationController {
 	 */
 	private void buildTree() {
 		DefaultMutableTreeNode nodeRoot = (DefaultMutableTreeNode) theView.treeConf.getModel().getRoot();
-		DriversManager.buildTree(nodeRoot);
+		DriversManager.buildTreeOperation(nodeRoot);
 		theView.treeConf.repaint();
 		theView.treeConf.updateUI();
 	}
