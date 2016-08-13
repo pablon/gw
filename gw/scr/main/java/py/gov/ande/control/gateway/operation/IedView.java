@@ -3,6 +3,7 @@ package py.gov.ande.control.gateway.operation;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -13,8 +14,8 @@ import py.gov.ande.control.gateway.model.IedOperation;
 
 public class IedView extends JPanel {
 
-	private JButton btnStartExploration;
-	private JButton btnEndExploration;
+	protected JButton btnStartExploration;
+	protected JButton btnEndExploration;
 	private IedOperation ied;
 
 	/**
@@ -77,6 +78,18 @@ public class IedView extends JPanel {
 		gbc_btnNewButton2.gridx = 6;
 		gbc_btnNewButton2.gridy = 9;
 		panel.add(btnEndExploration, gbc_btnNewButton2);
+	}
+	
+	/**
+	 * Método que agrega funcionalidades a los botones.
+	 * Iniciar exploración y cancelar.
+	 * @param listenForBtnClick
+	 * @author Pablo
+	 * @date 2016-08-13
+	 */
+	void addBtnIed(ActionListener listenForBtnClick){
+		btnStartExploration.addActionListener(listenForBtnClick);
+		btnEndExploration.addActionListener(listenForBtnClick);
 	}
 
 }

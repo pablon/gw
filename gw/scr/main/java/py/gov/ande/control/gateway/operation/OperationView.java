@@ -128,7 +128,7 @@ public class OperationView extends JFrame {
 		for (IedOperation ied : iedList) {
 			((JPanel)scrollPaneDetails.getViewport().getView()).add(iedView[i] = new IedView(ied));
 			iedView[i].setVisible(false);
-			//iedView[i].addBtnUpdateTags( new TabMappingTagsListener(this) );
+			iedView[i].addBtnIed( new IedListener(this) );
 			i++;
 		}
 	}
