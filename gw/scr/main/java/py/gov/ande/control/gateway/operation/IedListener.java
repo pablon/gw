@@ -11,8 +11,10 @@ import javax.swing.JOptionPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import py.gov.ande.control.gateway.driverUtil.BrcbRunnable;
 import py.gov.ande.control.gateway.driverUtil.DriverOperationResult;
 import py.gov.ande.control.gateway.driverUtil.PoolingRunnable;
+import py.gov.ande.control.gateway.driverUtil.UrcbRunnable;
 import py.gov.ande.control.gateway.manager.BrcbManager;
 import py.gov.ande.control.gateway.manager.TagMonitorIec61850Manager;
 import py.gov.ande.control.gateway.manager.UrcbManager;
@@ -75,13 +77,39 @@ public class IedListener implements ActionListener {
 	private DriverOperationResult startExploration(IedOperation ied) {
         logger.info("inicio");
 		List<TagMonitorIec61850Operation> tagsWithOutAnyReport = TagMonitorIec61850Manager.getAllTagsWithOutAnyReport(ied);
-		List<BufferedRcbOperation> bReportsWithSelectedTags = BrcbManager.getAllReportsWithSelectedTags(ied);
-		List<UnbufferedRcbOperation> uReportsWithSelectedTags = UrcbManager.getAllReportsWithSelectedTags(ied);
-		final int numberOfThreads = 1;
+		List<Integer> bReportsIdWithSelectedTags = BrcbManager.getAllReportsIdWithSelectedTags(ied);
+		List<Integer> uReportsIdWithSelectedTags = UrcbManager.getAllReportsIdWithSelectedTags(ied);
+		final int numberOfThreads = (
+				tagsWithOutAnyReport.size()>0?Integer.valueOf(1):Integer.valueOf(0)) 
+				+ bReportsIdWithSelectedTags.size() + 
+				uReportsIdWithSelectedTags.size();
+		
+		System.out.println("ied: "+ied.getName());
+		System.out.println("tagsWithOutAnyReport.size: "+tagsWithOutAnyReport.size());
+		System.out.println("bReportsIdWithSelectedTags.size: "+bReportsIdWithSelectedTags.size());
+		System.out.println("uReportsIdWithSelectedTags.size: "+uReportsIdWithSelectedTags.size());
+		System.out.println("numberOfThreads: "+numberOfThreads);
 		
         ExecutorService executor = Executors.newFixedThreadPool(numberOfThreads);
-        Runnable poolingRunnable = new PoolingRunnable(tagsWithOutAnyReport);
-        executor.execute(poolingRunnable);
+        
+        if(tagsWithOutAnyReport.size()>0){
+        	Runnable poolingRunnable = new PoolingRunnable(tagsWithOutAnyReport);
+        	executor.execute(poolingRunnable);
+        }
+        
+        if(bReportsIdWithSelectedTags.size() > 0){
+	        for (Integer bReportId : bReportsIdWithSelectedTags) {
+				Runnable brcbRunnable = new BrcbRunnable(bReportId);
+				executor.execute(brcbRunnable);
+			}
+        }
+        
+        if(uReportsIdWithSelectedTags.size() > 0){
+	        for (Integer uReportId : uReportsIdWithSelectedTags) {
+				Runnable urcbRunnable = new UrcbRunnable(uReportId);
+				executor.execute(urcbRunnable);
+			}
+        }
     
         executor.shutdown();	// Cierro el Executor
         logger.info("fin del startExploration");

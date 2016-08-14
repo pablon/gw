@@ -35,6 +35,7 @@ public class GatewayListener implements ActionListener {
 			if(rebuildDBOperation.getErrorType() == null){
 	    		JOptionPane.showMessageDialog(null,"Información: Se actualizó el sistema satisfactoriamente",
 	        		      "Advertencia",JOptionPane.INFORMATION_MESSAGE);
+	    		//PENDIENTE: aquí debe llamar a la construcción del arbol nuevamente
 			}else {
 	    		JOptionPane.showMessageDialog(null,"Información: Ocurrió un problema. " + rebuildDBOperation.getException(),
 	      		      "Advertencia",JOptionPane.ERROR_MESSAGE); 		

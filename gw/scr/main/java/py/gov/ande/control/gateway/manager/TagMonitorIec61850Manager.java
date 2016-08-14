@@ -136,11 +136,22 @@ public class TagMonitorIec61850Manager {
 	/**
 	 * Método que retorna la lista de tags seleccionados que no se encuentren dentro de ningún reporte
 	 * @param ied
-	 * @return
+	 * @return List<TagMonitorIec61850Operation>
+	 * @author Pablo
+	 * @date 2016-08-13
 	 */
 	public static List<TagMonitorIec61850Operation> getAllTagsWithOutAnyReport(IedOperation ied) {
-		// TODO Auto-generated method stub
-		return null;
+		ReportingCapability rc = ReportingCapabilityManager.getObjectNoneRcb();
+
+		return GenericManager.getListBasedOnCriteria(
+				"select tag "
+				+ "From TagMonitorIec61850Operation as tag "
+				+ "inner join tag.iedOperation as ied "
+				+ "where "
+				+ "ied.id = "+ied.getId()+ "and "
+				+ "tag.use = true and "
+				+ "tag.buffered = false and "
+				+ "tag.unbuffered = false");
 	}
 
 }

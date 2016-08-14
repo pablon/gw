@@ -308,14 +308,15 @@ public class GenericManager {
     * @return List
     * @author pablo
     */
+   @SuppressWarnings("unchecked")
    public static <T> List<T> getListBasedOnCriteria(String criterio){
        DatabaseOperationResult.ErrorType errorType = null;
        RuntimeException exception = null;
-       Query query = null;
+       List query = null;
        try {
            Session session = createNewSession();
            Transaction tx = session.beginTransaction();
-           query = session.createQuery(criterio);
+           query = session.createQuery(criterio).getResultList();
        } catch (RuntimeException e) {
            if (e instanceof ConstraintViolationException) {
                errorType = DatabaseOperationResult.ErrorType.CONSTRAINT_VIOLATION;
@@ -327,16 +328,8 @@ public class GenericManager {
        if(query == null)
            return null;
        else
-           return query.list();        
+           return query;        
    }
-   
-   /*public static List getListBasedOnCriteria(String criterio){
-	   	List<Object[]> results;
-		Session session = GenericManager.createNewSession();
-		List q=session.createQuery("from TagMonitorIec61850").getResultList();
-		results  = (List<Object[]>)q;
-	   
-   }*/
    
    /**
     * Método que retorna un objeto en base a un criterio de busqueda.

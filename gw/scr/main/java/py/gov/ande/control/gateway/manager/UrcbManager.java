@@ -91,9 +91,28 @@ public class UrcbManager {
 		//logger.info("fin");
 	}
 
-	public static List<UnbufferedRcbOperation> getAllReportsWithSelectedTags(IedOperation ied) {
-		// TODO Auto-generated method stub
-		return null;
+	/**
+	 * Método que retorna la lista de reportes sin buffers para los tags seleccionados.
+	 * Se toma la decisión de filtrar por tag.buffered = false, ya que se asume que si el tag estaba
+	 * configurado para brcb y urcb, ya fue seleccionado el reporte con buffer.
+	 * @param Ied
+	 * @return List<Integer>
+	 * @author Pablo
+	 * @date 2016-08-13
+	 * @version 1.0
+	 */
+	public static List<Integer> getAllReportsIdWithSelectedTags(IedOperation ied) {
+
+		return GenericManager.getListBasedOnCriteria(
+				"select urcb.id from TagMonitorIec61850Operation as tag "
+				+ "inner join tag.unbufferedRcbOperation urcb "
+				+ "inner join tag.iedOperation as ied "
+				+ "where "
+				+ "ied.id = "+ied.getId()+ "and "
+				+ "tag.buffered = false and "
+				+ "tag.unbuffered = true and "
+				+ "tag.use = true "
+				+ "group by urcb.id");
 	}
 
 }

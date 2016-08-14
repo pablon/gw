@@ -84,9 +84,26 @@ public class BrcbManager {
 		logger.info("fin");
 	}
 
-	public static List<BufferedRcbOperation> getAllReportsWithSelectedTags(IedOperation ied) {
-		// TODO Auto-generated method stub
-		return null;
+	/**
+	 * Método que retorna la lista de reportes para los tags seleccionados
+	 * @param Ied ied
+	 * @return List<Integer>
+	 * @author Pablo
+	 * @date 2016-08-13
+	 * @version 1.0
+	 */
+	public static List<Integer> getAllReportsIdWithSelectedTags(IedOperation ied) {
+
+		return GenericManager.getListBasedOnCriteria(
+				"select brcb.id "
+				+ "from TagMonitorIec61850Operation as tag "
+				+ "inner join tag.bufferedRcbOperation brcb "
+				+ "inner join tag.iedOperation as ied "
+				+ "where "
+				+ "ied.id = "+ied.getId()+ "and "
+				+ "tag.buffered = true and "
+				+ "tag.use = true "
+				+ "group by brcb.id");
 	}
 
 }

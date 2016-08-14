@@ -420,7 +420,8 @@ public class DriversManager {
         int recordsAffected = 0;
         RuntimeException exception = null;
         String criterioIed = "insert into IedOperation (id, name, bufferTime, portAddress,connectionTest,ipAddress, createdAt, updateAt) select ied.id, ied.name, ied.bufferTime, ied.portAddress, ied.connectionTest, ied.ipAddress, ied.createdAt, ied.updateAt from Ied ied";
-        String criterioTags = "insert into tag_monitor_iec61850_operation (id, use, telegram_address, ied_id) select tag.id, tag.use, tag.telegram_address, ied_id from tag_monitor_iec61850 tag where tag.use = true";
+        //String criterioTags = "insert into tag_monitor_iec61850_operation (id, use, telegram_address, ied_id) select tag.id, tag.use, tag.telegram_address, ied_id from tag_monitor_iec61850 tag where tag.use = true";
+        String criterioTags = "insert into tag_monitor_iec61850_operation (id, use, telegram_address, ied_id, brcb_id, information_type_id, normalization_id, reporting_capacibiliy_id, urcb_id, name, buffered, unbuffered) select tag.id, tag.use, tag.telegram_address, ied_id, brcb_id, information_type_id, normalization_id, reporting_capacibiliy_id, urcb_id, name, buffered, unbuffered from tag_monitor_iec61850 tag where tag.use = true";
         String criterioDrivers = "insert into DriversOperation (id, description, observation, iec61850, iec101, ied, subestation) "
 				+ "select d.id, d.description, d.observation, d.iec61850, d.iec101, d.ied, d.subestation"
 				+ " from Drivers d";
