@@ -2,17 +2,20 @@ package py.gov.ande.control.gateway.operation;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import javax.swing.JOptionPane;
 
+import org.openmuc.openiec61850.ServiceError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import py.gov.ande.control.gateway.driverUtil.BrcbRunnable;
 import py.gov.ande.control.gateway.driverUtil.DriverOperationResult;
+import py.gov.ande.control.gateway.driverUtil.DriverOperationResult.ErrorType;
 import py.gov.ande.control.gateway.driverUtil.PoolingRunnable;
 import py.gov.ande.control.gateway.driverUtil.UrcbRunnable;
 import py.gov.ande.control.gateway.manager.BrcbManager;
@@ -23,12 +26,15 @@ import py.gov.ande.control.gateway.model.IedOperation;
 import py.gov.ande.control.gateway.model.TagMonitorIec61850;
 import py.gov.ande.control.gateway.model.TagMonitorIec61850Operation;
 import py.gov.ande.control.gateway.model.UnbufferedRcbOperation;
+import py.gov.ande.control.gateway.util.DatabaseOperationResult;
+import py.gov.ande.control.gateway.util.GenericManager;
 
 public class IedListener implements ActionListener {
 	
 	private static final Logger logger = LoggerFactory.getLogger(IedListener.class);
-
 	private OperationView theView;
+	private BufferedRcbOperation brcb;
+	private BrcbRunnable[] brcbRunnable;
 
 	public IedListener(OperationView theView) {
 		this.theView = theView;
@@ -47,16 +53,48 @@ public class IedListener implements ActionListener {
 			if(theView.iedView[i].isVisible()){
 				if(e.getSource() == theView.iedView[i].btnStartExploration){
 					logger.info("btnStartExploration: "+i);
-					DriverOperationResult result = startExploration(theView.iedView[i].ied);
+					DriverOperationResult result = null;
+					result = startExploration(theView.iedView[i].ied);
 					if(result.wasError()){
-			    		JOptionPane.showMessageDialog(null,"Información: Ocurrió un problema. " + result.getException(),
+			    		JOptionPane.showMessageDialog(null,"Información: Ocurrió un error. ErrorType: " + result.getErrorType() + ", Exception: " + result.getException(),
 				      		      "Advertencia",JOptionPane.ERROR_MESSAGE); 
 					}
 				}else if(e.getSource() == theView.iedView[i].btnEndExploration){
 					logger.info("btnEndExploration: "+i);
+					DriverOperationResult result = null;
+					result = stopExploration(theView.iedView[i].ied);
+					if(result.wasError()){
+			    		JOptionPane.showMessageDialog(null,"Información: Ocurrió un error. ErrorType: " + result.getErrorType() + ", Exception: " + result.getException(),
+				      		      "Advertencia",JOptionPane.ERROR_MESSAGE); 
+					}
+					
 				}
 			}
 		}
+	}
+
+	private DriverOperationResult stopExploration(IedOperation ied) {
+		ErrorType errorType = null;
+		Exception exception = null;
+		
+		for (BrcbRunnable runnable : brcbRunnable) {
+			runnable.setEnableReport(false);
+			/*try {
+				runnable.disableReporting();
+			} catch (ServiceError e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				errorType = DriverOperationResult.ErrorType.SERVICE_ERROR;
+				exception = e;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				errorType = DriverOperationResult.ErrorType.IO_EXCEPTION;
+				exception = e;
+			}
+			runnable.disconnectToIed();*/
+		}
+		return new DriverOperationResult(errorType, exception);
 	}
 
 	/**
@@ -69,13 +107,18 @@ public class IedListener implements ActionListener {
 	 * 4) lanzar hilo por cada reporte
 	 * 
 	 * @param ied
-	 * @return 
+	 * @return DriverOperationResult
 	 * @date 2016-08-13
 	 * @author Pablo
 	 * @version 1.0
+	 * @throws IOException 
+	 * @throws ServiceError 
 	 */
 	private DriverOperationResult startExploration(IedOperation ied) {
         logger.info("inicio");
+		ErrorType errorType = null;
+		Exception exception = null;
+		
 		List<TagMonitorIec61850Operation> tagsWithOutAnyReport = TagMonitorIec61850Manager.getAllTagsWithOutAnyReport(ied);
 		List<Integer> bReportsIdWithSelectedTags = BrcbManager.getAllReportsIdWithSelectedTags(ied);
 		List<Integer> uReportsIdWithSelectedTags = UrcbManager.getAllReportsIdWithSelectedTags(ied);
@@ -93,14 +136,44 @@ public class IedListener implements ActionListener {
         ExecutorService executor = Executors.newFixedThreadPool(numberOfThreads);
         
         if(tagsWithOutAnyReport.size()>0){
-        	Runnable poolingRunnable = new PoolingRunnable(tagsWithOutAnyReport);
-        	executor.execute(poolingRunnable);
+        	Runnable poolingRunnable = null;
+			try {
+				poolingRunnable = new PoolingRunnable(ied, tagsWithOutAnyReport);
+				executor.execute(poolingRunnable);
+			} catch (Exception e) {
+				if(e instanceof IOException){
+					e.printStackTrace();
+					errorType = DriverOperationResult.ErrorType.IO_EXCEPTION;
+					exception = e;
+				}else if(e instanceof ServiceError){
+					e.printStackTrace();
+					errorType = DriverOperationResult.ErrorType.SERVICE_ERROR;
+					exception = e;
+				}
+			}
         }
         
         if(bReportsIdWithSelectedTags.size() > 0){
+        	brcbRunnable = new BrcbRunnable[bReportsIdWithSelectedTags.size()];
+        	int i = 0;
 	        for (Integer bReportId : bReportsIdWithSelectedTags) {
-				Runnable brcbRunnable = new BrcbRunnable(bReportId);
-				executor.execute(brcbRunnable);
+				
+				try {
+					brcb = GenericManager.getObjectById(BufferedRcbOperation.class, bReportId);
+					brcbRunnable[i] = new BrcbRunnable(ied, brcb);
+					executor.execute(brcbRunnable[i]);
+				} catch (Exception e) {
+					if(e instanceof IOException){
+						e.printStackTrace();
+						errorType = DriverOperationResult.ErrorType.IO_EXCEPTION;
+						exception = e;
+					}else if(e instanceof ServiceError){
+						e.printStackTrace();
+						errorType = DriverOperationResult.ErrorType.SERVICE_ERROR;
+						exception = e;
+					}
+				}
+				
 			}
         }
         
@@ -114,7 +187,7 @@ public class IedListener implements ActionListener {
         executor.shutdown();	// Cierro el Executor
         logger.info("fin del startExploration");
 		
-		return new DriverOperationResult();
+		return new DriverOperationResult(errorType, exception);
 	}
 	
 

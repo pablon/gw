@@ -12,13 +12,13 @@ import py.gov.ande.control.gateway.util.DatabaseOperationResult.ErrorType;
 public class DriverOperationResult {
 
 	private ErrorType errorType;
-	private RuntimeException exception;
+	private Exception exception;
 
 	public DriverOperationResult(){
 		this.errorType = null;
 	}
 	
-	public DriverOperationResult(ErrorType errorType, RuntimeException exception) {
+	public DriverOperationResult(ErrorType errorType, Exception exception) {
 		this.errorType = errorType;
 		this.exception = exception;
 	}
@@ -27,7 +27,7 @@ public class DriverOperationResult {
 		return errorType;
 	}
 
-	public RuntimeException getException() {
+	public Exception getException() {
 		return exception;
 	}
 	
@@ -43,7 +43,9 @@ public class DriverOperationResult {
      */
     public static enum ErrorType {
         CONSTRAINT_VIOLATION,
-        OTHER;
+        OTHER,
+        IO_EXCEPTION,
+        SERVICE_ERROR;
     }
 
 }

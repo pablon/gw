@@ -30,6 +30,17 @@ public class TestConnections {
 		}
 	    return false;
 	}
+	
+	/**
+	 * Test de conexión tipo Ping ICMP
+	 * @param address
+	 * @throws IOException
+	 * @author Pablo
+	 * @date 2016-08-14
+	 */
+	public static void testConnection2(InetAddress address) throws IOException  {
+	    	address.isReachable(5000);
+	}
 
 }
 
